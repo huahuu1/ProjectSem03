@@ -1,0 +1,77 @@
+﻿@model ProjectSem03.Models.Staff
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create new Staff</h2>
+@using (Html.BeginForm("Create", "Staffs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <div>
+            @Html.LabelFor(model => model.StaffId)
+            @Html.EditorFor(model => model.StaffId)
+            @Html.ValidationMessageFor(model => model.StaffId)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.StaffName)
+            @Html.EditorFor(model => model.StaffName)
+            @Html.ValidationMessageFor(model => model.StaffName)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Password)
+            @Html.EditorFor(model => model.Password)
+            @Html.ValidationMessageFor(model => model.Password)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.JoinDate)
+            @Html.EditorFor(model => model.JoinDate)
+            @Html.ValidationMessageFor(model => model.JoinDate)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.ProfileImage)
+            <input type="file" name="file" />
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Email)
+            @Html.EditorFor(model => model.Email)
+            @Html.ValidationMessageFor(model => model.Email)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Phone)
+            @Html.EditorFor(model => model.Phone)
+            @Html.ValidationMessageFor(model => model.Phone)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Address)
+            @Html.EditorFor(model => model.Address)
+            @Html.ValidationMessageFor(model => model.Address)
+        </div>
+
+        <div>
+            @Html.LabelFor(model => model.Role)
+            <input type="number" min="0" max="2" />
+            @Html.ValidationMessageFor(model => model.Role)
+        </div>
+        <br />
+        <div>
+            <input type="submit" value="Create" class="btn-primary" />
+        </div>
+    </div>
+}
+
+<div>
+    <h3>@ViewBag.Msg</h3>
+</div>
+
+<div>
+    @Html.ActionLink("Back to list ", "Index", "Staffs")
+</div>
+
+

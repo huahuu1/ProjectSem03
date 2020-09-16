@@ -1,0 +1,81 @@
+﻿@model ProjectSem03.Models.Student
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create new Student</h1>
+@using (Html.BeginForm("Create", "Students", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div>
+        <div>
+            @Html.LabelFor(s => s.StudentId)
+            @Html.EditorFor(s => s.StudentId)
+            @Html.ValidationMessageFor(s => s.StudentId)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.Password)
+            @Html.EditorFor(s => s.Password)
+            @Html.ValidationMessageFor(s => s.Password)
+        </div>
+        @*<div>
+            @Html.LabelFor(s => s.ConfirmPassword)
+            @Html.EditorFor(s => s.ConfirmPassword)
+            @Html.ValidationMessageFor(s => s.ConfirmPassword)
+        </div>*@
+        <div>
+            @Html.LabelFor(s => s.FirstName)
+            @Html.EditorFor(s => s.FirstName)
+            @Html.ValidationMessageFor(s => s.FirstName)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.LastName)
+            @Html.EditorFor(s => s.LastName)
+            @Html.ValidationMessageFor(s => s.LastName)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.DateOfBirth)
+            @Html.EditorFor(s => s.DateOfBirth)
+            @Html.ValidationMessageFor(s => s.DateOfBirth)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.Gender)
+            @Html.RadioButtonFor(s => s.Gender, "Male")<span>Male</span>
+            @Html.RadioButtonFor(s => s.Gender, "Female")<span>Female</span>
+            @Html.ValidationMessageFor(s => s.Gender)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.Phone)
+            @Html.EditorFor(s => s.Phone)
+            @Html.ValidationMessageFor(s => s.Phone)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.Email)
+            @Html.EditorFor(s => s.Email)
+            @Html.ValidationMessageFor(s => s.Email)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.JoinDate)
+            @Html.TextBox("JoinDate", DateTime.Today, new { @readonly = "readonly", @style = "border: none;" })
+        </div>
+        <div>
+            @Html.LabelFor(s => s.Address)
+            @Html.EditorFor(s => s.Address)
+            @Html.ValidationMessageFor(s => s.Address)
+        </div>
+        <div>
+            @Html.LabelFor(s => s.ProfileImage)
+            <input type="file" name="file" />
+        </div>
+        <div>
+            <input type="submit" value="Create" class="btn-primary" />
+        </div>
+    </div>
+}
+<div>
+    <h3>@ViewBag.Msg</h3>
+</div>
+<div>
+    @Html.ActionLink("Back to list ", "Index", "Students")
+</div>

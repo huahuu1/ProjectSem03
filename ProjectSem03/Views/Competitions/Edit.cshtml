@@ -1,0 +1,54 @@
+﻿@model ProjectSem03.Models.Competition
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit Competition</h2>
+<br />
+@using (Html.BeginForm("Edit", "Competitions", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        @Html.HiddenFor(model => model.CompetitionId)
+    </div>
+    <div>
+        @Html.HiddenFor(model => model.CompetitionName)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.StartDate)
+        @Html.EditorFor(model => model.StartDate)
+        @Html.ValidationMessageFor(model => model.StartDate)
+    </div>
+    <div>
+        @Html.LabelFor(model => model.EndDate)
+        @Html.EditorFor(model => model.EndDate)
+        @Html.ValidationMessageFor(model => model.EndDate)
+    </div>
+    <div>
+        @Html.LabelFor(model => model.Description)
+        @Html.TextAreaFor(model => model.Description)
+        @Html.ValidationMessageFor(model => model.Description)
+    </div>
+
+    <div>
+        @Html.HiddenFor(model => model.StaffId)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.CompetitionImages)
+        <input type="file" name="file" />
+    </div>
+    <br />
+    <div>
+        <input type="submit" value="Update" class="btn-warning" />
+    </div>
+}
+
+<div>
+    <h3>@ViewBag.Msg</h3>
+</div>
+
+<div>
+    @Html.ActionLink("Back to list ", "Index", "Competitions")
+</div>

@@ -1,0 +1,28 @@
+﻿@model ProjectSem03.Models.Student
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h1>Student Login</h1>
+@using (Html.BeginForm("Login", "Students", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <table>
+        <tr>
+            <td>@Html.LabelFor(s => s.Email)</td>
+            <td>@Html.EditorFor(s => s.Email)</td>
+            <td>@Html.ValidationMessageFor(s => s.Email)</td>
+        </tr>
+        <tr>
+            <td>@Html.LabelFor(s => s.Password)</td>
+            <td>@Html.EditorFor(s => s.Password)</td>
+            <td>@Html.ValidationMessageFor(s => s.Password)</td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="Login" class="btn-success" /></td>
+            <td>@ViewBag.Msg</td>
+            <td></td>
+        </tr>
+    </table>
+}

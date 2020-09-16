@@ -1,0 +1,247 @@
+section.slider {
+  position: relative;
+  height: 971px; }
+  section.slider .owl-loading {
+    opacity: 1; }
+  section.slider .slider-main {
+    height: 100%; }
+    section.slider .slider-main .owl-stage-outer {
+      height: 100%; }
+      section.slider .slider-main .owl-stage-outer .owl-stage {
+        height: 100%; }
+        section.slider .slider-main .owl-stage-outer .owl-stage .owl-item {
+          height: 100%; }
+          section.slider .slider-main .owl-stage-outer .owl-stage .owl-item .item {
+            height: 100%; }
+            section.slider .slider-main .owl-stage-outer .owl-stage .owl-item .item .owl-lazy {
+              height: 100%;
+              width: auto;
+              background-position: 0% 0%;
+              background-size: cover !important;
+              background-repeat: no-repeat !important;
+              zoom: 1.07; }
+      section.slider .slider-main .owl-stage-outer .overlay {
+        background-color: rgba(190, 190, 190, 0.2);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        left: -1px;
+        right: -1px;
+        transition: transform .3s, opacity .6s;
+        pointer-events: none; }
+    section.slider .slider-main .owl-nav .owl-prev {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 10rem;
+      margin: 0; }
+    section.slider .slider-main .owl-nav .owl-next {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 10rem;
+      margin: 0; }
+    section.slider .slider-main .owl-nav button.owl-prev,
+    section.slider .slider-main .owl-nav button.owl-next {
+      background: transparent;
+      opacity: 0;
+      transition: all .3s ease;
+      -webkit-transition: all .3s ease;
+      -moz-transition: all .3s ease;
+      -ms-transition: all .3s ease;
+      -o-transition: all .3s ease; }
+      section.slider .slider-main .owl-nav button.owl-prev:hover,
+      section.slider .slider-main .owl-nav button.owl-next:hover {
+        outline: none; }
+      section.slider .slider-main .owl-nav button.owl-prev i,
+      section.slider .slider-main .owl-nav button.owl-next i {
+        transition: all .3s ease;
+        -webkit-transition: all .3s ease;
+        -moz-transition: all .3s ease;
+        -ms-transition: all .3s ease;
+        -o-transition: all .3s ease;
+        color: #fff;
+        font-size: 2.2rem; }
+      section.slider .slider-main .owl-nav button.owl-prev:hover i,
+      section.slider .slider-main .owl-nav button.owl-next:hover i {
+        color: #ff0000; }
+    section.slider .slider-main .owl-dots {
+      position: absolute;
+      left: 49%;
+      bottom: 0;
+      transform: translate(-15%, -50%); }
+      section.slider .slider-main .owl-dots .owl-dot {
+        outline: none; }
+        section.slider .slider-main .owl-dots .owl-dot span {
+          background-color: #fff;
+          width: 1.2rem;
+          height: 1.2rem;
+          transition: all .2s ease; }
+        section.slider .slider-main .owl-dots .owl-dot:hover span {
+          background-color: #ee5b54; }
+      section.slider .slider-main .owl-dots .owl-dot.active span,
+      section.slider .slider-main .owl-dots .owl-dot.active:hover span {
+        background-color: #ee5b54; }
+  section.slider .slider-content .slider-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 997; }
+    section.slider .slider-content .slider-circle img {
+      position: relative; }
+    section.slider .slider-content .slider-circle .slider-dot-image img {
+      animation: mover 1s infinite alternate;
+      position: absolute;
+      top: 56px;
+      left: 0; }
+  section.slider .slider-content .slider-text {
+    position: absolute;
+    z-index: 999;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center; }
+    section.slider .slider-content .slider-text span {
+      display: block; }
+    section.slider .slider-content .slider-text span:nth-child(1) {
+      color: #ee5b54;
+      font-family: "Montserrat",Arial,Helvetica,sans-serif;
+      font-size: 1.725rem;
+      font-weight: 600;
+      margin-bottom: 1.8rem; }
+    section.slider .slider-content .slider-text span:nth-child(2) {
+      color: #000;
+      font-family: "Playfair Display",Arial,Helvetica,sans-serif;
+      font-size: 7.725rem;
+      font-weight: 900;
+      margin-bottom: 2.4rem; }
+    section.slider .slider-content .slider-text span:nth-child(3) {
+      margin-bottom: 1.2rem; }
+    section.slider .slider-content .slider-text span:nth-child(4) {
+      margin-bottom: 3.5rem; }
+    section.slider .slider-content .slider-text span:nth-child(3),
+    section.slider .slider-content .slider-text span:nth-child(4) {
+      color: #000;
+      font-family: "Roboto",Arial,Helvetica,sans-serif;
+      font-size: 2.025rem;
+      font-weight: 300; }
+    section.slider .slider-content .slider-text .button-apply {
+      border-radius: 50px;
+      background-color: #ee5b54;
+      display: inline-block; }
+      section.slider .slider-content .slider-text .button-apply a.button-hover {
+        position: relative;
+        display: block;
+        z-index: 0;
+        padding: 1.5rem 3.61rem;
+        text-transform: uppercase;
+        border-radius: 50px;
+        transition: all .3s ease; }
+        section.slider .slider-content .slider-text .button-apply a.button-hover span {
+          color: #fff;
+          margin-bottom: 0;
+          font-family: "Montserrat",Arial,Helvetica,sans-serif;
+          font-size: 1.41rem;
+          font-weight: 600; }
+        section.slider .slider-content .slider-text .button-apply a.button-hover:hover {
+          box-shadow: 0 0 0 1px #ee5b54 inset; }
+          section.slider .slider-content .slider-text .button-apply a.button-hover:hover span {
+            color: #ee5b54; }
+          section.slider .slider-content .slider-text .button-apply a.button-hover:hover:before {
+            transform: scale(1); }
+        section.slider .slider-content .slider-text .button-apply a.button-hover:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #fff;
+          border-radius: 50px;
+          box-shadow: 0 0 0 1px #ee5b54 inset;
+          transform: scale(0);
+          transition: all .3s ease; }
+
+@keyframes mover {
+  0% {
+    transform: translateY(0); }
+  100% {
+    transform: translateY(-10px); } }
+  section.slider .owl-carousel .owl-item .owl-lazy:not([src]), section.slider .owl-carousel .owl-item .owl-lazy[src^=""] {
+    max-height: none !important; }
+  section.slider .banner-inner button.owl-prev,
+  section.slider .banner-inner button.owl-next {
+    outline: none; }
+  section.slider .banner-inner:hover button.owl-prev,
+  section.slider .banner-inner:hover button.owl-next {
+    opacity: 1;
+    outline: none; }
+  section.slider .banner-inner:hover .owl-prev {
+    transform: translateX(-20%);
+    -webkit-transform: translateX(-20%);
+    -moz-transform: translateX(-20%);
+    -ms-transform: translateX(-20%);
+    -o-transform: translateX(-20%); }
+  section.slider .banner-inner:hover .owl-next {
+    transform: translateX(20%);
+    -webkit-transform: translateX(20%);
+    -moz-transform: translateX(20%);
+    -ms-transform: translateX(20%);
+    -o-transform: translateX(20%); }
+  section.slider .fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    right: 0;
+    bottom: 0;
+    padding: 0 !important;
+    margin: 0 !important; }
+
+@media (max-width: 549px) {
+  .slider-main {
+    height: 35rem; }
+    .slider-main .owl-stage .owl-lazy {
+      height: 35rem; } }
+
+@media (min-width: 550px) {
+  .slider-main {
+    height: 50rem; }
+    .slider-main .owl-stage .owl-lazy {
+      height: 50rem; } }
+
+@media (min-width: 850px) {
+  .slider-main {
+    height: 75rem; }
+    .slider-main .owl-stage .owl-lazy {
+      height: 75rem; } }
+
+#text-box-2 {
+  width: 90%; }
+
+#text-box-1 .text,
+#text-box-2 .text {
+  font-size: 80%; }
+
+@media (min-width: 550px) {
+  #text-box-2 {
+    width: 70%; }
+  #text-box-2 .text {
+    font-size: 100%; } }
+
+@media (min-width: 850px) {
+  #text-box-2 {
+    width: 50%; } }
+
+@media (min-width: 850px) {
+  #text-box-1 {
+    width: 31%; } }
+
+@media (min-width: 550px) {
+  #text-box-1 {
+    width: 35%; } }

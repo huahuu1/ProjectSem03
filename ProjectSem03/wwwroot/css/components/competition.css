@@ -1,0 +1,86 @@
+section.competition {
+  background-color: #f2edeb;
+  padding-bottom: 4rem; }
+  section.competition .container .comp-title {
+    text-align: center; }
+    section.competition .container .comp-title .title-text {
+      line-height: 1;
+      padding-top: 2rem;
+      margin-bottom: 4rem; }
+      section.competition .container .comp-title .title-text span {
+        font-family: "Playfair Display",Arial,Helvetica,sans-serif;
+        font-size: 3.5rem;
+        font-weight: 900;
+        color: #ee5b54; }
+  section.competition .container .comps .comp-col .comp-img img {
+    width: 100%; }
+  section.competition .container .comps .comp-col .comp-name {
+    margin-bottom: 2.2rem;
+    margin-top: 2.8rem; }
+    section.competition .container .comps .comp-col .comp-name span {
+      font-family: "Montserrat",Arial,Helvetica,sans-serif;
+      font-size: 2.5rem;
+      font-weight: 900; }
+  section.competition .container .comps .comp-col .comp-calendar ul {
+    display: flex; }
+    section.competition .container .comps .comp-col .comp-calendar ul li {
+      font-size: 1.5rem; }
+      section.competition .container .comps .comp-col .comp-calendar ul li i {
+        margin-right: 1rem;
+        color: #ee5b54; }
+      section.competition .container .comps .comp-col .comp-calendar ul li span {
+        text-transform: uppercase;
+        margin-right: 2rem; }
+  section.competition .container .comps .comp-col .comp-countdown {
+    margin-top: 2rem; }
+    section.competition .container .comps .comp-col .comp-countdown .ClassyCountdownDemo {
+      width: 40rem;
+      margin: 0 auto; }
+      section.competition .container .comps .comp-col .comp-countdown .ClassyCountdownDemo .ClassyCountdown-days {
+        margin: 0 2rem 2rem 0; }
+      section.competition .container .comps .comp-col .comp-countdown .ClassyCountdownDemo .ClassyCountdown-hours {
+        margin: 0 2rem 2rem 0; }
+      section.competition .container .comps .comp-col .comp-countdown .ClassyCountdownDemo .ClassyCountdown-minutes {
+        margin: 0 2rem 2rem 0; }
+      section.competition .container .comps .comp-col .comp-countdown .ClassyCountdownDemo .ClassyCountdown-seconds {
+        margin: 0 2rem 2rem 0; }
+  section.competition .container .comps .comp-col .comp-button {
+    text-align: center;
+    margin-top: 4rem; }
+    section.competition .container .comps .comp-col .comp-button .button-apply {
+      border-radius: 50px;
+      background-color: #ee5b54;
+      display: inline-block; }
+      section.competition .container .comps .comp-col .comp-button .button-apply a.button-hover {
+        position: relative;
+        display: block;
+        z-index: 0;
+        padding: 1rem 2.2rem;
+        text-transform: uppercase;
+        border-radius: 50px;
+        transition: all .3s ease; }
+        section.competition .container .comps .comp-col .comp-button .button-apply a.button-hover span {
+          color: #fff;
+          margin-bottom: 0;
+          font-family: "Montserrat",Arial,Helvetica,sans-serif;
+          font-size: 1.3rem;
+          font-weight: 600; }
+        section.competition .container .comps .comp-col .comp-button .button-apply a.button-hover:hover {
+          box-shadow: 0 0 0 1px #ee5b54 inset; }
+          section.competition .container .comps .comp-col .comp-button .button-apply a.button-hover:hover span {
+            color: #ee5b54; }
+          section.competition .container .comps .comp-col .comp-button .button-apply a.button-hover:hover:before {
+            transform: scale(1); }
+        section.competition .container .comps .comp-col .comp-button .button-apply a.button-hover:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #fff;
+          border-radius: 50px;
+          box-shadow: 0 0 0 1px #ee5b54 inset;
+          transform: scale(0);
+          transition: all .3s ease; }

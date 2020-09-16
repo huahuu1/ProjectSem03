@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewData["Title"] = "Upload";
+    Layout = "~/Views/Shared/_Layout-noSlider.cshtml";
+}
+
+@model ProjectSem03.Models.Design
+
+@using Microsoft.AspNetCore.Http
+
+<section class="up-load">
+    @using (Html.BeginForm("Upload", "StudentDesignPosting", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row" , @id = "upload-form"}))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+        <div class="file-upload col-lg-6">
+            <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
+            <div class="image-upload-wrap">
+                <input class="file-upload-input" type="file" name="file" onchange="readURL(this);" accept="image/*" />
+                @Html.ValidationMessageFor(d => d.Painting)
+                <div class="drag-text">
+                    <h3>Drag and drop a file or select add Image</h3>
+                </div>
+            </div>
+            <div class="file-upload-content">
+                <img class="file-upload-image" src="#" alt="your image" />
+                <div class="image-title-wrap">
+                    <button class="remove-image" type="button" onclick="removeUpload()">Remove&ensp;<span class="image-title">Uploaded Image</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="file-description col-lg-6">
+            <div class="des-content">
+                <div class="des-title"><span>Design Name:</span></div>
+                @Html.EditorFor(d => d.DesignName, new { htmlAttributes = new { @class = "img-title form-control form-control-lg" } })
+                @Html.ValidationMessageFor(d => d.DesignName)
+                <div class="des-title"><span>Description:</span></div>
+                @Html.TextAreaFor(d => d.Description, new { @class = "img-description form-control form-control-lg", cols = "30", rows = "11" })
+                @Html.ValidationMessageFor(d => d.Description)
+                @*<textarea class="form-control form-control-lg" id="img-description" name="short_description" cols="30" rows="11"></textarea>*@
+                <div class="des-title">
+                    <span>Submit Date:</span>
+                </div>
+                @Html.TextBox("SubmitDate", DateTime.Now, new { @readonly = "readonly", @class = "submit-date-title form-control form-control-lg" })
+            </div>
+            <div class="button-upload"><a class="button-hover" onclick="document.forms['upload-form'].submit()"><span>Upload</span></a></div>
+        </div>
+}
+    <div>@ViewBag.Msg</div>
+</section>
+

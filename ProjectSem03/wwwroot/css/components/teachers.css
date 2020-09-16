@@ -1,0 +1,134 @@
+@charset "UTF-8";
+section.teachers {
+  height: 600px; }
+  section.teachers .wrapper-teachers {
+    height: 100%;
+    background-image: url("../assets/images/yellow_brush_stroke_01.jpg");
+    background-size: contain; }
+    section.teachers .wrapper-teachers .teacher-slider {
+      height: 100%;
+      width: 80%;
+      margin: auto;
+      top: 1%; }
+      section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer {
+        height: 100%; }
+        section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage {
+          height: 100%; }
+          section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item {
+            height: 100%; }
+            section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item {
+              height: 100%; }
+              section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                flex-direction: column; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-img {
+                  margin-bottom: 3rem; }
+                  section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-img img {
+                    width: 14rem;
+                    border-radius: 50%; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-quote blockquote {
+                  font-family: "Roboto",Arial,Helvetica,sans-serif;
+                  font-size: 2.7rem;
+                  font-style: italic;
+                  font-weight: 300;
+                  line-height: 5rem;
+                  display: block;
+                  quotes: "“" "”"; }
+                  section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-quote blockquote q {
+                    quotes: "“" "”"; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-name span:nth-child(1) {
+                  display: block;
+                  color: #ee5b54;
+                  text-transform: uppercase;
+                  font-size: 1.4rem;
+                  font-family: "Montserrat",Arial,Helvetica,sans-serif;
+                  font-weight: 600; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-name span:nth-child(2) {
+                  display: block;
+                  font-size: 1.6rem;
+                  font-family: "Roboto",Arial,Helvetica;
+                  font-weight: 300; }
+      section.teachers .wrapper-teachers .teacher-slider .owl-dots {
+        position: absolute;
+        left: 9%;
+        bottom: 8%;
+        transform: translate(-47%, -50%); }
+        section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot {
+          outline: none; }
+          section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot span {
+            background-color: #fff;
+            width: 1.2rem;
+            height: 1.2rem;
+            transition: all .2s ease; }
+          section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot:hover span {
+            background-color: #ee5b54; }
+        section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot.active span,
+        section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot.active:hover span {
+          background-color: #ee5b54; }
+  section.teachers .wrapper-about {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 9rem;
+    padding-right: 6rem; }
+    section.teachers .wrapper-about .about-page {
+      text-transform: uppercase;
+      color: #ee5b54;
+      font-size: 1.7rem;
+      margin-bottom: .8rem;
+      font-family: "Montserrat",Arial,Helvetica,sans-serif;
+      font-weight: 600; }
+    section.teachers .wrapper-about .about-title {
+      font-family: "Playfair Display",Arial,Helvetica,sans-serif;
+      font-weight: 900;
+      font-size: 6rem;
+      line-height: 1.2;
+      margin-bottom: 1.4rem; }
+    section.teachers .wrapper-about .about-text {
+      font-family: "Roboto",Arial,Helvetica,sans-serif;
+      line-height: 1.9;
+      font-weight: 300;
+      margin-bottom: 2rem; }
+    section.teachers .wrapper-about .about-button {
+      border-radius: 50px;
+      background-color: #ee5b54;
+      display: inline-block; }
+      section.teachers .wrapper-about .about-button a.button-hover {
+        position: relative;
+        display: block;
+        z-index: 0;
+        padding: 1.5rem 3.61rem;
+        text-transform: uppercase;
+        border-radius: 50px;
+        transition: all .3s ease; }
+        section.teachers .wrapper-about .about-button a.button-hover span {
+          color: #fff;
+          margin-bottom: 0;
+          font-family: "Montserrat",Arial,Helvetica,sans-serif;
+          font-size: 1.41rem;
+          font-weight: 600; }
+        section.teachers .wrapper-about .about-button a.button-hover:hover {
+          box-shadow: 0 0 0 1px #ee5b54 inset; }
+          section.teachers .wrapper-about .about-button a.button-hover:hover span {
+            color: #ee5b54; }
+          section.teachers .wrapper-about .about-button a.button-hover:hover:before {
+            transform: scale(1); }
+        section.teachers .wrapper-about .about-button a.button-hover:before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: #fff;
+          border-radius: 50px;
+          box-shadow: 0 0 0 1px #ee5b54 inset;
+          transform: scale(0);
+          transition: all .3s ease; }
+
+.owl-carousel .owl-item .owl-lazy:not([src]), .owl-carousel .owl-item .owl-lazy[src^=""] {
+  max-height: none !important; }

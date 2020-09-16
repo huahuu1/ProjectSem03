@@ -1,0 +1,9 @@
+.card {
+    padding: 0;
+}
+.card-header:not(.ui-sortable-handle) {
+    background-color: #007bff !important;
+    color: #fff;
+}
+
+

@@ -1,0 +1,51 @@
+﻿@model ProjectSem03.Models.Award
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create new Award</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AwardName" class="control-label"></label>
+                <input asp-for="AwardName" class="form-control" />
+                <span asp-validation-for="AwardName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Staff Name: </label>
+                <div>
+                    @Html.DropDownList("StaffId", (IEnumerable<SelectListItem>)ViewBag.data)
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Competition Name: </label>
+                <div>
+                    @Html.DropDownList("CompetitionId", (IEnumerable<SelectListItem>)ViewBag.data2)
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Posting Description: </label>
+                <div>
+                    @Html.DropDownList("PostingId", (IEnumerable<SelectListItem>)ViewBag.data3)
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <h3>@ViewBag.Msg</h3>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

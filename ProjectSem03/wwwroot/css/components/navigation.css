@@ -1,0 +1,115 @@
+section.header header .container .nav {
+  height: 100px; }
+  section.header header .container .nav .nav-logo a img {
+    width: 170px; }
+  section.header header .container .nav .nav-items ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0; }
+    section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) {
+      margin-right: 5rem;
+      position: relative;
+      padding: 1rem 0; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) a.circle {
+        text-transform: uppercase;
+        font-size: 1.4rem;
+        font-weight: 600; }
+        section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) a.circle img {
+          width: 3rem;
+          border: 1px solid #50514f;
+          border-radius: 50%;
+          margin-right: 1rem;
+          z-index: -1;
+          line-height: 0; }
+        section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) a.circle:after {
+          content: ' ';
+          display: block;
+          position: absolute;
+          bottom: -2px;
+          margin-left: -4px;
+          left: 50%;
+          pointer-events: none;
+          height: 8px;
+          width: 8px;
+          border-radius: 50%;
+          background-color: #ee5b54;
+          z-index: 999;
+          transform: scale(0);
+          transition: all .2s ease; }
+        section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) a.circle:hover:after {
+          transform: scale(1.5); }
+        section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) a.circle:hover {
+          color: #ee5b54; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) .student-nav:after {
+        bottom: 2px !important; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) a.active:after {
+        content: ' ';
+        display: block;
+        position: absolute;
+        bottom: -2px;
+        margin-left: -4px;
+        left: 50%;
+        pointer-events: none;
+        height: 8px;
+        width: 8px;
+        border-radius: 50%;
+        background-color: #ee5b54;
+        z-index: 999;
+        transform: scale(1) !important;
+        transition: all .2s ease; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) a.active:hover {
+        color: #ee5b54; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child):hover a:after {
+        transform: scale(1.5) !important; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) ul.sub-nav {
+        display: block;
+        z-index: 998;
+        opacity: 0;
+        position: absolute;
+        pointer-events: none;
+        background-color: #fff;
+        min-width: 18rem;
+        top: 40px;
+        box-shadow: 0 0 10px 0 rgba(204, 204, 204, 0.5);
+        transition: opacity .2s; }
+        section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) ul.sub-nav li {
+          display: block;
+          position: relative; }
+          section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) ul.sub-nav li:not(:last-child):after {
+            content: ' ';
+            display: block;
+            position: absolute;
+            left: 2rem;
+            right: 2rem;
+            bottom: 0;
+            height: 1px;
+            background-color: rgba(0, 0, 0, 0.1); }
+          section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) ul.sub-nav li a {
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all .3s auto;
+            padding: 1rem 1.5rem;
+            text-transform: uppercase;
+            font-weight: 400; }
+            section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) ul.sub-nav li a:hover {
+              color: #ee5b54; }
+            section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) ul.sub-nav li a span {
+              text-transform: uppercase;
+              margin-left: 1.5rem; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child) .student-sub-nav {
+        top: 44px !important; }
+      section.header header .container .nav .nav-items ul li.nav-item:not(:last-child):hover ul.sub-nav {
+        opacity: 1;
+        pointer-events: inherit; }
+    section.header header .container .nav .nav-items ul li.nav-item:nth-last-child(2) .sub-nav {
+      right: 0; }
+    section.header header .container .nav .nav-items ul li a.btn-login {
+      text-transform: uppercase;
+      font-size: 1.4rem;
+      font-weight: 600;
+      background-color: #fa5a5a;
+      color: #fff;
+      font-weight: 600;
+      padding: 0.5rem 1.5rem;
+      text-decoration: none; }

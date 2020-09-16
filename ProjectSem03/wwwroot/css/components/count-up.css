@@ -1,0 +1,34 @@
+.count-up {
+  height: 26rem; }
+  .count-up .wrapper-countup {
+    height: 100%;
+    background-image: url("../assets/images/pattern.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat; }
+    .count-up .wrapper-countup .container {
+      height: 100%; }
+      .count-up .wrapper-countup .container .count-content {
+        height: 100%; }
+        .count-up .wrapper-countup .container .count-content .row {
+          height: 100%;
+          align-items: center; }
+          .count-up .wrapper-countup .container .count-content .row .counter-list {
+            text-align: center; }
+            .count-up .wrapper-countup .container .count-content .row .counter-list i {
+              display: block;
+              color: #ee5b54;
+              font-size: 5rem; }
+            .count-up .wrapper-countup .container .count-content .row .counter-list span {
+              display: block;
+              text-transform: uppercase;
+              font-family: "Playfair Display",Arial,Helvetica,sans-serif;
+              font-weight: 700;
+              font-size: 4.5rem;
+              margin-top: .2rem; }
+            .count-up .wrapper-countup .container .count-content .row .counter-list p {
+              text-transform: uppercase;
+              font-family: "Montserrat",Arial,Helvetica,sans-serif;
+              color: #ee5b54;
+              font-size: 1.5rem;
+              font-weight: 600; }

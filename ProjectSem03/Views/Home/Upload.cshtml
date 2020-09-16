@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "Upload";
+    Layout = "~/Views/Shared/_Layout-noSlider.cshtml";
+}
+@model ProjectSem03.Models.Design
+
+<div class="files-uploaded">
+    <div class="files-uploaded-title"><span>Files Uploaded</span></div>
+    <div class="files-uploaded-content row">
+        @foreach (var item in ViewBag.designList)
+        {
+            <div class="img-uploaded col-lg-6">
+                <div class="img-wrapper row">
+                    <div class="img-content col-lg-6"><img src="~/@item.Design.Painting" alt="" /></div>
+                    <div class="img-text col-lg-6">
+                        <div class="img-des"><span>@item.Design.SubmitDate</span><span>@item.Design.DesignName</span><span>@item.Design.Description</span>@*<a class="button-hover" href="#"><span>Update</span></a>*@</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,54 @@
+﻿@model ProjectSem03.Models.Competition
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create new Competition</h2>
+@using (Html.BeginForm("Create", "Competitions", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        <div>
+            @Html.LabelFor(model => model.CompetitionName)
+            @Html.EditorFor(model => model.CompetitionName)
+            @Html.ValidationMessageFor(model => model.CompetitionName)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.StartDate)
+            @Html.EditorFor(model => model.StartDate)
+            @Html.ValidationMessageFor(model => model.StartDate)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.EndDate)
+            @Html.EditorFor(model => model.EndDate)
+            @Html.ValidationMessageFor(model => model.EndDate)
+        </div>
+        <div>
+            @Html.LabelFor(model => model.Description)
+            @Html.TextAreaFor(model => model.Description)
+            @Html.ValidationMessageFor(model => model.Description)
+        </div>
+        <div>
+            <label>Staff Name: </label>
+            <div>
+                @Html.DropDownList("StaffId", (IEnumerable<SelectListItem>)ViewBag.data)
+            </div>
+        </div>
+        <div>
+            @Html.LabelFor(model => model.CompetitionImages)
+            <input type="file" name="file" />
+        </div>
+        <br />
+        <div>
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+<div>
+    <h3>@ViewBag.Msg</h3>
+</div>
+
+<div>
+    @Html.ActionLink("Back to list ", "Index", "Competitions")
+</div>

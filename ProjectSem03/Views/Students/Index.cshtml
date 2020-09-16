@@ -1,0 +1,100 @@
+﻿@model IEnumerable<ProjectSem03.Models.StudentCompetition>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.StudentId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.Password)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.JoinDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.ProfileImage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Competition.CompetitionName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.StudentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Password)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.DateOfBirth)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Gender)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.JoinDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Student.Address)
+            </td>
+            <td>
+                <img src="@item.Student.ProfileImage" width="50" height="50" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Competition.CompetitionName)
+            </td>
+            <td>
+                @Html.ActionLink("Update", "Edit", new { id = item.Student.StudentId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Student.StudentId }, new { onClick = "return confirm('Are you sure?')" }) |
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

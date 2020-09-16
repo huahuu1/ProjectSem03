@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ProjectSem03.Models.CombineModels>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>List of Postings</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Post Date</th>
+            <th>Post Description</th>
+            <th>Mark</th>
+            <th>Remark</th>
+            <th>Design Name</th>
+            <th>Competition Name</th>
+            <th>Staff Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Postings.PostingId</td>
+                <td>@item.Postings.PostDate</td>
+                <td>@item.Postings.PostDescription</td>
+                <td>@item.Postings.Mark</td>
+                <td>@item.Postings.Remark</td>
+                <td>@item.Designs.DesignName</td>
+                <td>@item.Competitions.CompetitionName</td>
+                <td>@item.Staffs.StaffName</td>
+                <td>
+                    @Html.ActionLink("Update", "Edit", new { id = item.Postings.PostingId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

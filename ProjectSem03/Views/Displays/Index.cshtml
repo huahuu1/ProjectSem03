@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ProjectSem03.Models.CombineModels>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>List of Competitions</h2>
+
+<p>
+    <a asp-action="Create">Create New Display</a>
+</p>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>ExhibitionName</th>
+            <th>DesignName</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Exhibitions.ExhibitionName</td>
+                <td>@item.Designs.DesignName</td>
+            </tr>
+        }
+    </tbody>
+</table>

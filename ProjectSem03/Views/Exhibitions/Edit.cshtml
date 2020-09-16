@@ -1,0 +1,55 @@
+﻿@model ProjectSem03.Models.Exhibition
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit Exhibition</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ExhibitionId" />
+            <div class="form-group">
+                <label asp-for="ExhibitionName" class="control-label"></label>
+                <input asp-for="ExhibitionName" class="form-control" />
+                <span asp-validation-for="ExhibitionName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Place" class="control-label"></label>
+                <input asp-for="Place" class="form-control" />
+                <span asp-validation-for="Place" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Staff Name: </label>
+                <div>
+                    @Html.DropDownList("StaffId", (IEnumerable<SelectListItem>)ViewBag.data)
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <h3>@ViewBag.Msg</h3>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

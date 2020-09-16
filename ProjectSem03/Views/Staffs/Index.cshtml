@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
+}
+
+@model IEnumerable<ProjectSem03.Models.Staff>
+
+<h2>List of Staffs</h2>
+<br />
+@using (Html.BeginForm("Index", "Staffs", FormMethod.Post))
+{
+    <input type="text" name="sname" placeholder="Enter staff name" />
+    <input type="submit" value="Search">
+}
+<br />
+<p>
+    @Html.ActionLink("Create New Staff", "Create", "Staffs")
+</p>
+<p>
+    @Html.ActionLink("Student List", "Index", "Students")
+</p>
+<p>
+    @Html.ActionLink("Award List", "Index", "Awards")
+</p>
+<p>
+    @Html.ActionLink("Posting List", "Index", "Postings")
+</p>
+<p>
+    @Html.ActionLink("Exhibition List", "Index", "Exhibitions")
+</p>
+<p>
+    @Html.ActionLink("Update Upcoming Exhibition", "UpcomingIndex", "Exhibitions")
+</p>
+<p>
+    @Html.ActionLink("Competition List", "Index", "Competitions")
+</p>
+<br />
+<table class="table">
+    <tr>
+        <th>StaffId</th>
+        <th>StaffName</th>
+        <th>JoinDate</th>
+        <th>ProfileImage</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Role</th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.StaffId</td>
+            <td>@item.StaffName</td>
+            <td>@item.JoinDate.ToShortDateString()</td>
+            <td>
+                <img src="../@item.ProfileImage" width="50" height="50" />
+            </td>
+            <td>@item.Email</td>
+            <td>@item.Phone</td>
+            <td>@item.Address</td>
+            <td>@item.Role</td>
+            <td>
+                @Html.ActionLink("Update", "Edit", new { id = item.StaffId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.StaffId }, new { onClick = "return confirm('Are you sure?')" })
+            </td>
+        </tr>
+    }
+</table>
+
+
+
+

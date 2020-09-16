@@ -1,0 +1,65 @@
+﻿@model ProjectSem03.Models.Staff
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit Staff</h2>
+<br />
+@using (Html.BeginForm("Edit", "Staffs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div>
+        @Html.HiddenFor(model => model.StaffId)
+    </div>
+
+    <div>
+        @Html.HiddenFor(model => model.StaffName)
+    </div>
+
+    <div>
+        @Html.HiddenFor(model => model.Password)
+    </div>
+
+    <div>
+        @Html.HiddenFor(model => model.JoinDate)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.ProfileImage)
+        <input type="file" name="file" />
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Email)
+        @Html.EditorFor(model => model.Email)
+        @Html.ValidationMessageFor(model => model.Email)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Phone)
+        @Html.EditorFor(model => model.Phone)
+        @Html.ValidationMessageFor(model => model.Phone)
+    </div>
+
+    <div>
+        @Html.LabelFor(model => model.Address)
+        @Html.EditorFor(model => model.Address)
+        @Html.ValidationMessageFor(model => model.Address)
+    </div>
+
+    <div>
+        @Html.HiddenFor(model => model.Role)
+    </div>
+    <br />
+    <div>
+        <input type="submit" value="Update" class="btn-warning" />
+    </div>
+}
+
+<div>
+    <h3>@ViewBag.Msg</h3>
+</div>
+
+<div>
+    @Html.ActionLink("Back to list ", "Index", "Staffs")
+</div>
