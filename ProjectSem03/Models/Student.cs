@@ -30,8 +30,8 @@ namespace ProjectSem03.Models
         [StringLength(50, MinimumLength = 3, ErrorMessage = "LastName must be from 3 to 50 characters")]
         public string LastName { get; set; }
         [Required(ErrorMessage = "DateOfBirth is required.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [MinimumAge(16, ErrorMessage = "Age must be >= 16")]
         public DateTime DateOfBirth { get; set; }
         [Required(ErrorMessage = "Gender is required.")]
         public string Gender { get; set; }
@@ -41,9 +41,8 @@ namespace ProjectSem03.Models
         [Required(ErrorMessage = "Email is required.")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
+        [DataType(DataType.Date), DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Required(ErrorMessage = "JoinDate is required.")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime JoinDate { get; set; }
         [Required(ErrorMessage = "Address is required.")]
         [StringLength(255, MinimumLength = 5, ErrorMessage = "Address must be from 5 to 255 characters")]

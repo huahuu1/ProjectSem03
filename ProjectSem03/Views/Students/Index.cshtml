@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjectSem03.Models.StudentCompetition>
+﻿@model IEnumerable<ProjectSem03.Models.Student>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,41 +13,41 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Student.StudentId)
+                @Html.DisplayNameFor(model => model.StudentId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.Password)
+                @Html.DisplayNameFor(model => model.Password)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.FirstName)
+                @Html.DisplayNameFor(model => model.FirstName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.LastName)
+                @Html.DisplayNameFor(model => model.LastName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.DateOfBirth)
+                @Html.DisplayNameFor(model => model.DateOfBirth)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.Gender)
+                @Html.DisplayNameFor(model => model.Gender)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.Phone)
+                @Html.DisplayNameFor(model => model.Phone)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.Email)
+                @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.JoinDate)
+                @Html.DisplayNameFor(model => model.JoinDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.Address)
+                @Html.DisplayNameFor(model => model.Address)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Student.ProfileImage)
+                @Html.DisplayNameFor(model => model.ProfileImage)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Competition.CompetitionName)
-            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.CompetitionName)
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -55,45 +55,45 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.StudentId)
+                @Html.DisplayFor(modelItem => item.StudentId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.Password)
+                @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.FirstName)
+                @Html.DisplayFor(modelItem => item.FirstName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.LastName)
+                @Html.DisplayFor(modelItem => item.LastName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.DateOfBirth)
+                @Html.DisplayFor(modelItem => item.DateOfBirth)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.Gender)
+                @Html.DisplayFor(modelItem => item.Gender)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.Phone)
+                @Html.DisplayFor(modelItem => item.Phone)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.Email)
+                @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.JoinDate)
+                @Html.DisplayFor(modelItem => item.JoinDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Student.Address)
+                @Html.DisplayFor(modelItem => item.Address)
             </td>
             <td>
-                <img src="@item.Student.ProfileImage" width="50" height="50" />
+                <img src="@item.ProfileImage" width="50" height="50" />
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.Competition.CompetitionName)
             </td>
             <td>
-                @Html.ActionLink("Update", "Edit", new { id = item.Student.StudentId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Student.StudentId }, new { onClick = "return confirm('Are you sure?')" }) |
-            </td>
+                @Html.ActionLink("Update", "Edit", new { id = item.StudentID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = StudentId }, new { onClick = "return confirm('Are you sure?')" }) |
+            </td>*@
         </tr>
 }
     </tbody>
