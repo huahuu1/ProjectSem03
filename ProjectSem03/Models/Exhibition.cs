@@ -29,7 +29,5 @@ namespace ProjectSem03.Models
         public DateTime EndDate { get; set; }
         [Required]
         public string StaffId { get; set; }
-
-        public ICollection<Display> Displays { get; set; }
     }
 }

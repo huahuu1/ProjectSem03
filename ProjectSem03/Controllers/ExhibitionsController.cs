@@ -41,36 +41,7 @@ namespace ProjectSem03.Controllers
                 return View(list);
             }
         }
-
-        public IActionResult ExhibitionPage(string ename)
-        {
-            var exh = db.Exhibition.ToList();
-            ViewBag.data = new SelectList(exh, "ExhibitionId", "ExhibitionName");
-
-            var list = from d in db.Design
-                       join ds in db.Display on d.DesignId equals ds.DesignID
-                       join e in db.Exhibition on ds.ExhibitionID equals e.ExhibitionId
-                       join stu in db.Student on d.StudentId equals stu.StudentId
-                       orderby ds.ExhibitionID
-                       select new CombineModels
-                       {
-                           Displays = ds,
-                           Exhibitions = e,
-                           Designs = d,
-                           Students = stu
-                       };
-            if (string.IsNullOrEmpty(ename))
-            {
-                return View(list);
-            }
-            else
-            {
-                int eId = int.Parse(ename);
-                var filter = list.Where(d => d.Displays.ExhibitionID.Equals(eId));
-                return View(filter);
-            }
-        }
-
+        
         public IActionResult UpcomingIndex()
         {
             DateTime today = Convert.ToDateTime(DateTime.Today);

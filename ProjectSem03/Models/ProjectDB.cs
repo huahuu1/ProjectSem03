@@ -17,12 +17,5 @@ namespace ProjectSem03.Models
         public DbSet<Student> Student { get; set; }
         public DbSet<Award> Award { get; set; }
         public DbSet<Exhibition> Exhibition { get; set; }
-        public DbSet<Display> Display { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Display>()
-                .HasKey(d => new { d.DesignID, d.ExhibitionID });
-        }
     }
 }
