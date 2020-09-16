@@ -20,94 +20,68 @@ namespace ProjectSem03.Controllers
         {
             this.db = db;
         }
-        //INDEX STAFF Foward best design to Exhibition
-        public IActionResult Index(string searchName, string dropdownlistname)
+        
+        public IActionResult Index()
         {
-            //if (HttpContext.Session.GetString("staffname") == null) //check session
-            //{
-            //    return RedirectToAction("Login");
-            //}
-            //else
-            //{
-                var list = from d in db.Design
-                           join s in db.Student on d.StudentId equals s.StudentId into table1
-                           from s in table1.DefaultIfEmpty()
-                           join p in db.Posting on d.DesignId equals p.DesignID into table2
-                           from p in table2.DefaultIfEmpty()
-                           select new DesignStudentPosting
-                           {
-                               Design = d,
-                               Student = s,
-                               Posting = p
-                           };
-                List<string> mark = new List<string>();
-                mark.Add("best");
-                mark.Add("better");
-                mark.Add("good");
-                mark.Add("moderate");
-                mark.Add("normal");
-                mark.Add("disqualified");
-                mark.Add(null);
-                // Tạo SelectList
-                SelectList markList = new SelectList(mark);
-
-                // Set vào ViewBag
-                ViewBag.MarkList = markList;
-                if (String.IsNullOrEmpty(searchName) && String.IsNullOrEmpty(dropdownlistname))
-                {
-
-                    return View(list);
-                }
-                else if (!String.IsNullOrEmpty(dropdownlistname) && !String.IsNullOrEmpty(searchName))
-                {
-                    var res = list.Where(d => d.Posting.Mark.Equals(dropdownlistname) && d.Design.DesignName.Contains(searchName));
-                    return View(res);
-                }
-                else if (!String.IsNullOrEmpty(dropdownlistname))
-                {
-                    var res = list.Where(d => d.Posting.Mark.Equals(dropdownlistname));
-                    return View(res);
-                }
-                else
-                {
-                    var res = list.Where(d => d.Design.DesignName.Contains(searchName));
-                    return View(res);
-                }
-            //}//END check session
+            var list = db.Design.ToList();
+            return View(list);
         }
 
-        //UPDATE
-        public IActionResult Forward(int id)
+
+        public IActionResult Edit(int id)
         {
-            HttpContext.Session.SetInt32("designId", id);
-            return View();
+            var exhibition = db.Exhibition.ToList();
+            ViewBag.exhibitionName = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
+
+            var design = db.Design.Find(id);
+            if (design != null)
+            {
+                return View(design);
+            }
+            else
+            {
+                return View();
+            }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Forward(Display display)
+        public IActionResult Edit(Design design)
         {
+            var exhibition = db.Exhibition.ToList();
+            ViewBag.data = new SelectList(exhibition, "ExhibitionID", "ExhibitionName");
+
             try
             {
-                if (ModelState.IsValid)
+                var editDesign = db.Design.SingleOrDefault(d=>d.DesignId.Equals(design.DesignId));
+                if(ModelState.IsValid)
                 {
-                    display.Price = 0;
-                    display.SoldStatus = false;
-                    display.PaidStatus = false;
-                    display.DesignID = (int)HttpContext.Session.GetInt32("designId");
-                    db.Display.Add(display);
-                    db.SaveChanges();                    
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    ViewBag.Msg = "Fail";
+                    if(editDesign != null)
+                    {
+                        editDesign.ExhibitionID = design.ExhibitionID;
+                        editDesign.Price = editDesign.Price;
+                        editDesign.SoldStatus = design.SoldStatus;
+                        editDesign.PaidStatus = design.PaidStatus;
+
+                        if(editDesign.Price > 0)
+                        {
+                            db.SaveChanges();
+                            return RedirectToAction("Index", "Designs");
+                        }
+                        else
+                        {
+                            ViewBag.Msg = "Price must be larger than zero";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Msg = "Failed .......";
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                ViewBag.Msg = ex.Message;
+                ViewBag.Msg = e.Message;
             }
             return View();
-        }//End Forward
+        }
     }
 }

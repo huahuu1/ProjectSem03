@@ -14,6 +14,5 @@ namespace ProjectSem03.Models
         public Student Students { get; set; }
         public Award Awards { get; set; }
         public Exhibition Exhibitions { get; set; }
-        public Display Displays { get; set; }
     }
 }
