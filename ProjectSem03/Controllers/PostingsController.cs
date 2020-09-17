@@ -64,8 +64,9 @@ namespace ProjectSem03.Controllers
                         editPosting.PostDescription = posting.PostDescription;
                         editPosting.Mark = posting.Mark;
                         editPosting.Remark = posting.Remark;
+                        editPosting.SoldStatus = posting.SoldStatus;
+                        editPosting.PaidStatus = posting.PaidStatus;
                         editPosting.StaffId = posting.StaffId;
-
                         db.SaveChanges();
                         return RedirectToAction("Index", "Postings");
                     }

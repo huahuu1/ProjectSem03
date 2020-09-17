@@ -32,8 +32,6 @@ namespace ProjectSem03.Models
         [ForeignKey("ExhibitionID")]
         public int ExhibitionID { get; set; }
         public double Price { get; set; }
-        public bool SoldStatus { get; set; }
-        public bool PaidStatus { get; set; }
 
         public ICollection<Posting> Posting { get; set; }
     }

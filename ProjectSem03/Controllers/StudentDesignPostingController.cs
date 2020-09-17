@@ -209,7 +209,7 @@ namespace ProjectSem03.Controllers
                 {
                     var student = db.Student.SingleOrDefault(s => s.StudentId.Equals(HttpContext.Session.GetString("studentid")));
                     int competitionId = (int)HttpContext.Session.GetInt32("registerCompetitionId");
-                    var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals((int)HttpContext.Session.GetInt32("registerCompetitionId")));
+                    var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(competitionId));
                 
                     DateTime today = DateTime.Now;
                     if (file == null || file.Length < 0)

@@ -18,8 +18,8 @@ namespace ProjectSem03.Models
         public string AwardName { get; set; }
         [Required]
         public int CompetitionID { get; set; }
-        [Required]
-        public int PostingID { get; set; }
+
+        public int? PostingID { get; set; } // no need required
         [Required]
         public string StaffId { get; set; }
     }

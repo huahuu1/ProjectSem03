@@ -90,10 +90,11 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(int id)
         {
-            var list = db.Staff.Where(s => s.Role.Equals(1) || s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
-
             var exh = db.Exhibition.Find(id);
+
+            var list = db.Staff.Where(s => s.Role.Equals(1) || s.Role.Equals(2));
+            ViewBag.data = new SelectList(list, "StaffId", "StaffName", exh.StaffId);
+
             if (exh != null)
             {
                 return View(exh);

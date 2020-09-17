@@ -1,8 +1,9 @@
-﻿@model ProjectSem03.Models.Competition
-
-@{
-    ViewData["Title"] = "Create";
+﻿@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
+
+@model ProjectSem03.Models.Competition
 
 <h2>Create new Competition</h2>
 @using (Html.BeginForm("Create", "Competitions", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -15,12 +16,12 @@
         </div>
         <div>
             @Html.LabelFor(model => model.StartDate)
-            @Html.EditorFor(model => model.StartDate)
+            @Html.TextBoxFor(model => model.StartDate, "{0:dd/MM/yyyy hh:mm tt}", new { @class = "form-control datetimepicker" })
             @Html.ValidationMessageFor(model => model.StartDate)
         </div>
         <div>
             @Html.LabelFor(model => model.EndDate)
-            @Html.EditorFor(model => model.EndDate)
+            @Html.TextBoxFor(model => model.EndDate, "{0:dd/MM/yyyy hh:mm tt}", new { @class = "form-control datetimepicker" })
             @Html.ValidationMessageFor(model => model.EndDate)
         </div>
         <div>
