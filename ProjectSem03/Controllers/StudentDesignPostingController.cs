@@ -212,7 +212,7 @@ namespace ProjectSem03.Controllers
                     var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals((int)HttpContext.Session.GetInt32("registerCompetitionId")));
                 
                     DateTime today = DateTime.Now;
-                    if (file == null || file.Length <= 0)
+                    if (file == null)
                     {
                         ViewBag.Msg = "Painting is required";
                     }
@@ -241,7 +241,7 @@ namespace ProjectSem03.Controllers
                     {
                         ViewBag.Msg = "Painting must be .jpg or .png";
                     }
-                } //check if no registerd to competition
+                }
                 else
                 {
                     ViewBag.Msg = "Model is invalid.";

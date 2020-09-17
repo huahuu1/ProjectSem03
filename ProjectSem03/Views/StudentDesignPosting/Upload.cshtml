@@ -17,7 +17,7 @@
             <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
             <div class="image-upload-wrap">
                 <input class="file-upload-input" type="file" name="file" onchange="readURL(this);" accept="image/*" />
-                @Html.ValidationMessageFor(d => d.Painting)
+                @*@Html.ValidationMessageFor(d => d.Painting)*@
                 <div class="drag-text">
                     <h3>Drag and drop a file or select add Image</h3>
                 </div>
@@ -38,7 +38,7 @@
                 @Html.TextAreaFor(d => d.Description, new { @class = "img-description form-control form-control-lg", cols = "30", rows = "11" })
                 @Html.ValidationMessageFor(d => d.Description)
                 <div class="des-title"><span>Price:</span></div>
-                @Html.EditorFor(d => d.Price, new { htmlAttributes = new { @class = "form-control form-control-lg" } })
+                @Html.EditorFor(d => d.Price, new { htmlAttributes = new { @type = "number", @min = "0", @value = "0", @step = "0.01", @class = "form-control form-control-lg" } })
                 @Html.ValidationMessageFor(d => d.Price)
                 @*<textarea class="form-control form-control-lg" id="img-description" name="short_description" cols="30" rows="11"></textarea>*@
                 <div class="des-title">

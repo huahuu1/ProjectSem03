@@ -14,7 +14,7 @@
                 <div class="img-wrapper row">
                     <div class="img-content col-lg-6"><img src="~/@item.Designs.Painting" alt="" /></div>
                     <div class="img-text col-lg-6">
-                        <div class="img-des"><span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.Description</span>@*<a class="button-hover" href="#"><span>Update</span></a>*@</div>
+                        <div class="img-des"><span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.Description</span><a class="button-hover" asp-action="Edit" asp-controller="StudentDesignPosting" asp-route-id="@item.Designs.DesignId"><span>Update</span></a></div>
                     </div>
                 </div>
             </div>
