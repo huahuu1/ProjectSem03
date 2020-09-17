@@ -29,8 +29,10 @@ namespace ProjectSem03.Models
         //[Required]
         [ForeignKey("StudentId")]
         public string StudentId { get; set; }
+        [ForeignKey("ExhibitionID")]
+        public int ExhibitionID { get; set; }
+        public double Price { get; set; }
 
         public ICollection<Posting> Posting { get; set; }
-        public ICollection<Display> Displays { get; set; }
     }
 }

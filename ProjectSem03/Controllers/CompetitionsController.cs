@@ -52,7 +52,7 @@ namespace ProjectSem03.Controllers
                         string path = Path.Combine("wwwroot/images", file.FileName);
                         var stream = new FileStream(path, FileMode.Create);
                         file.CopyToAsync(stream);
-                        competition.CompetitionImages = "../images/" + file.FileName;
+                        competition.CompetitionImages = "/images/" + file.FileName;
 
                         db.Competition.Add(competition);
                         db.SaveChanges();
@@ -83,6 +83,8 @@ namespace ProjectSem03.Controllers
                 return View();
             }
         }
+
+        [HttpPost]
         public IActionResult Edit(Competition competition, IFormFile file)
         {
             try
@@ -92,19 +94,28 @@ namespace ProjectSem03.Controllers
                 {
                     if (editCompetition != null)
                     {
-                        editCompetition.CompetitionImages = competition.CompetitionImages;
-
-                        if (file.Length > 0)
+                        if (file == null)
+                        {
+                            editCompetition.CompetitionName = competition.CompetitionName;
+                            editCompetition.StartDate = competition.StartDate;
+                            editCompetition.EndDate = competition.EndDate;
+                            editCompetition.Description = competition.Description;
+                            editCompetition.StaffId = competition.StaffId;
+                            db.SaveChanges();
+                            return RedirectToAction("Index", "Competitions");
+                        }
+                        else if (file != null && file.Length > 0)
                         {
                             string path = Path.Combine("wwwroot/images", file.FileName);
                             var stream = new FileStream(path, FileMode.Create);
                             file.CopyToAsync(stream);
-                            competition.CompetitionImages = "../images/" + file.FileName;
-
+                            competition.CompetitionImages = "/images/" + file.FileName;
+                            editCompetition.CompetitionName = competition.CompetitionName;
                             editCompetition.StartDate = competition.StartDate;
                             editCompetition.EndDate = competition.EndDate;
                             editCompetition.Description = competition.Description;
-
+                            editCompetition.CompetitionImages = competition.CompetitionImages;
+                            editCompetition.StaffId = competition.StaffId;
                             db.SaveChanges();
                             return RedirectToAction("Index", "Competitions");
                         }

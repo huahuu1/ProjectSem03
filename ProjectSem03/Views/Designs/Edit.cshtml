@@ -1,0 +1,52 @@
+﻿@model ProjectSem03.Models.Design
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit Design</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="DesignId" />
+            <input type="hidden" asp-for="DesignName" />
+            <input type="hidden" asp-for="Painting" />
+            <input type="hidden" asp-for="Description" />
+            <input type="hidden" asp-for="SubmitDate" />
+            <input type="hidden" asp-for="StudentId" />
+            <div class="form-group">
+                <label>Exhibition Name: </label>
+                @Html.DropDownList("ExhibitionId", (IEnumerable<SelectListItem>)ViewBag.exhibitionName, "--Choose--")
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            @*<div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="SoldStatus" /> @Html.DisplayNameFor(model => model.SoldStatus)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="PaidStatus" /> @Html.DisplayNameFor(model => model.PaidStatus)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you sure?')" />
+            </div>*@
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

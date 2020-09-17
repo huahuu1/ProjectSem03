@@ -169,7 +169,7 @@ namespace ProjectSem03.Controllers
             if (stuId == null) //check login
             {
                 return RedirectToAction("Login");
-            }
+            }            
             else
             {
                 //Viewbag list of student designs
@@ -208,46 +208,44 @@ namespace ProjectSem03.Controllers
                 if (ModelState.IsValid)
                 {
                     var student = db.Student.SingleOrDefault(s => s.StudentId.Equals(HttpContext.Session.GetString("studentid")));
-
                     int competitionId = (int)HttpContext.Session.GetInt32("registerCompetitionId");
-                    var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals((int)HttpContext.Session.GetInt32("registerCompetitionId")));
-
-
+                    var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(competitionId));
+                
                     DateTime today = DateTime.Now;
                     if (file == null || file.Length < 0)
                     {
                         ViewBag.Msg = "Painting is required";
                     }
-                    else if (file != null && file.Length > 0 && Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png")) //profile images must be .jpg or .png
-                        {
-                            string path = Path.Combine("wwwroot/images", file.FileName);
-                            var stream = new FileStream(path, FileMode.Create);
-                            file.CopyToAsync(stream);
-                            design.Painting = "../images/" + file.FileName;
-                            design.StudentId = HttpContext.Session.GetString("studentid"); //login session
-                            db.Design.Add(design);
-                            db.SaveChanges();
-                            stream.Close();
+                    else if (file != null && file.Length > 0 && (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))) //profile images must be .jpg or .png
+                    {
+                        string path = Path.Combine("wwwroot/images", file.FileName);
+                        var stream = new FileStream(path, FileMode.Create);
+                        file.CopyToAsync(stream);
+                        design.Painting = "../images/" + file.FileName;
+                        design.StudentId = HttpContext.Session.GetString("studentid"); //login session
+                        db.Design.Add(design);
+                        db.SaveChanges();
+                        stream.Close();
                         //add posting
-                            var modelPosting = new Posting();
+                        var modelPosting = new Posting();
                         modelPosting.PostDate = today;
                         modelPosting.DesignID = design.DesignId;
                         modelPosting.CompetitionId = competitionId; //session registerCompetitionId
-                        modelPosting.PostDescription = student.FirstName + " " + student.LastName + " joined the contest " + "\"" + comp.CompetitionName + "\"";
+                        modelPosting.PostDescription = student.FirstName + " " + student.LastName + " joined the contest " + "\"" + comp.CompetitionName + "\""; //COMP NULL HERE IF MISSING COMPETTITION
                         modelPosting.StaffId = comp.StaffId;
                         db.Posting.Add(modelPosting);
                         db.SaveChanges();
                         return RedirectToAction("Upload");
-                        }
-                        else
-                        {
-                            ViewBag.Msg = "Painting must be .jpg";
-                        }
-            }
+                    }
+                    else
+                    {
+                        ViewBag.Msg = "Painting must be .jpg or .png";
+                    }
+                } //check if no registerd to competition
                 else
-            {
-                ViewBag.Msg = "Model is invalid.";
-            }
+                {
+                    ViewBag.Msg = "Model is invalid.";
+                }
         }
             catch (Exception e)
             {

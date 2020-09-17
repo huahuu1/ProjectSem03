@@ -47,14 +47,12 @@ namespace ProjectSem03.Controllers
             var exh = db.Exhibition.ToList();
             ViewBag.Exhibition = new SelectList(exh, "ExhibitionId", "ExhibitionName");
 
-            var list = from d in db.Design
-                       join ds in db.Display on d.DesignId equals ds.DesignID
-                       join e in db.Exhibition on ds.ExhibitionID equals e.ExhibitionId
+            var list = from e in db.Exhibition
+                       join d in db.Design on e.ExhibitionId equals d.ExhibitionID
                        join stu in db.Student on d.StudentId equals stu.StudentId
-                       orderby ds.ExhibitionID
+                       orderby e.ExhibitionId
                        select new CombineModels
                        {
-                           Displays = ds,
                            Exhibitions = e,
                            Designs = d,
                            Students = stu
@@ -66,7 +64,7 @@ namespace ProjectSem03.Controllers
             else
             {
                 int eId = int.Parse(ename);
-                var filter = list.Where(d => d.Displays.ExhibitionID.Equals(eId));
+                var filter = list.Where(d => d.Exhibitions.ExhibitionId.Equals(eId));
                 return View(filter);
             }
         }

@@ -1,25 +1,24 @@
-﻿@model IEnumerable<ProjectSem03.Models.CombineModels>
-
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
+@model IEnumerable<ProjectSem03.Models.CombineModels>
+
 <h2>List of Competitions</h2>
-<p>
-    <a asp-action="Create">Create New Competition</a>
-</p>
-<br />
+
 @foreach (var item in Model)
 {
     <div style="font-size:medium" class="font-weight-bold border-dark">
         <div class="border"><img src="@item.Competitions.CompetitionImages" width="100" height="100" /></div>
         <div class="border">@item.Competitions.CompetitionName</div>
-        <div class="border">@item.Competitions.StartDate&nbsp;|&nbsp;@item.Competitions.EndDate</div>
+        <div class="border">@item.Competitions.StartDate.ToString("dd/MM/yyyy hh:mm tt")&nbsp;|&nbsp;@item.Competitions.EndDate.ToString("dd/MM/yyyy hh:mm tt")</div>
         <div class="border">Organizer: @item.Staffs.StaffName</div>
         <div class="border">
             @Html.ActionLink("Update", "Edit", new { id = item.Competitions.CompetitionId })&nbsp;|&nbsp;
             @Html.ActionLink("Delete", "Delete", new { id = item.Competitions.CompetitionId }, new { onClick = "return confirm('Are you sure?')" })
         </div>
     </div>
-    <br /><br />
+    <br />
+    <br />
 }

@@ -63,6 +63,16 @@
                 @Html.EditorFor(model => model.Remark)
                 @Html.ValidationMessageFor(model => model.Remark)
             </div>
+            <div class="form-group">
+                <label>Sold Status: </label>
+                @Html.EditorFor(model => model.SoldStatus)
+                @Html.ValidationMessageFor(model => model.SoldStatus)
+            </div>
+            <div class="form-group">
+                <label>Paid Status: </label>
+                @Html.EditorFor(model => model.PaidStatus)
+                @Html.ValidationMessageFor(model => model.PaidStatus)
+            </div>
             <input type="hidden" asp-for="DesignID" />
             <input type="hidden" asp-for="CompetitionId" />
             <div class="form-group">

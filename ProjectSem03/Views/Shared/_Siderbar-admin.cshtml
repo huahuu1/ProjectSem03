@@ -71,9 +71,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a asp-controller="Competitions" asp-action="Index" class="nav-link">
                                 <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Category List</p>
+                                <p style="padding-left: 0.5rem">Competition List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Competitions" asp-action="Create" class="nav-link">
+                                <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
+                                <p style="padding-left: 0.5rem">Add New Competition</p>
                             </a>
                         </li>
                     </ul>
@@ -88,9 +94,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a asp-controller="Exhibitions" asp-action="Index" class="nav-link">
                                 <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Supplier List</p>
+                                <p style="padding-left: 0.5rem">Exhibition List</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Exhibitions" asp-action="Create" class="nav-link">
+                                <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
+                                <p style="padding-left: 0.5rem">Add New Exhibition</p>
                             </a>
                         </li>
                     </ul>
@@ -105,15 +117,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-list nav-icon"></i>
-                                <p style="padding-left: 0.5rem">List Orders</p>
+                            <a asp-controller="Awards" asp-action="Index" class="nav-link">
+                                <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                <p style="padding-left: 0.5rem">Award List</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a asp-controller="Awards" asp-action="Create" class="nav-link">
                                 <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
-                                <p style="padding-left: 0.5rem">Add New Order</p>
+                                <p style="padding-left: 0.5rem">Add New Award</p>
                             </a>
                         </li>
                     </ul>
