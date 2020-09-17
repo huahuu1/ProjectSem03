@@ -36,10 +36,10 @@ namespace ProjectSem03.Controllers
                 var list = from d in db.Design
                            join s in db.Student on d.StudentId equals s.StudentId
                            where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
-                           select new DesignStudent
+                           select new CombineModels
                            {
-                               Design = d,
-                               Student = s
+                               Designs = d,
+                               Students = s
                            };
                return View(list);
             }
@@ -85,7 +85,7 @@ namespace ProjectSem03.Controllers
                         ////check today SubmitDate                     
                         if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
                         {
-                            if (file != null && file.Length > 0 && Path.GetExtension(file.FileName).ToLower().Equals(".jpg")) //profile images must be .jpg
+                            if (file != null && file.Length > 0 && (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))) //profile images must be .jpg
                             {
                                 string path = Path.Combine("wwwroot/images", file.FileName);
                                 var stream = new FileStream(path, FileMode.Create);
@@ -113,7 +113,7 @@ namespace ProjectSem03.Controllers
                             }
                             else
                             {
-                                ViewBag.Msg = "Painting must be .jpg";
+                                ViewBag.Msg = "Painting must be .jpg or .png";
                             }
                         }
                         else
@@ -150,15 +150,15 @@ namespace ProjectSem03.Controllers
         }
 
         //2. UPDATE to join
-        private List<DesignStudent> designStudentList()
+        private List<CombineModels> designStudentList()
         {
             var list = (from d in db.Design
                         join s in db.Student on d.StudentId equals s.StudentId
                         where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
-                        select new DesignStudent
+                        select new CombineModels
                         {
-                            Design = d,
-                            Student = s
+                            Designs = d,
+                            Students = s
                         }).ToList();
             return list;
         }
@@ -179,10 +179,10 @@ namespace ProjectSem03.Controllers
                 var postList = (from p in db.Posting
                            join d in db.Design on p.DesignID equals d.DesignId
                            where p.CompetitionId == id && d.StudentId.Equals(stuId) && p.DesignID.Equals(d.DesignId)
-                           select new DesignPosting
+                           select new CombineModels
                            {
-                               Design = d,
-                               Posting = p
+                               Designs = d,
+                               Postings = p
                            }).ToList();
                 if (postList.Count>0) //check row
                 {
@@ -212,7 +212,7 @@ namespace ProjectSem03.Controllers
                     var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals((int)HttpContext.Session.GetInt32("registerCompetitionId")));
                 
                     DateTime today = DateTime.Now;
-                    if (file == null || file.Length < 0)
+                    if (file == null || file.Length <= 0)
                     {
                         ViewBag.Msg = "Painting is required";
                     }
@@ -246,7 +246,7 @@ namespace ProjectSem03.Controllers
                 {
                     ViewBag.Msg = "Model is invalid.";
                 }
-        }
+            }
             catch (Exception e)
             {
                 ViewBag.Msg = e.Message;

@@ -72,7 +72,7 @@ namespace ProjectSem03.Controllers
                     }
                     else
                     {
-                        ViewBag.Msg = "Profile images must be .jpg";
+                        ViewBag.Msg = "Profile images must be .jpg or .png";
                         return View();
                     }
                 }
@@ -156,7 +156,7 @@ namespace ProjectSem03.Controllers
                         }
                         else
                         {
-                            ViewBag.Msg = "Profile images must be .jpg";
+                            ViewBag.Msg = "Profile images must be .jpg or .png";
                             return View();
                         }
                     }

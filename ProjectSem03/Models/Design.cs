@@ -26,14 +26,12 @@ namespace ProjectSem03.Models
         [Required(ErrorMessage = "SubmitDate is required.")]
         [DataType(DataType.Date)]
         public DateTime SubmitDate { get; set; } //date <= competitions end date
+        public double Price { get; set; }
         //[Required]
         [ForeignKey("StudentId")]
         public string StudentId { get; set; }
         [ForeignKey("ExhibitionID")]
-        public int ExhibitionID { get; set; }
-        public double Price { get; set; }
-        public bool SoldStatus { get; set; }
-        public bool PaidStatus { get; set; }
+        public int? ExhibitionID { get; set; }
 
         public ICollection<Posting> Posting { get; set; }
     }

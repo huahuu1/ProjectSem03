@@ -21,7 +21,7 @@
                             <li class="nav-item">
                                 <a class="circle student-nav" asp-action="Upload" asp-controller="Home"><img src="@Context.Session.GetString("studentImage")" alt="" /><span>@Context.Session.GetString("ename")</span></a>
                                 <ul class="sub-nav student-sub-nav">
-                                    <li><a asp-action="Upload" asp-controller="StudentDesignPosting"><span>Upload History</span></a></li>
+                                    <li><a asp-action="Upload" asp-controller="Home"><span>Upload History</span></a></li>
                                     <li><a asp-action="Logout" asp-controller="Home"><span>Logout</span></a></li>
                                 </ul>
                             </li>
