@@ -53,8 +53,8 @@ namespace ProjectSem03.Controllers
             var list2 = db.Competition.ToList();
             ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
 
-            //var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
-            //ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
+            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
 
             return View();
         }

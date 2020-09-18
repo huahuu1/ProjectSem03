@@ -31,6 +31,7 @@ namespace ProjectSem03.Models
         public string StudentId { get; set; }
         [ForeignKey("ExhibitionID")]
         public int ExhibitionID { get; set; }
+        [Range(1,10000,ErrorMessage = "Price must be between 1 to 10000$")]
         public double Price { get; set; }
 
         public ICollection<Posting> Posting { get; set; }

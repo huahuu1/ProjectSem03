@@ -42,7 +42,7 @@ namespace ProjectSem03.Controllers
             return View(list);
         }
 
-        public IActionResult Exhibition(string ename)
+        public IActionResult Exhibition(string ename, int id)
         {
             var exh = db.Exhibition.ToList();
             ViewBag.Exhibition = new SelectList(exh, "ExhibitionId", "ExhibitionName");
@@ -58,6 +58,7 @@ namespace ProjectSem03.Controllers
                            Designs = d,
                            Students = stu
                        };
+
             if (string.IsNullOrEmpty(ename))
             {
                 return View(list);

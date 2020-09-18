@@ -27,12 +27,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.SoldStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaidStatus)
-            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -55,14 +49,8 @@
                 @Html.DisplayFor(modelItem => item.ExhibitionID)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.Price) $
             </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.SoldStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaidStatus)
-            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.DesignId">Edit</a>
             </td>
