@@ -31,15 +31,53 @@ namespace ProjectSem03.Controllers
             }
         }
 
+        //Method
+        private string GenId()
+        {
+            var model = db.Student.Last();
+            string FirstId = model.StudentId.Substring(0, 3);
+            string AffterID = model.StudentId.Substring(3, 7);
+
+            string LastNummberId = "";
+            for (int i = 0; i <= AffterID.Length - 1; i++)
+            {
+                if (int.Parse(AffterID[i].ToString()) != 0)
+                {
+                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);
+                    break;
+                }
+            }
+
+            LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
+
+            int CountId = LastNummberId.Length; //full lenghtid           
+            Console.WriteLine(CountId);
+            string FullId = FirstId;
+            for (int i = 0; i < 7; i++)
+            {
+                if (i == 7 - CountId)
+                {
+                    FullId += LastNummberId;
+                    break;
+                }
+                else
+                {
+                    FullId += "0";
+                }
+            }
+
+            return FullId;
+        }
+
         //CREATE
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetString("staffId") == null) //check login
+            if (HttpContext.Session.GetString("staffId") == null) //check login ROLE MANAGER
             {
                 return RedirectToAction("Login");
             }
             else
-            {
+            {                
                 return View();
             }
         }
@@ -64,6 +102,7 @@ namespace ProjectSem03.Controllers
                             //key
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             student.Password = AesEncDesc.EncryptString(key, student.Password);
+                            student.StudentId = GenId();
                             db.Student.Add(student);
                             db.SaveChanges();
                             stream.Close();

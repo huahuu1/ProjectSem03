@@ -107,6 +107,7 @@ namespace ProjectSem03.Controllers
                             {
                                 model.DesignName = design.DesignName;
                                 model.Description = design.Description;
+                                model.Price = design.Price;
                                 //add posting
                                 modelPosting.PostDate = today;
                                 db.SaveChanges();
@@ -223,7 +224,7 @@ namespace ProjectSem03.Controllers
                     
                     DateTime today = Convert.ToDateTime(DateTime.Today);
                     ////check today SubmitDate                     
-                    if (today >= comp.StartDate.Date && today <= comp.EndDate.Date)
+                    if (today >= comp.StartDate.Date && today <= comp.EndDate.Date) //null exception
                     {
 
                         if (file == null)
@@ -268,7 +269,7 @@ namespace ProjectSem03.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.Msg = e.Message;
+                ViewBag.Msg = e.Message;                
             }
             return View();
         }
