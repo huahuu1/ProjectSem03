@@ -20,7 +20,7 @@ namespace ProjectSem03.Controllers
         {
             this.db = db;
         }
-        
+
         public IActionResult Index()
         {
             var list = db.Design.ToList();
@@ -57,7 +57,9 @@ namespace ProjectSem03.Controllers
                     if (editDesign != null)
                     {
                         editDesign.ExhibitionID = design.ExhibitionID;
-                        editDesign.Price = design.Price;
+                        editDesign.Price = editDesign.Price;
+                        //editDesign.SoldStatus = design.SoldStatus;
+                        //editDesign.PaidStatus = design.PaidStatus;
 
                         db.SaveChanges();
                         return RedirectToAction("Index", "Designs");

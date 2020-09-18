@@ -70,15 +70,15 @@ namespace ProjectSem03.Controllers
             }
         }
 
-        private List<DesignStudent> designStudentList()
+        private List<CombineModels> designStudentList()
         {
             var list = (from d in db.Design
                         join s in db.Student on d.StudentId equals s.StudentId
                         where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
-                        select new DesignStudent
+                        select new CombineModels
                         {
-                            Design = d,
-                            Student = s
+                            Designs = d,
+                            Students = s
                         }).ToList();
             return list;
         }
@@ -99,10 +99,10 @@ namespace ProjectSem03.Controllers
                 var postList = (from p in db.Posting
                                 join d in db.Design on p.DesignID equals d.DesignId
                                 where p.CompetitionId == id && d.StudentId.Equals(stuId) && p.DesignID.Equals(d.DesignId)
-                                select new DesignPosting
+                                select new CombineModels
                                 {
-                                    Design = d,
-                                    Posting = p
+                                    Designs = d,
+                                    Postings = p
                                 }).ToList();
                 if (postList.Count > 0) //check row
                 {

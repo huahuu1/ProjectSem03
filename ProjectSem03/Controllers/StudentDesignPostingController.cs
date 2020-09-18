@@ -29,17 +29,17 @@ namespace ProjectSem03.Controllers
         {
             if (HttpContext.Session.GetString("studentid") == null) //check session
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Index","Home");
             }
             else
             {
                 var list = from d in db.Design
                            join s in db.Student on d.StudentId equals s.StudentId
                            where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
-                           select new DesignStudent
+                           select new CombineModels
                            {
-                               Design = d,
-                               Student = s
+                               Designs = d,
+                               Students = s
                            };
                return View(list);
             }
@@ -50,7 +50,7 @@ namespace ProjectSem03.Controllers
         {
             if (HttpContext.Session.GetString("studentid") == null) //check session
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Index","Home");
             }
             else
             {
@@ -58,11 +58,11 @@ namespace ProjectSem03.Controllers
                 //check model is not null and this DesignStudentId == Session
                 if (model != null && model.StudentId.Equals(HttpContext.Session.GetString("studentid")))
                 {
-                    return View(model); ;
+                    return View(model);
                 }
                 else
                 {
-                    return RedirectToAction("Login");
+                    return NotFound();
                 }
             } //end check session
         }
@@ -82,10 +82,10 @@ namespace ProjectSem03.Controllers
                         var modelCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(modelPosting.CompetitionId));
 
                         DateTime today = Convert.ToDateTime(DateTime.Today);
-                        ////check today SubmitDate                     
+                        ////check today SubmitDate
                         if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
                         {
-                            if (file != null && file.Length > 0 && Path.GetExtension(file.FileName).ToLower().Equals(".jpg")) //profile images must be .jpg
+                            if (file != null && file.Length > 0 && (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))) //profile images must be .jpg
                             {
                                 string path = Path.Combine("wwwroot/images", file.FileName);
                                 var stream = new FileStream(path, FileMode.Create);
@@ -94,13 +94,14 @@ namespace ProjectSem03.Controllers
                                 design.Painting = "../images/" + file.FileName;
                                 model.Painting = design.Painting;
                                 model.Description = design.Description;
-                                //Student cannot change DesignId and StudentId and SubmitDate >= StartDate && <= EndDate of Competition 
+                                model.Price = design.Price;
+                                //Student cannot change DesignId and StudentId and SubmitDate >= StartDate && <= EndDate of Competition
                                 db.SaveChanges();
                                 stream.Close();
                                 //update posting
                                 modelPosting.PostDate = today;
                                 db.SaveChanges();
-                                return RedirectToAction("Index");
+                                return RedirectToAction("Index","Home");
                             }
                             else if (file == null) //if no change painting
                             {
@@ -109,16 +110,16 @@ namespace ProjectSem03.Controllers
                                 //add posting
                                 modelPosting.PostDate = today;
                                 db.SaveChanges();
-                                return RedirectToAction("Index");
+                                return RedirectToAction("Index","Home");
                             }
                             else
                             {
-                                ViewBag.Msg = "Painting must be .jpg";
+                                ViewBag.Msg = "Painting must be .jpg or .png";
                             }
                         }
                         else
                         {
-                            ViewBag.Msg = "Time to submit pictures for competition has expired ( Endate: " + modelCompetition.EndDate.ToString() + " )";                            
+                            ViewBag.Msg = "Time to submit pictures for competition has expired ( Endate: " + modelCompetition.EndDate.ToString() + " )";
                         }// End check Design Submitdate
                     }//END check model
                     else
@@ -128,7 +129,7 @@ namespace ProjectSem03.Controllers
                 }
                 else
                 {
-                    ViewBag.Msg = "Update Failed";
+                    ViewBag.Msg = "Model Failed";
                 }
             }
             catch (Exception e)
@@ -150,45 +151,54 @@ namespace ProjectSem03.Controllers
         }
 
         //2. UPDATE to join
-        private List<DesignStudent> designStudentList()
+        private List<CombineModels> designStudentList()
         {
             var list = (from d in db.Design
                         join s in db.Student on d.StudentId equals s.StudentId
                         where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
-                        select new DesignStudent
+                        select new CombineModels
                         {
-                            Design = d,
-                            Student = s
+                            Designs = d,
+                            Students = s
                         }).ToList();
             return list;
         }
-        //UPLOAD   
+        //UPLOAD
         public IActionResult Upload(int id)
         {
             string stuId = HttpContext.Session.GetString("studentid");
             if (stuId == null) //check login
             {
-                return RedirectToAction("Login");
-            }            
+                return RedirectToAction("Index","Home");
+            }
             else
             {
+                //check root
+                var compList = db.Competition.Where(c=>c.CompetitionId.Equals(id));
+                if (compList == null)
+                {
+                    return RedirectToAction("Upload", "Home");
+                }
+
                 //Viewbag list of student designs
                 ViewBag.designList = designStudentList();
-                
+
                 //check if student is already registered competition
                 var postList = (from p in db.Posting
                            join d in db.Design on p.DesignID equals d.DesignId
                            where p.CompetitionId == id && d.StudentId.Equals(stuId) && p.DesignID.Equals(d.DesignId)
-                           select new DesignPosting
+                           select new CombineModels
                            {
-                               Design = d,
-                               Posting = p
+                               Designs = d,
+                               Postings = p
                            }).ToList();
+
                 if (postList.Count>0) //check row
                 {
-                    //TempData["testmsgs"] = "<script>alert('You have already registered for this competition');</script>";
-                    ViewBag.Msg = "You have already registered for this competition";
-                    return View();
+                    TempData["testmsg"] = "<script>alert('You have already registered for this competition');</script>";
+                    //ViewBag.Msg = "You have already registered for this competition";
+                    //return View();
+                    return RedirectToAction("Index","Home");
                 }
                 else
                 {
@@ -209,44 +219,53 @@ namespace ProjectSem03.Controllers
                 {
                     var student = db.Student.SingleOrDefault(s => s.StudentId.Equals(HttpContext.Session.GetString("studentid")));
                     int competitionId = (int)HttpContext.Session.GetInt32("registerCompetitionId");
-                    var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(competitionId));
-                
-                    DateTime today = DateTime.Now;
-                    if (file == null || file.Length < 0)
+                    var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals((int)HttpContext.Session.GetInt32("registerCompetitionId")));
+
+                    DateTime today = Convert.ToDateTime(DateTime.Today);
+                    ////check today SubmitDate
+                    if (today >= comp.StartDate.Date && today <= comp.EndDate.Date)
                     {
-                        ViewBag.Msg = "Painting is required";
-                    }
-                    else if (file != null && file.Length > 0 && (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))) //profile images must be .jpg or .png
-                    {
-                        string path = Path.Combine("wwwroot/images", file.FileName);
-                        var stream = new FileStream(path, FileMode.Create);
-                        file.CopyToAsync(stream);
-                        design.Painting = "../images/" + file.FileName;
-                        design.StudentId = HttpContext.Session.GetString("studentid"); //login session
-                        db.Design.Add(design);
-                        db.SaveChanges();
-                        stream.Close();
-                        //add posting
-                        var modelPosting = new Posting();
-                        modelPosting.PostDate = today;
-                        modelPosting.DesignID = design.DesignId;
-                        modelPosting.CompetitionId = competitionId; //session registerCompetitionId
-                        modelPosting.PostDescription = student.FirstName + " " + student.LastName + " joined the contest " + "\"" + comp.CompetitionName + "\""; //COMP NULL HERE IF MISSING COMPETTITION
-                        modelPosting.StaffId = comp.StaffId;
-                        db.Posting.Add(modelPosting);
-                        db.SaveChanges();
-                        return RedirectToAction("Upload");
-                    }
+
+                        if (file == null)
+                        {
+                            ViewBag.Msg = "Painting is required";
+                        }
+                        else if (file != null && file.Length > 0 && (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))) //profile images must be .jpg or .png
+                        {
+                            string path = Path.Combine("wwwroot/images", file.FileName);
+                            var stream = new FileStream(path, FileMode.Create);
+                            file.CopyToAsync(stream);
+                            design.Painting = "../images/" + file.FileName;
+                            design.StudentId = HttpContext.Session.GetString("studentid"); //login session
+                            db.Design.Add(design);
+                            db.SaveChanges();
+                            stream.Close();
+                            //add posting
+                            var modelPosting = new Posting();
+                            modelPosting.PostDate = today;
+                            modelPosting.DesignID = design.DesignId;
+                            modelPosting.CompetitionId = competitionId; //session registerCompetitionId
+                            modelPosting.PostDescription = student.FirstName + " " + student.LastName + " joined the contest " + "\"" + comp.CompetitionName + "\""; //COMP NULL HERE IF MISSING COMPETTITION
+                            modelPosting.StaffId = comp.StaffId;
+                            db.Posting.Add(modelPosting);
+                            db.SaveChanges();
+                            return RedirectToAction("Upload");
+                        }
+                        else
+                        {
+                            ViewBag.Msg = "Painting must be .jpg or .png";
+                        }
+                    }//check date
                     else
                     {
-                        ViewBag.Msg = "Painting must be .jpg or .png";
+                        ViewBag.Msg = "Time to submit pictures for competition has expired ( Endate: " + comp.EndDate.ToString() + " )";
                     }
-                } //check if no registerd to competition
+                }
                 else
                 {
                     ViewBag.Msg = "Model is invalid.";
                 }
-        }
+            }
             catch (Exception e)
             {
                 ViewBag.Msg = e.Message;
@@ -254,7 +273,7 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        //LOGIN        
+        //LOGIN
         public IActionResult Login()
         {
             return View();

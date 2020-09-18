@@ -6,6 +6,12 @@
 @using Microsoft.AspNetCore.Http
 
 <section class="competition">
+    <div>
+        @if (TempData["testmsg"] != null)
+        {
+            @Html.Raw(TempData["testmsg"])
+        }
+    </div>
     <div class="container">
         <div class="comp-title">
             <div class="title-text"><span>Upcoming Competitions</span></div>
