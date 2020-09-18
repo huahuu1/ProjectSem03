@@ -62,7 +62,20 @@
             <td>@item.Email</td>
             <td>@item.Phone</td>
             <td>@item.Address</td>
-            <td>@item.Role</td>
+            <td>
+                @if (item.Role == 0)
+                {
+                    @item.Role.ToString("Admin");
+                }
+                else if(item.Role == 1)
+                {
+                    @item.Role.ToString("Manager");
+                }
+                else
+                {
+                    @item.Role.ToString("Staff");
+                }
+            </td>
             <td>
                 @Html.ActionLink("Update", "Edit", new { id = item.StaffId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.StaffId }, new { onClick = "return confirm('Are you sure?')" })

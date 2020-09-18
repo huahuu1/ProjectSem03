@@ -31,7 +31,7 @@ namespace ProjectSem03.Controllers
         public IActionResult Edit(int id)
         {
             var exhibition = db.Exhibition.ToList();
-            ViewBag.exhibitionName = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
+            ViewBag.data = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
 
             var design = db.Design.Find(id);
             if (design != null)
@@ -51,23 +51,16 @@ namespace ProjectSem03.Controllers
 
             try
             {
-                var editDesign = db.Design.SingleOrDefault(d=>d.DesignId.Equals(design.DesignId));
-                if(ModelState.IsValid)
+                var editDesign = db.Design.SingleOrDefault(d => d.DesignId.Equals(design.DesignId));
+                if (ModelState.IsValid)
                 {
-                    if(editDesign != null)
+                    if (editDesign != null)
                     {
                         editDesign.ExhibitionID = design.ExhibitionID;
-                        editDesign.Price = editDesign.Price;
+                        editDesign.Price = design.Price;
 
-                        if(editDesign.Price > 0)
-                        {
-                            db.SaveChanges();
-                            return RedirectToAction("Index", "Designs");
-                        }
-                        else
-                        {
-                            ViewBag.Msg = "Price must be larger than zero";
-                        }
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Designs");
                     }
                     else
                     {

@@ -4,6 +4,25 @@
     Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
+@{
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "Admin",
+        Value = "0"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Manager",
+        Value = "1"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Staff",
+        Value = "2"
+    });
+}
+
 <h2>Create new Staff</h2>
 @using (Html.BeginForm("Create", "Staffs", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -57,7 +76,7 @@
 
         <div>
             @Html.LabelFor(model => model.Role)
-            <input type="number" min="0" max="2" />
+            @Html.DropDownListFor(model => model.Role, listItems, "-- Select Role --")
             @Html.ValidationMessageFor(model => model.Role)
         </div>
         <br />

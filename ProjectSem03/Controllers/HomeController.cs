@@ -50,6 +50,7 @@ namespace ProjectSem03.Controllers
             var list = from e in db.Exhibition
                        join d in db.Design on e.ExhibitionId equals d.ExhibitionID
                        join stu in db.Student on d.StudentId equals stu.StudentId
+                       where e.ExhibitionId.Equals(d.ExhibitionID)
                        orderby e.ExhibitionId
                        select new CombineModels
                        {
