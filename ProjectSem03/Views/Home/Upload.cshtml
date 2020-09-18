@@ -4,7 +4,12 @@
     Layout = "~/Views/Shared/_Layout-noSlider.cshtml";
 }
 @model ProjectSem03.Models.CombineModels
-
+<div>
+    @if (TempData["testmsg"] != null)
+    {
+        @Html.Raw(TempData["testmsg"])
+    }
+</div>
 <div class="files-uploaded">
     <div class="files-uploaded-title"><span>Files Uploaded</span></div>
     <div class="files-uploaded-content row">
@@ -14,7 +19,7 @@
                 <div class="img-wrapper row">
                     <div class="img-content col-lg-6"><img src="~/@item.Designs.Painting" alt="" /></div>
                     <div class="img-text col-lg-6">
-                        <div class="img-des"><span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.Description</span><a class="button-hover" asp-action="Edit" asp-controller="StudentDesignPosting" asp-route-id="@item.Designs.DesignId"><span>Update</span></a></div>
+                        <div class="img-des"><span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.Description</span><span>@item.Designs.Price</span><a class="button-hover" asp-action="Edit" asp-controller="StudentDesignPosting" asp-route-id="@item.Designs.DesignId"><span>Update</span></a></div>
                     </div>
                 </div>
             </div>

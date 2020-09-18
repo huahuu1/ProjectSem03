@@ -34,7 +34,6 @@ namespace ProjectSem03.Models
         [DataType(DataType.Currency)]       
         public double Price { get; set; }
 
-        //[Required]
         [ForeignKey("StudentId")]
         public string StudentId { get; set; }
 

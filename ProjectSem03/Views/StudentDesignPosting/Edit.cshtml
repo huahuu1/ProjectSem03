@@ -1,64 +1,60 @@
-﻿@model ProjectSem03.Models.Design
-
+﻿
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout-noSlider.cshtml";
 }
 
-<h1>Edit</h1>
+@model ProjectSem03.Models.Design
 
-<h4>Design</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="DesignId" />
-            <div class="form-group">
-                <label asp-for="DesignName" class="control-label"></label>
-                <input asp-for="DesignName" class="form-control" />
-                <span asp-validation-for="DesignName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Painting" class="control-label"></label>
-                <input asp-for="Painting" class="form-control" />
-                <span asp-validation-for="Painting" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="SubmitDate" class="control-label"></label>
-                <input asp-for="SubmitDate" class="form-control" />
-                <span asp-validation-for="SubmitDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StudentId" class="control-label"></label>
-                <select asp-for="StudentId" class="form-control" asp-items="ViewBag.StudentId"></select>
-                <span asp-validation-for="StudentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExhibitionID" class="control-label"></label>
-                <input asp-for="ExhibitionID" class="form-control" />
-                <span asp-validation-for="ExhibitionID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+@using Microsoft.AspNetCore.Http
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<section class="up-load">
+    @using (Html.BeginForm("Edit", "StudentDesignPosting", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row", @id = "upload-form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+        @Html.HiddenFor(d => d.DesignId)
+        @Html.HiddenFor(d => d.SubmitDate)
+        @Html.HiddenFor(d => d.StudentId)
+
+        <div class="file-upload col-lg-6">
+            <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
+            <div class="image-upload-wrap">
+                <input class="file-upload-input" type="file" name="file" onchange="readURL(this);" accept="image/*" />
+                @*@Html.ValidationMessageFor(d => d.Painting)*@
+                <div class="drag-text">
+                    <h3>Drag and drop a file or select add Image</h3>
+                </div>
+            </div>
+            <div class="file-upload-content">
+                <img class="file-upload-image" src="#" alt="your image" />
+                <div class="image-title-wrap">
+                    <button class="remove-image" type="button" onclick="removeUpload()">Remove&ensp;<span class="image-title">Uploaded Image</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="file-description col-lg-6">
+            <div class="des-content">
+                <div class="des-title"><span>Design Name:</span></div>
+                @Html.EditorFor(d => d.DesignName, new { htmlAttributes = new { @class = "img-title form-control form-control-lg" } })
+                @Html.ValidationMessageFor(d => d.DesignName)
+                <div class="des-title"><span>Description:</span></div>
+                @Html.TextAreaFor(d => d.Description, new { @class = "img-description form-control form-control-lg", cols = "30", rows = "11" })
+                @Html.ValidationMessageFor(d => d.Description)
+                <div class="des-title"><span>Price:</span></div>
+                @Html.EditorFor(d => d.Price, new { htmlAttributes = new { @type = "number", @min = "0", @value = "0", @step = "0.01", @class = "form-control form-control-lg" } })
+                @Html.ValidationMessageFor(d => d.Price)
+                @*<textarea class="form-control form-control-lg" id="img-description" name="short_description" cols="30" rows="11"></textarea>*@
+            </div>
+            <div class="button-upload"><a class="button-hover" onclick="document.forms['upload-form'].submit()"><span>Save</span></a></div>
+        </div>
+    }
+    <div style="color:red;">@ViewBag.Msg</div>
+</section>
+
+
+
+@*@section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@
