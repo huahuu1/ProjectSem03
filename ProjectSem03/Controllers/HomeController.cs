@@ -87,36 +87,15 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Upload(int id)
         {
-            string stuId = HttpContext.Session.GetString("studentid");
-            if (stuId == null) //check login
+            if (HttpContext.Session.GetString("ename") == null) //check session
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 //Viewbag list of student designs
                 ViewBag.designList = designStudentList();
-
-                //check if student is already registered competition
-                var postList = (from p in db.Posting
-                                join d in db.Design on p.DesignID equals d.DesignId
-                                where p.CompetitionId == id && d.StudentId.Equals(stuId) && p.DesignID.Equals(d.DesignId)
-                                select new CombineModels
-                                {
-                                    Designs = d,
-                                    Postings = p
-                                }).ToList();
-                if (postList.Count > 0) //check row
-                {
-                    //TempData["testmsgs"] = "<script>alert('You have already registered for this competition');</script>";
-                    ViewBag.Msg = "You have already registered for this competition";
-                    return View();
-                }
-                else
-                {
-                    HttpContext.Session.SetInt32("registerCompetitionId", id); // competitionId
-                    return View();
-                }
+                return View();
             }
         }
 
