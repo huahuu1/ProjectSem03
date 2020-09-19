@@ -83,14 +83,18 @@ namespace ProjectSem03.Controllers
                     if (model != null)
                     {
                         //get DesignId for check Competition
-                        var modelPosting = db.Posting.SingleOrDefault(p => p.DesignID.Equals(model.DesignId));
+                        var modelPosting = db.Posting.SingleOrDefault(p => p.DesignID.Equals(model.DesignId));                        
                         var modelCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(modelPosting.CompetitionId));
-
+;
                         var today = DateTime.Now;                        
                         ////check today SubmitDate                     
                         if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
                         {
-                            if (file == null) //if no change painting
+                            if(modelPosting.Mark!=null || modelPosting.Remark != null)
+                            {
+                                ViewBag.Msg = "This painting has been graded";
+                            }
+                            else if (file == null) //if no change painting
                             {
                                 model.DesignName = design.DesignName;
                                 model.Description = design.Description;
@@ -106,9 +110,9 @@ namespace ProjectSem03.Controllers
                                 string ext = Path.GetExtension(file.FileName);
                                 if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
                                 {
-                                    string tempCurFilePath = Path.Combine("wwwroot/images", model.Painting); //old painting
+                                    string tempCurFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //old painting
                                     string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
-                                    string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{renameFile}";
+                                    string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\Medium\\{renameFile}";
 
                                     using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
                                     {
@@ -208,7 +212,7 @@ namespace ProjectSem03.Controllers
                 var compList = db.Competition.Where(c=>c.CompetitionId.Equals(id));
                 if (compList == null)
                 {
-                    return RedirectToAction("Upload", "Home");
+                    return NotFound();
                 }
 
                 //Viewbag list of student designs
@@ -267,7 +271,7 @@ namespace ProjectSem03.Controllers
                             if (file != null && (file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
                             {
                                 string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
-                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{renameFile}";
+                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\Medium\\{renameFile}";
                                 using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
                                 {
                                     await file.CopyToAsync(stream);
@@ -328,19 +332,26 @@ namespace ProjectSem03.Controllers
             {
                 try
                 {
-                    var model = db.Design.SingleOrDefault(d => d.DesignId.Equals(id.ToString()));
+                    var model = db.Design.SingleOrDefault(d => d.DesignId.Equals(id));
                     if (model != null)
                     {
+                        string tempCurFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //old painting
                         db.Design.Remove(model);
                         db.SaveChanges();
+
                         string message = "File deleted Successful";
                         TempData["message"] = "<script>alert('" + message + "');</script>";
+
+                        //check old painting exists
+                        if (System.IO.File.Exists(tempCurFilePath))
+                        {
+                            System.IO.File.Delete(tempCurFilePath);
+                        }
                         return RedirectToAction("Upload", "Home");
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    ViewBag.Msg = ex.Message;
                     return BadRequest("Delete Failed");
                 }
             }

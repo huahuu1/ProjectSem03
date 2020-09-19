@@ -17,11 +17,11 @@
         {
             <div class="img-uploaded col-lg-6">
                 <div class="img-wrapper row">
-                    <div class="img-content col-lg-6"><img src="../images/@item.Designs.Painting" alt="@item.Designs.Painting" /></div>
+                    <div class="img-content col-lg-6"><img src="../images/Medium/@item.Designs.Painting" alt="@item.Designs.Painting" /></div>
                     <div class="img-text col-lg-6">
                         <div class="img-des">
                             <span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.Description</span><span>@item.Designs.Price</span><a class="button-hover" asp-action="Edit" asp-controller="StudentDesignPosting" asp-route-id="@item.Designs.DesignId"><span>Update</span></a>
-                            @Html.ActionLink("Delete", "Delete","StudentDesignPosting", new { id = item.Designs.DesignId }, new { onClick = "return confirm('Are you sure?')" })
+                             <a class="button-hover" asp-action="Delete" asp-controller="StudentDesignPosting" asp-route-id="@item.Designs.DesignId" onclick="return confirm('Are you sure?')"><span>Delete</span></a>
                             <a class="button-hover" download="@item.Designs.Painting" href="../images/@item.Designs.Painting"><span>Download</span></a>
                         </div>
                     </div>
