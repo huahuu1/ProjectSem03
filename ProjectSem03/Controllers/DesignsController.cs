@@ -64,9 +64,7 @@ namespace ProjectSem03.Controllers
                     if (editDesign != null)
                     {
                         editDesign.ExhibitionID = design.ExhibitionID;
-                        editDesign.Price = editDesign.Price;
-                        //editDesign.SoldStatus = design.SoldStatus;
-                        //editDesign.PaidStatus = design.PaidStatus;
+                        editDesign.Price = design.Price;
 
                         if(design.Price > 0)
                         {

@@ -11,6 +11,8 @@ using System.Runtime.InteropServices.ComTypes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.Dynamic;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Net.Http.Headers;
 
 namespace ProjectSem03.Controllers
 {
@@ -66,9 +68,12 @@ namespace ProjectSem03.Controllers
                 }
             } //end check session
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Design design, IFormFile file)
+        [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
+        [RequestSizeLimit(8388608)]
+        public async Task<IActionResult> Edit(Design design, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
             try
             {
@@ -81,40 +86,66 @@ namespace ProjectSem03.Controllers
                         var modelPosting = db.Posting.SingleOrDefault(p => p.DesignID.Equals(model.DesignId));
                         var modelCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(modelPosting.CompetitionId));
 
-                        DateTime today = Convert.ToDateTime(DateTime.Today);
+                        var today = DateTime.Now;
                         ////check today SubmitDate
                         if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
                         {
-                            if (file != null && file.Length > 0 && (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))) //profile images must be .jpg
+                            if (file == null) //if no change painting
                             {
-                                string path = Path.Combine("wwwroot/images", file.FileName);
-                                var stream = new FileStream(path, FileMode.Create);
-                                file.CopyToAsync(stream);
                                 model.DesignName = design.DesignName;
-                                design.Painting = "../images/" + file.FileName;
-                                model.Painting = design.Painting;
                                 model.Description = design.Description;
                                 model.Price = design.Price;
-                                //Student cannot change DesignId and StudentId and SubmitDate >= StartDate && <= EndDate of Competition
-                                db.SaveChanges();
-                                stream.Close();
-                                //update posting
-                                modelPosting.PostDate = today;
-                                db.SaveChanges();
-                                return RedirectToAction("Index","Home");
-                            }
-                            else if (file == null) //if no change painting
-                            {
-                                model.DesignName = design.DesignName;
-                                model.Description = design.Description;
                                 //add posting
                                 modelPosting.PostDate = today;
                                 db.SaveChanges();
-                                return RedirectToAction("Index","Home");
+                                return RedirectToAction("Upload", "Home");
                             }
                             else
                             {
-                                ViewBag.Msg = "Painting must be .jpg or .png";
+
+                                string ext = Path.GetExtension(file.FileName);
+                                if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                                {
+                                    string tempCurFilePath = Path.Combine("wwwroot/images", model.Painting); //old painting
+                                    string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
+                                    string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{renameFile}";
+
+                                    using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                    {
+                                        await file.CopyToAsync(stream);
+                                        await stream.FlushAsync();
+                                    }
+
+                                    model.DesignName = design.DesignName;
+                                    design.Painting = renameFile;
+                                    model.Painting = design.Painting;
+                                    model.Description = design.Description;
+                                    model.Price = design.Price;
+                                    //Student cannot change DesignId and StudentId and SubmitDate >= StartDate && <= EndDate of Competition
+                                    db.SaveChanges();
+                                    //update posting
+                                    modelPosting.PostDate = today;
+                                    db.SaveChanges();
+
+                                    string message = "File updated Successful";
+                                    TempData["message"] = "<script>alert('" + message + "');</script>";
+
+                                    //check old painting exists
+                                    if (System.IO.File.Exists(tempCurFilePath))
+                                    {
+                                        System.IO.File.Delete(tempCurFilePath);
+                                    }
+
+                                    return RedirectToAction("Upload", "Home");
+                                }
+                                else if (file.Length > 8388608)
+                                {
+                                    ViewBag.Msg = "Painting must be smaller than 8MB";
+                                }
+                                else
+                                {
+                                    ViewBag.Msg = "Painting must be .jpg or .png";
+                                }
                             }
                         }
                         else
@@ -209,7 +240,9 @@ namespace ProjectSem03.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Upload(Design design, IFormFile file)
+        [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
+        [RequestSizeLimit(8388608)]
+        public async Task<IActionResult> Upload(Design design, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
             //ViewBag list of student designs
             ViewBag.designList = designStudentList();
@@ -221,39 +254,51 @@ namespace ProjectSem03.Controllers
                     int competitionId = (int)HttpContext.Session.GetInt32("registerCompetitionId");
                     var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals((int)HttpContext.Session.GetInt32("registerCompetitionId")));
 
-                    DateTime today = Convert.ToDateTime(DateTime.Today);
+                    var today = DateTime.Now;
                     ////check today SubmitDate
-                    if (today >= comp.StartDate.Date && today <= comp.EndDate.Date)
+                    if (today >= comp.StartDate.Date && today <= comp.EndDate.Date) //null exception
                     {
-
                         if (file == null)
                         {
                             ViewBag.Msg = "Painting is required";
                         }
-                        else if (file != null && file.Length > 0 && (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))) //profile images must be .jpg or .png
-                        {
-                            string path = Path.Combine("wwwroot/images", file.FileName);
-                            var stream = new FileStream(path, FileMode.Create);
-                            file.CopyToAsync(stream);
-                            design.Painting = "../images/" + file.FileName;
-                            design.StudentId = HttpContext.Session.GetString("studentid"); //login session
-                            db.Design.Add(design);
-                            db.SaveChanges();
-                            stream.Close();
-                            //add posting
-                            var modelPosting = new Posting();
-                            modelPosting.PostDate = today;
-                            modelPosting.DesignID = design.DesignId;
-                            modelPosting.CompetitionId = competitionId; //session registerCompetitionId
-                            modelPosting.PostDescription = student.FirstName + " " + student.LastName + " joined the contest " + "\"" + comp.CompetitionName + "\""; //COMP NULL HERE IF MISSING COMPETTITION
-                            modelPosting.StaffId = comp.StaffId;
-                            db.Posting.Add(modelPosting);
-                            db.SaveChanges();
-                            return RedirectToAction("Upload");
-                        }
-                        else
-                        {
-                            ViewBag.Msg = "Painting must be .jpg or .png";
+                        else {
+                            string ext = Path.GetExtension(file.FileName);
+                            if (file != null && (file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                            {
+                                string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
+                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{renameFile}";
+                                using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(stream);
+                                    await stream.FlushAsync();
+                                }
+
+                                design.Painting = renameFile;
+                                design.StudentId = HttpContext.Session.GetString("studentid"); //login session
+                                db.Design.Add(design);
+                                db.SaveChanges();
+                                //add posting
+                                var modelPosting = new Posting();
+                                modelPosting.PostDate = today;
+                                modelPosting.DesignID = design.DesignId;
+                                modelPosting.CompetitionId = competitionId; //session registerCompetitionId
+                                modelPosting.PostDescription = student.FirstName + " " + student.LastName + " joined the contest " + "\"" + comp.CompetitionName + "\""; //COMP NULL HERE IF MISSING COMPETTITION
+                                modelPosting.StaffId = comp.StaffId;
+                                db.Posting.Add(modelPosting);
+                                db.SaveChanges();
+                                string message = "File uploaded Successful";
+                                TempData["message"] = "<script>alert('" + message + "');</script>";
+                                return RedirectToAction("Upload", "Home");
+                            }
+                            else if (file.Length > 8388608)
+                            {
+                                ViewBag.Msg = "Painting must be smaller than 8MB";
+                            }
+                            else
+                            {
+                                ViewBag.Msg = "Painting must be .jpg or .png";
+                            }
                         }
                     }//check date
                     else
@@ -269,6 +314,35 @@ namespace ProjectSem03.Controllers
             catch (Exception e)
             {
                 ViewBag.Msg = e.Message;
+            }
+            return View();
+        }
+
+        public IActionResult Delete(int id)
+        {
+            if (HttpContext.Session.GetString("studentid") == null) //check session
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                try
+                {
+                    var model = db.Design.SingleOrDefault(d => d.DesignId.Equals(id.ToString()));
+                    if (model != null)
+                    {
+                        db.Design.Remove(model);
+                        db.SaveChanges();
+                        string message = "File deleted Successful";
+                        TempData["message"] = "<script>alert('" + message + "');</script>";
+                        return RedirectToAction("Upload", "Home");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Msg = ex.Message;
+                    return BadRequest("Delete Failed");
+                }
             }
             return View();
         }

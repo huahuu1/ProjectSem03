@@ -35,8 +35,46 @@ namespace ProjectSem03.Controllers
                     var filter = list.Where(s => s.FirstName.ToLower().Contains(sname) || s.FirstName.ToUpper().Contains(sname) || s.LastName.ToLower().Contains(sname) || s.LastName.ToUpper().Contains(sname));
                     return View(filter);
                 }
-                
+
             }
+        }
+
+        //Method
+        private string GenId()
+        {
+            var model = db.Student.Last();
+            string FirstId = model.StudentId.Substring(0, 3);
+            string AffterID = model.StudentId.Substring(3, 7);
+
+            string LastNummberId = "";
+            for (int i = 0; i <= AffterID.Length - 1; i++)
+            {
+                if (int.Parse(AffterID[i].ToString()) != 0)
+                {
+                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);
+                    break;
+                }
+            }
+
+            LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
+
+            int CountId = LastNummberId.Length; //full lenghtid
+            Console.WriteLine(CountId);
+            string FullId = FirstId;
+            for (int i = 0; i < 7; i++)
+            {
+                if (i == 7 - CountId)
+                {
+                    FullId += LastNummberId;
+                    break;
+                }
+                else
+                {
+                    FullId += "0";
+                }
+            }
+
+            return FullId;
         }
 
         //CREATE
@@ -79,6 +117,7 @@ namespace ProjectSem03.Controllers
                             //key
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             student.Password = AesEncDesc.EncryptString(key, student.Password);
+                            student.StudentId = GenId();
                             db.Student.Add(student);
                             stream.Close();
                             db.SaveChanges();
@@ -160,7 +199,7 @@ namespace ProjectSem03.Controllers
                                 //Staff cannot change Student CompetitionId and Password
                                 stream.Close();
                                 db.SaveChanges();
-                                
+
                                 return RedirectToAction("Index", "Students");
                             }
                         }
@@ -197,7 +236,7 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        //DELETE        
+        //DELETE
         public IActionResult Delete(string id)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
