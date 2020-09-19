@@ -4,6 +4,7 @@
 }
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
+@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = "Index";
@@ -11,9 +12,13 @@
 
 <h2>List of Awards</h2>
 
-<p>
-    <a asp-action="Create">Create New Award</a>
-</p>
+@if (Context.Session.GetString("staffRole") == "2")
+{
+    <p>
+        <a asp-action="Create">Create New Award</a>
+    </p>
+}
+
 <table class="table">
     <thead>
         <tr>
@@ -42,11 +47,19 @@
                     }
                 </td>
                 <td>@item.Staffs.StaffName</td>
-                <td>
-                @Html.ActionLink("Update", "Edit", new { id = item.Awards.AwardId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Awards.AwardId }, new { onClick = "return confirm('Are you sure?')" }) |
-            </td>
+
+                @if (Context.Session.GetString("staffRole") == "2")
+                {
+                    <td>
+                        @Html.ActionLink("Update", "Edit", new { id = item.Awards.AwardId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Awards.AwardId }, new { onClick = "return confirm('Are you sure?')" }) |
+                    </td>
+                }
             </tr>
         }
     </tbody>
 </table>
+<br />
+<p>
+    @Html.ActionLink("Back to Staff Functions", "Index", "Staffs")
+</p>

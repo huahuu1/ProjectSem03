@@ -15,25 +15,20 @@
     <div class="wrapper-ex">
         <div class="ex-title"><span>Exhibition highlights</span><span>currently on display</span></div>
 
-        @*@{Html.RenderPartial("_View");}*@
         @foreach (var item in Model)
         {
-            if (item.Designs.ExhibitionID.Equals(item.Exhibitions.ExhibitionId))
-            {
-                <div class="ex-content">
-                    @*<div class="conduct-time"><span>@item.Exhibitions.ExhibitionName / @item.Exhibitions.StartDate - @item.Exhibitions.EndDate / @item.Exhibitions.Place</span></div>*@
-                    <div class="ex-designs row">
-                        <div class="designs-show col-lg-3">
-                            <div class="show-inner">
-                                <div class="show-image"><a href="#"><img src="../@item.Designs.Painting" alt="" /></a></div>
-                                <div class="show-info"><span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.StudentId</span><a class="button-hover" href="#"><span>View more</span></a></div>
-                                @*<div class="show-info"><span>$ @item.Designs.Price</span></div>*@
-                            </div>
-                        </div>
-                    </div>
+            <div class="ex-content">
+                @*<div class="conduct-time"><span>@item.Exhibitions.ExhibitionName / @item.Exhibitions.StartDate - @item.Exhibitions.EndDate / @item.Exhibitions.Place</span></div>*@
+                <div class="ex-designs row">
+                     <div class="designs-show col-lg-3">
+                         <div class="show-inner">
+                             <div class="show-image"><a href="#"><img src="../@item.Designs.Painting" alt="" /></a></div>
+                             <div class="show-info"><span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.StudentId</span><a class="button-hover" href="#"><span>View more</span></a></div>
+                             @*<div class="show-info"><span>$ @item.Designs.Price</span></div>*@
+                          </div>
+                     </div>
                 </div>
-            }
-
+            </div>
         }
     </div>
 </section>

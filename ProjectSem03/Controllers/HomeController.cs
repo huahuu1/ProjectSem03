@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectSem03.Models;
 
@@ -42,7 +43,7 @@ namespace ProjectSem03.Controllers
             return View(list);
         }
 
-        public IActionResult Exhibition(string ename, int id)
+        public IActionResult Exhibition(string ename)
         {
             var exh = db.Exhibition.ToList();
             ViewBag.Exhibition = new SelectList(exh, "ExhibitionId", "ExhibitionName");
@@ -142,6 +143,7 @@ namespace ProjectSem03.Controllers
                         HttpContext.Session.SetString("ename", accName);
                         HttpContext.Session.SetString("staffId", staff.StaffId);
                         HttpContext.Session.SetString("staffImage", staff.ProfileImage);
+                        HttpContext.Session.SetString("staffRole", staff.Role.ToString());
                         return RedirectToAction("Index", "Staffs", new { area = "" });
                     }
                     else

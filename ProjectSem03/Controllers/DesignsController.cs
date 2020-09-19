@@ -30,17 +30,24 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(int id)
         {
-            var exhibition = db.Exhibition.ToList();
-            ViewBag.data = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
-
-            var design = db.Design.Find(id);
-            if (design != null)
+            if (HttpContext.Session.GetString("staffRole") == "2")
             {
-                return View(design);
+                var exhibition = db.Exhibition.ToList();
+                ViewBag.data = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
+
+                var design = db.Design.Find(id);
+                if (design != null)
+                {
+                    return View(design);
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
@@ -59,8 +66,15 @@ namespace ProjectSem03.Controllers
                         editDesign.ExhibitionID = design.ExhibitionID;
                         editDesign.Price = design.Price;
 
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Designs");
+                        if(design.Price > 0)
+                        {
+                            db.SaveChanges();
+                            return RedirectToAction("Index", "Designs");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Edit", "Designs");
+                        }
                     }
                     else
                     {

@@ -4,8 +4,16 @@
 }
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
+@using Microsoft.AspNetCore.Http
 
 <h2>List of Competitions</h2>
+
+@if (Context.Session.GetString("staffRole") == "2")
+{
+    <p>
+        <a asp-action="Create">Create New Competition</a>
+    </p>
+}
 
 @foreach (var item in Model)
 {
@@ -14,11 +22,18 @@
         <div class="border">@item.Competitions.CompetitionName</div>
         <div class="border">@item.Competitions.StartDate.ToString("dd/MM/yyyy hh:mm tt")&nbsp;|&nbsp;@item.Competitions.EndDate.ToString("dd/MM/yyyy hh:mm tt")</div>
         <div class="border">Organizer: @item.Staffs.StaffName</div>
-        <div class="border">
-            @Html.ActionLink("Update", "Edit", new { id = item.Competitions.CompetitionId })&nbsp;|&nbsp;
-            @Html.ActionLink("Delete", "Delete", new { id = item.Competitions.CompetitionId }, new { onClick = "return confirm('Are you sure?')" })
-        </div>
+        @if (Context.Session.GetString("staffRole") == "2")
+        {
+            <div class="border">
+                @Html.ActionLink("Update", "Edit", new { id = item.Competitions.CompetitionId })&nbsp;|&nbsp;
+                @Html.ActionLink("Delete", "Delete", new { id = item.Competitions.CompetitionId }, new { onClick = "return confirm('Are you sure?')" })
+            </div>
+        }
     </div>
     <br />
     <br />
 }
+<br />
+<p>
+    @Html.ActionLink("Back to Staff Functions", "Index", "Staffs")
+</p>

@@ -4,6 +4,7 @@
 }
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
+@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = "Index";
@@ -23,9 +24,6 @@
 <p>
     <a asp-action="Create">Create New Exhibition</a>
 </p>
-<p>
-    @Html.ActionLink("Assign Designs", "Index", "Displays")
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -39,21 +37,45 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @if (Context.Session.GetString("staffRole") == "1")
         {
-            <tr>
-                <td>@item.Exhibitions.ExhibitionId</td>
-                <td>@item.Exhibitions.ExhibitionName</td>
-                <td>@item.Exhibitions.Place</td>
-                <td>@item.Exhibitions.StartDate.ToShortDateString()</td>
-                <td>@item.Exhibitions.EndDate.ToShortDateString()</td>
-                <td>@item.Staffs.StaffName</td>
-                <td>
-                    @Html.ActionLink("Update", "Edit", new { id = item.Exhibitions.ExhibitionId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Exhibitions.ExhibitionId }, new { onClick = "return confirm('Are you sure?')" })
-                </td>
-            </tr>
+            @foreach (var item in ViewBag.data)
+            {
+                <tr>
+                    <td>@item.Exhibitions.ExhibitionId</td>
+                    <td>@item.Exhibitions.ExhibitionName</td>
+                    <td>@item.Exhibitions.Place</td>
+                    <td>@item.Exhibitions.StartDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Exhibitions.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Staffs.StaffName</td>
+                    <td>
+                        @Html.ActionLink("Update", "Edit", new { id = item.Exhibitions.ExhibitionId })
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Exhibitions.ExhibitionId</td>
+                    <td>@item.Exhibitions.ExhibitionName</td>
+                    <td>@item.Exhibitions.Place</td>
+                    <td>@item.Exhibitions.StartDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Exhibitions.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@item.Staffs.StaffName</td>
+                    <td>
+                        @Html.ActionLink("Update", "Edit", new { id = item.Exhibitions.ExhibitionId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Exhibitions.ExhibitionId }, new { onClick = "return confirm('Are you sure?')" })
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
+<br />
+<p>
+    @Html.ActionLink("Back to Staff Functions", "Index", "Staffs")
+</p>
 

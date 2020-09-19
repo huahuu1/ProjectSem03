@@ -4,40 +4,50 @@
 }
 
 @model IEnumerable<ProjectSem03.Models.Staff>
+@using Microsoft.AspNetCore.Http
 
-<h2>List of Staffs</h2>
+<h2>Staff Functions</h2>
 <br />
-@using (Html.BeginForm("Index", "Staffs", FormMethod.Post))
+<br />
+@if (Context.Session.GetString("staffRole") == "0")
 {
-    <input type="text" name="sname" placeholder="Enter staff name" />
-    <input type="submit" value="Search">
+    @using (Html.BeginForm("Index", "Staffs", FormMethod.Post))
+    {
+        <input type="text" name="sname" placeholder="Enter staff name" />
+        <input type="submit" value="Search">
+    }
+    <br />
+    <p>
+        @Html.ActionLink("Create New Staff", "Create", "Staffs")
+    </p>
+    <p>
+        @Html.ActionLink("Student List", "Index", "Students")
+    </p>
+}
+else
+{
+    <p>
+        @Html.ActionLink("Award List", "Index", "Awards")
+    </p>
+    <p>
+        @Html.ActionLink("Posting List", "Index", "Postings")
+    </p>
+    @if (Context.Session.GetString("staffRole") == "2")
+    {
+        <p>
+            @Html.ActionLink("Design List", "Index", "Designs")
+        </p>
+    }
+    <p>
+        @Html.ActionLink("Exhibition List", "Index", "Exhibitions")
+    </p>
+    <p>
+        @Html.ActionLink("Competition List", "Index", "Competitions")
+    </p>
 }
 <br />
-<p>
-    @Html.ActionLink("Create New Staff", "Create", "Staffs")
-</p>
-<p>
-    @Html.ActionLink("Student List", "Index", "Students")
-</p>
-<p>
-    @Html.ActionLink("Award List", "Index", "Awards")
-</p>
-<p>
-    @Html.ActionLink("Posting List", "Index", "Postings")
-</p>
-<p>
-    @Html.ActionLink("Exhibition List", "Index", "Exhibitions")
-</p>
-<p>
-    @Html.ActionLink("Update Upcoming Exhibition", "UpcomingIndex", "Exhibitions")
-</p>
-<p>
-    @Html.ActionLink("Competition List", "Index", "Competitions")
-</p>
-<p>
-    @Html.ActionLink("Design List", "Index", "Designs")
-</p>
-<br />
+@if(Context.Session.GetString("staffRole") == "0")
+{
 <table class="table">
     <tr>
         <th>StaffId</th>
@@ -67,7 +77,7 @@
                 {
                     @item.Role.ToString("Admin");
                 }
-                else if(item.Role == 1)
+                else if (item.Role == 1)
                 {
                     @item.Role.ToString("Manager");
                 }
@@ -78,11 +88,16 @@
             </td>
             <td>
                 @Html.ActionLink("Update", "Edit", new { id = item.StaffId }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.StaffId }, new { onClick = "return confirm('Are you sure?')" })
+                @if (item.StaffId != Context.Session.GetString("staffId"))
+                {
+                    @Html.ActionLink("Delete", "Delete", new { id = item.StaffId }, new { onClick = "return confirm('Are you sure?')" })
+                }
             </td>
         </tr>
     }
 </table>
+}
+
 
 
 

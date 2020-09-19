@@ -149,9 +149,9 @@ namespace ProjectSem03.Controllers
                     return View();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                return BadRequest(e.Message);
             }
         }
     }

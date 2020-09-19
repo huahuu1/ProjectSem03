@@ -33,13 +33,20 @@ namespace ProjectSem03.Controllers
         //CREATE
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetString("staffId") == null) //check login
+            if (HttpContext.Session.GetString("staffRole") == "0")
             {
-                return RedirectToAction("Login");
+                if (HttpContext.Session.GetString("staffId") == null) //check login
+                {
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
