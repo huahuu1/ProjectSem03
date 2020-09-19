@@ -36,7 +36,7 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(int id)
         {
-            if (HttpContext.Session.GetString("staffRole") == "2")
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName");

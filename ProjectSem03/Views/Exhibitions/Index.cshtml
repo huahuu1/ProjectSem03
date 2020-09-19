@@ -37,7 +37,7 @@
         </tr>
     </thead>
     <tbody>
-        @if (Context.Session.GetString("staffRole") == "1")
+        @if (Context.Session.GetInt32("staffRole") == 1)
         {
             @foreach (var item in ViewBag.data)
             {

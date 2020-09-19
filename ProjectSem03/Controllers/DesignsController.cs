@@ -30,7 +30,7 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(int id)
         {
-            if (HttpContext.Session.GetString("staffRole") == "2")
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var exhibition = db.Exhibition.ToList();
                 ViewBag.data = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");

@@ -9,7 +9,7 @@
 <h2>Staff Functions</h2>
 <br />
 <br />
-@if (Context.Session.GetString("staffRole") == "0")
+@if (Context.Session.GetInt32("staffRole") == 0)
 {
     @using (Html.BeginForm("Index", "Staffs", FormMethod.Post))
     {
@@ -32,7 +32,7 @@ else
     <p>
         @Html.ActionLink("Posting List", "Index", "Postings")
     </p>
-    @if (Context.Session.GetString("staffRole") == "2")
+    @if (Context.Session.GetInt32("staffRole") == 2)
     {
         <p>
             @Html.ActionLink("Design List", "Index", "Designs")
@@ -46,7 +46,7 @@ else
     </p>
 }
 <br />
-@if(Context.Session.GetString("staffRole") == "0")
+@if(Context.Session.GetInt32("staffRole") == 0)
 {
 <table class="table">
     <tr>

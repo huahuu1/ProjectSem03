@@ -20,7 +20,7 @@
             <th>Design Name</th>
             <th>Competition Name</th>
             <th>Staff Name</th>
-            @if (Context.Session.GetString("staffRole") == "2")
+            @if (Context.Session.GetInt32("staffRole") == 2)
             {
                 <th>Action</th>
             }
@@ -40,7 +40,7 @@
                 <td>@item.Designs.DesignName</td>
                 <td>@item.Competitions.CompetitionName</td>
                 <td>@item.Staffs.StaffName</td>
-                @if (Context.Session.GetString("staffRole") == "2")
+                @if (Context.Session.GetInt32("staffRole") == 2)
                 {
                     <td>
                         @Html.ActionLink("Update", "Edit", new { id = item.Postings.PostingId })

@@ -8,7 +8,7 @@
 
 <h2>List of Competitions</h2>
 
-@if (Context.Session.GetString("staffRole") == "2")
+@if (Context.Session.GetInt32("staffRole") == 2)
 {
     <p>
         <a asp-action="Create">Create New Competition</a>
@@ -22,7 +22,7 @@
         <div class="border">@item.Competitions.CompetitionName</div>
         <div class="border">@item.Competitions.StartDate.ToString("dd/MM/yyyy hh:mm tt")&nbsp;|&nbsp;@item.Competitions.EndDate.ToString("dd/MM/yyyy hh:mm tt")</div>
         <div class="border">Organizer: @item.Staffs.StaffName</div>
-        @if (Context.Session.GetString("staffRole") == "2")
+        @if (Context.Session.GetInt32("staffRole") == 2)
         {
             <div class="border">
                 @Html.ActionLink("Update", "Edit", new { id = item.Competitions.CompetitionId })&nbsp;|&nbsp;

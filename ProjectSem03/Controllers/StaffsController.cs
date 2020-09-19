@@ -35,7 +35,7 @@ namespace ProjectSem03.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            if(HttpContext.Session.GetString("staffRole") == "0")
+            if(HttpContext.Session.GetInt32("staffRole") == 0)
             {
                 return View();
             }
@@ -80,7 +80,7 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(string id)
         {
-            if (HttpContext.Session.GetString("staffRole") == "0")
+            if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
                 var stf = db.Staff.Find(id);
                 if (stf != null)

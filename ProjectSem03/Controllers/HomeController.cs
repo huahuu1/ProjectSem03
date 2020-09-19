@@ -143,7 +143,7 @@ namespace ProjectSem03.Controllers
                         HttpContext.Session.SetString("ename", accName);
                         HttpContext.Session.SetString("staffId", staff.StaffId);
                         HttpContext.Session.SetString("staffImage", staff.ProfileImage);
-                        HttpContext.Session.SetString("staffRole", staff.Role.ToString());
+                        HttpContext.Session.SetInt32("staffRole", staff.Role);
                         return RedirectToAction("Index", "Staffs", new { area = "" });
                     }
                     else
