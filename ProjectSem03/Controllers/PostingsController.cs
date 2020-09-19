@@ -7,6 +7,7 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.AspNetCore.Http;
 
 namespace ProjectSem03.Controllers
 {
@@ -51,17 +52,24 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(int id)
         {
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
-
-            var posting = db.Posting.Find(id);
-            if (posting != null)
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
-                return View(posting);
+                var list = db.Staff.Where(s => s.Role.Equals(2));
+                ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+
+                var posting = db.Posting.Find(id);
+                if (posting != null)
+                {
+                    return View(posting);
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]

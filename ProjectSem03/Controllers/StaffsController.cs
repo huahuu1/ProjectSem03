@@ -43,7 +43,14 @@ namespace ProjectSem03.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            if(HttpContext.Session.GetInt32("staffRole") == 0)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Staffs");
+            }
         }
         [HttpPost]
         [ActionName("Create")]
@@ -82,14 +89,21 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(string id)
         {
-            var stf = db.Staff.Find(id);
-            if (stf != null)
+            if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                return View(stf);
+                var stf = db.Staff.Find(id);
+                if (stf != null)
+                {
+                    return View(stf);
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]

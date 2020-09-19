@@ -49,9 +49,16 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Create()
         {
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
-            return View();
+            if(HttpContext.Session.GetInt32("staffRole") == 2)
+            {
+                var list = db.Staff.Where(s => s.Role.Equals(2));
+                ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Staffs");
+            }
         }
         [HttpPost]
         public IActionResult Create(Competition competition, IFormFile file)
@@ -89,14 +96,21 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(int id)
         {
-            var competition = db.Competition.Find(id);
-            if (competition != null)
+            if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
-                return View(competition);
+                var competition = db.Competition.Find(id);
+                if (competition != null)
+                {
+                    return View(competition);
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
 
@@ -165,9 +179,9 @@ namespace ProjectSem03.Controllers
                     return View();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                return BadRequest(e.Message);
             }
         }
     }

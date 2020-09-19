@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectSem03.Models;
 
@@ -58,6 +59,7 @@ namespace ProjectSem03.Controllers
                            Designs = d,
                            Students = stu
                        };
+
             if (string.IsNullOrEmpty(ename))
             {
                 return View(list);
@@ -131,7 +133,7 @@ namespace ProjectSem03.Controllers
             {
                 var staff = db.Staff.SingleOrDefault(s => s.Email.Equals(accName));
                 var student = db.Student.SingleOrDefault(s => s.Email.Equals(accName));
-                
+
                 if (staff != null)
                 {
                     var key = "b14ca5898a4e4133bbce2ea2315a1916";
@@ -142,6 +144,7 @@ namespace ProjectSem03.Controllers
                         HttpContext.Session.SetString("staffName", staff.StaffName);
                         HttpContext.Session.SetString("staffId", staff.StaffId);
                         HttpContext.Session.SetString("staffImage", staff.ProfileImage);
+                        HttpContext.Session.SetInt32("staffRole", staff.Role);
                         return RedirectToAction("Index", "Admin", new { area = "" });
                     }
                     else

@@ -42,13 +42,20 @@ namespace ProjectSem03.Controllers
         //CREATE
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetString("staffId") == null) //check login
+            if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                return RedirectToAction("Login");
+                if (HttpContext.Session.GetString("staffId") == null) //check login
+                {
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
@@ -98,22 +105,29 @@ namespace ProjectSem03.Controllers
         //EDIT
         public IActionResult Edit(string id)
         {
-            if (HttpContext.Session.GetString("staffId") == null) //check session
+            if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                return RedirectToAction("Login");
-            }
-            else
-            {
-                var model = db.Student.Find(id);
-                if (model != null)
+                if (HttpContext.Session.GetString("staffId") == null) //check session
                 {
-                    return View(model); ;
+                    return RedirectToAction("Login");
                 }
                 else
                 {
-                    return View();
-                }
-            } //end check session
+                    var model = db.Student.Find(id);
+                    if (model != null)
+                    {
+                        return View(model); ;
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                } //end check session
+            }
+            else
+            {
+                return RedirectToAction("Index", "Staffs");
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

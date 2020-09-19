@@ -51,16 +51,23 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Create()
         {
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+            if(HttpContext.Session.GetInt32("staffRole") == 2)
+            {
+                var list = db.Staff.Where(s => s.Role.Equals(2));
+                ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
-            var list2 = db.Competition.ToList();
-            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
+                var list2 = db.Competition.ToList();
+                ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
 
-            //var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
-            //ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
+                var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+                ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
 
-            return View();
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Staffs");
+            }
         }
         [HttpPost]
         public IActionResult Create(Award award)
@@ -96,24 +103,31 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Edit(int id)
         {
-            var listAward = db.Award.Find(id);
-
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
-
-            var list2 = db.Competition.ToList();
-            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName", listAward.CompetitionID);
-
-            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
-            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription", listAward.PostingID);
-
-            if (listAward != null)
+            if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
-                return View(listAward);
+                var listAward = db.Award.Find(id);
+
+                var list = db.Staff.Where(s => s.Role.Equals(2));
+                ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
+
+                var list2 = db.Competition.ToList();
+                ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName", listAward.CompetitionID);
+
+                var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+                ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription", listAward.PostingID);
+
+                if (listAward != null)
+                {
+                    return View(listAward);
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]

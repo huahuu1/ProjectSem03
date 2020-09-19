@@ -18,6 +18,7 @@
                         Create New Award
                     </h3>
                 </div>
+<<<<<<< HEAD
                 <div class="card-body">
                     @using (Html.BeginForm("Create", "Awards", FormMethod.Post, new { enctype = "multipart/form-data" }))
                     {
@@ -50,6 +51,17 @@
                         </div>
                     }
                 </div>
+=======
+            </div>
+            <div class="form-group">
+                <label>Posting Description: </label>
+                <div>
+                    @Html.DropDownList("PostingId", (IEnumerable<SelectListItem>)ViewBag.data3)
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+>>>>>>> 864c0a09e4f095f7912d0d195d779c4c4d1c895e
             </div>
         </div>
     </div>

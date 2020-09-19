@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
+<<<<<<< HEAD
 @using (Html.BeginForm("Index", "Students", FormMethod.Post, new { @class = "form-inline form-group" }))
 {
     <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="sname" placeholder="Enter student name" />
@@ -75,3 +76,72 @@
         </tbody>
     </table>
 </div>
+=======
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Of Birth</th>
+            <th>Gender</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Join Date</th>
+            <th>Address</th>
+            <th>Profile Image</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @item.DateOfBirth.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gender)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @item.JoinDate.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    <img src="@item.ProfileImage" width="50" height="50" />
+                </td>
+                <td>
+                    @Html.ActionLink("Update", "Edit", new { id = item.StudentId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.StudentId }, new { onClick = "return confirm('Are you sure?')" }) |
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<p>
+    @Html.ActionLink("Back to Staff Functions", "Index", "Staffs")
+</p>
+>>>>>>> 864c0a09e4f095f7912d0d195d779c4c4d1c895e

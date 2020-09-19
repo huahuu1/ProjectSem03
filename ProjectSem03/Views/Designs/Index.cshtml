@@ -27,46 +27,39 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.SoldStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PaidStatus)
-            </th>*@
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DesignName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Painting)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubmitDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ExhibitionID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.SoldStatus)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaidStatus)
-            </td>*@
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.DesignId">Edit</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DesignName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Painting)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubmitDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExhibitionID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) $
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.DesignId">Edit</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+<br />
+<p>
+    @Html.ActionLink("Back to Staff Functions", "Index", "Staffs")
+</p>
