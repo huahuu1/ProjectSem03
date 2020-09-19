@@ -9,43 +9,62 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create new Exhibition</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 mx-auto row">
+            <div class="card col-lg-5 col-sm-12 mx-auto">
+                <div class="card-header text-center">
+                    <h3 class="card-title float-none">
+                        Create New Exhibition
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Create", "Exhibitions", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ExhibitionName, "Exhibition Name")
+                            <span class="text text-danger">*</span>
+                            @Html.EditorFor(model => model.ExhibitionName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ExhibitionName)
+                        </div>
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ExhibitionName" class="control-label"></label>
-                <input asp-for="ExhibitionName" class="form-control" />
-                <span asp-validation-for="ExhibitionName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Place" class="control-label"></label>
-                <input asp-for="Place" class="form-control" />
-                <span asp-validation-for="Place" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                @Html.EditorFor(model => model.StartDate)
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label>Staff Name: </label>
-                <div>
-                    @Html.DropDownList("StaffId", (IEnumerable<SelectListItem>)ViewBag.data)
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Place)
+                            <span class="text text-danger">*</span>
+                            @Html.EditorFor(model => model.Place, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Place)
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.StartDate, "Start Date")
+                            <span class="text text-danger">*</span>
+                            @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.StartDate)
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.EndDate, "End Date")
+                            <span class="text text-danger">*</span>
+                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EndDate)
+                        </div>
+
+                        <div class="form-group">
+                            <label>Staff Name: </label>
+                            <div>
+                                @Html.DropDownList("StaffId", (IEnumerable<SelectListItem>)ViewBag.data, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <br />
+                        <div class="form-group text-center">
+                            <input class="btn btn-primary" type="submit" value="Create" />
+                        </div>
+                    }
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 

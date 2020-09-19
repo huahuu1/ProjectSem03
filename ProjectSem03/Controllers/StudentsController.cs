@@ -17,7 +17,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string sname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -26,7 +26,16 @@ namespace ProjectSem03.Controllers
             else
             {
                 var list = db.Student.ToList();
-                return View(list);
+                if (string.IsNullOrEmpty(sname))
+                {
+                    return View(list);
+                }
+                else
+                {
+                    var filter = list.Where(s => s.FirstName.ToLower().Contains(sname) || s.FirstName.ToUpper().Contains(sname) || s.LastName.ToLower().Contains(sname) || s.LastName.ToUpper().Contains(sname));
+                    return View(filter);
+                }
+                
             }
         }
 
@@ -59,19 +68,19 @@ namespace ProjectSem03.Controllers
                             string path = Path.Combine("wwwroot/images", file.FileName);
                             var stream = new FileStream(path, FileMode.Create);
                             file.CopyToAsync(stream);
-                            student.ProfileImage = "/images/" + file.FileName;
+                            student.ProfileImage = "/images/students/" + file.FileName;
                             //key
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             student.Password = AesEncDesc.EncryptString(key, student.Password);
                             db.Student.Add(student);
-                            db.SaveChanges();
                             stream.Close();
+                            db.SaveChanges();
                             return RedirectToAction("Index", "Students");
                         }
                     }
                     else
                     {
-                        ViewBag.Msg = "Profile images must be .jpg or .png";
+                        ViewBag.Msg = "Profile images must be .jpg";
                         return View();
                     }
                 }
@@ -132,9 +141,10 @@ namespace ProjectSem03.Controllers
                                 model.Email = student.Email;
                                 model.JoinDate = student.JoinDate;
                                 model.Address = student.Address;
-                                student.ProfileImage = "/images/" + file.FileName;
+                                student.ProfileImage = "/images/students/" + file.FileName;
                                 model.ProfileImage = student.ProfileImage;
                                 //Staff cannot change Student CompetitionId and Password
+                                stream.Close();
                                 db.SaveChanges();
                                 
                                 return RedirectToAction("Index", "Students");
@@ -155,7 +165,7 @@ namespace ProjectSem03.Controllers
                         }
                         else
                         {
-                            ViewBag.Msg = "Profile images must be .jpg or .png";
+                            ViewBag.Msg = "Profile images must be .jpg";
                             return View();
                         }
                     }

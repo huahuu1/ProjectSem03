@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
 
 namespace ProjectSem03.Controllers
 {
@@ -16,33 +17,36 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string aname)
         {
-            var list = from a in db.Award
-                       join c in db.Competition on a.CompetitionID equals c.CompetitionId
-                       join s in db.Staff on a.StaffId equals s.StaffId
-                       join p in db.Posting on a.PostingID equals p.PostingId
-                       select new CombineModels
-                       {
-                           Awards = a,
-                           Competitions = c,
-                           Staffs = s,
-                           Postings = p
-                       };
-            if (list.Count() == 0)
+            if (HttpContext.Session.GetString("staffId") == null) //check session
             {
-                list = from a in db.Award
-                                        join c in db.Competition on a.CompetitionID equals c.CompetitionId
-                                        join s in db.Staff on a.StaffId equals s.StaffId
-                                        select new CombineModels
-                                        {
-                                            Awards = a,
-                                            Competitions = c,
-                                            Staffs = s,
-                                        };
-                return View(list);
+                return RedirectToAction("Login");
             }
-            return View(list);
+            else
+            {
+                var list = from a in db.Award
+                           join c in db.Competition on a.CompetitionID equals c.CompetitionId
+                           join s in db.Staff on a.StaffId equals s.StaffId
+                           join p in db.Posting on a.PostingID equals p.PostingId into groupjoin
+                           from p in groupjoin.DefaultIfEmpty()
+                           select new CombineModels
+                           {
+                               Awards = a,
+                               Competitions = c,
+                               Staffs = s,
+                               Postings = p
+                           };
+                if (string.IsNullOrEmpty(aname))
+                {
+                    return View(list);
+                }
+                else
+                {
+                    var filter = list.Where(s => s.Awards.AwardName.ToLower().Contains(aname) || s.Awards.AwardName.ToUpper().Contains(aname));
+                    return View(filter);
+                }
+            }
         }
 
         public IActionResult Create()

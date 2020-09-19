@@ -1,11 +1,13 @@
-﻿<aside class="main-sidebar sidebar-dark-primary elevation-4">
+﻿@using Microsoft.AspNetCore.Http
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="" class="brand-link">
-        <img src=""
+        <img src="@Context.Session.GetString("staffImage")"
              alt="AdminLTE Logo"
              class="brand-image img-circle elevation-3"
              style="opacity: .8">
-        <span class="brand-text font-weight-light"></span>
+        <span class="brand-text font-weight-light">@Context.Session.GetString("staffName")</span>
     </a>
 
     <!-- Sidebar -->
@@ -14,7 +16,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
-                     with font-awesome or any other icon font library -->
+         with font-awesome or any other icon font library -->
                 <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-user"></i>
@@ -126,6 +128,23 @@
                             <a asp-controller="Awards" asp-action="Create" class="nav-link">
                                 <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
                                 <p style="padding-left: 0.5rem">Add New Award</p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                        <p>
+                            Posting
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a asp-controller="Postings" asp-action="Index" class="nav-link">
+                                <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                <p style="padding-left: 0.5rem">Posting List</p>
                             </a>
                         </li>
                     </ul>

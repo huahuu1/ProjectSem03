@@ -20,16 +20,24 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Index(string sname)
         {
-            var list = db.Staff.ToList();
-            if (string.IsNullOrEmpty(sname))
+            if (HttpContext.Session.GetString("staffId") == null) //check session
             {
-                return View(list);
+                return RedirectToAction("Login");
             }
             else
             {
-                var filter = list.Where(s => s.StaffName.ToLower().Contains(sname) || s.StaffName.ToUpper().Contains(sname));
-                return View(filter);
+                var list = db.Staff.ToList();
+                if (string.IsNullOrEmpty(sname))
+                {
+                    return View(list);
+                }
+                else
+                {
+                    var filter = list.Where(s => s.StaffName.ToLower().Contains(sname) || s.StaffName.ToUpper().Contains(sname));
+                    return View(filter);
+                }
             }
+            
         }
 
         [HttpGet]
@@ -50,11 +58,12 @@ namespace ProjectSem03.Controllers
                         string path = Path.Combine("wwwroot/images", file.FileName);
                         var stream = new FileStream(path, FileMode.Create);
                         file.CopyToAsync(stream);
-                        staff.ProfileImage = "../images/" + file.FileName;
+                        staff.ProfileImage = "/images/teachers/" + file.FileName;
 
                         var key = "b14ca5898a4e4133bbce2ea2315a1916";
                         staff.Password = AesEncDesc.EncryptString(key, staff.Password);
                         db.Staff.Add(staff);
+                        stream.Close();
                         db.SaveChanges();
                         return RedirectToAction("Index", "Staffs");
                     }
@@ -93,25 +102,40 @@ namespace ProjectSem03.Controllers
                 {
                     if (editStaff != null)
                     {
-                        editStaff.ProfileImage = staff.ProfileImage;
-
-                        if (file.Length > 0)
+                        if (file != null && file.Length > 0) //profile images must be .jpg
                         {
-                            string path = Path.Combine("wwwroot/images", file.FileName);
-                            var stream = new FileStream(path, FileMode.Create);
-                            file.CopyToAsync(stream);
-                            editStaff.ProfileImage = "../images/" + file.FileName;
+                            if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
+                            {
+                                string path = Path.Combine("wwwroot/images", file.FileName);
+                                var stream = new FileStream(path, FileMode.Create);
+                                file.CopyToAsync(stream);
+                                editStaff.ProfileImage = "/images/teachers/" + file.FileName;
 
+                                editStaff.Email = staff.Email;
+                                editStaff.Phone = staff.Phone;
+                                editStaff.Address = staff.Address;
+                                stream.Close();
+                                db.SaveChanges();
+                                return RedirectToAction("Index", "Staffs");
+                            }
+                        }
+                        else if (file == null) //if no change profile images
+                        {
                             editStaff.Email = staff.Email;
                             editStaff.Phone = staff.Phone;
                             editStaff.Address = staff.Address;
                             db.SaveChanges();
                             return RedirectToAction("Index", "Staffs");
                         }
+                        else
+                        {
+                            ViewBag.Msg = "Profile images must be .jpg";
+                            return View();
+                        }
                     }
                     else
                     {
-                        ViewBag.Msg = "Failed .......";
+                        ViewBag.Msg = "Failed";
                     }
                 }
             }

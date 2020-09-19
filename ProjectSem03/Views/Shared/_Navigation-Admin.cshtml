@@ -5,10 +5,10 @@
             <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="" class="nav-link">Home</a>
+            <a asp-action="Index" asp-controller="Admin" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-            <a href="" class="nav-link">Website</a>
+            <a asp-action="Index" asp-controller="Home" class="nav-link">Website</a>
         </li>
     </ul>
 
@@ -17,10 +17,10 @@
         <a class="btn btn-danger" href=""
            onclick="event.preventDefault();
                         document.getElementById('logout-form').submit();">
-            
+            Logout
         </a>
 
-        <form class="d-none" id="logout-form" action="" method="POST" style="display: block;">
+        <form class="d-none" id="logout-form" asp-action="Logout" asp-controller="Home" method="POST" style="display: block;">
         </form>
     </ul>
 </nav>

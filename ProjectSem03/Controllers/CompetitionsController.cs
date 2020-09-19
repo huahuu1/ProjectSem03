@@ -18,17 +18,33 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string cname)
         {
-            var list = from c in db.Competition
-                       join s in db.Staff
-                       on c.StaffId equals s.StaffId
-                       select new CombineModels
-                       {
-                           Staffs = s,
-                           Competitions = c
-                       };
-            return View(list);
+            if (HttpContext.Session.GetString("staffId") == null) //check session
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                var list = from c in db.Competition
+                           join s in db.Staff
+                           on c.StaffId equals s.StaffId
+                           select new CombineModels
+                           {
+                               Staffs = s,
+                               Competitions = c
+                           };
+                if (string.IsNullOrEmpty(cname))
+                {
+                    return View(list);
+                }
+                else
+                {
+                    var filter = list.Where(c=>c.Competitions.CompetitionName.Contains(cname));
+                    return View(filter);
+                }
+
+            }
         }
 
         public IActionResult Create()

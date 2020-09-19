@@ -139,9 +139,10 @@ namespace ProjectSem03.Controllers
                     if (staff.Password.Equals(accPass))
                     {
                         HttpContext.Session.SetString("ename", accName);
+                        HttpContext.Session.SetString("staffName", staff.StaffName);
                         HttpContext.Session.SetString("staffId", staff.StaffId);
                         HttpContext.Session.SetString("staffImage", staff.ProfileImage);
-                        return RedirectToAction("Index", "Staffs", new { area = "" });
+                        return RedirectToAction("Index", "Admin", new { area = "" });
                     }
                     else
                     {

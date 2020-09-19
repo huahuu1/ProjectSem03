@@ -92,7 +92,7 @@ namespace ProjectSem03.Controllers
         {
             var exh = db.Exhibition.Find(id);
 
-            var list = db.Staff.Where(s => s.Role.Equals(1) || s.Role.Equals(2));
+            var list = db.Staff.Where(s => s.Role.Equals(2));
             ViewBag.data = new SelectList(list, "StaffId", "StaffName", exh.StaffId);
 
             if (exh != null)
@@ -107,7 +107,7 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Edit(Exhibition exhibition)
         {
-            var list = db.Staff.Where(s => s.Role.Equals(1) || s.Role.Equals(2));
+            var list = db.Staff.Where(s => s.Role.Equals(2));
             ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
             try
