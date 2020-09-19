@@ -1,4 +1,9 @@
-﻿@model IEnumerable<ProjectSem03.Models.CombineModels>
+﻿@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
+}
+
+@model IEnumerable<ProjectSem03.Models.CombineModels>
 
 @{
     ViewData["Title"] = "Index";
@@ -15,7 +20,7 @@
             <th>Id</th>
             <th>AwardName</th>
             <th>CompetitionName</th>
-            <th>PostTime</th>
+            <th>Winning Post</th>
             <th>StaffName</th>
         </tr>
     </thead>
@@ -26,8 +31,21 @@
                 <td>@item.Awards.AwardId</td>
                 <td>@item.Awards.AwardName</td>
                 <td>@item.Competitions.CompetitionName</td>
-                <td>@item.Postings.PostDate</td>
+                <td>
+                    @if (item.Postings == null || String.IsNullOrEmpty(item.Postings.PostDescription))
+                    {
+                        <span></span>
+                    }
+                    else
+                    {
+                        @item.Postings.PostDescription
+                    }
+                </td>
                 <td>@item.Staffs.StaffName</td>
+                <td>
+                @Html.ActionLink("Update", "Edit", new { id = item.Awards.AwardId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Awards.AwardId }, new { onClick = "return confirm('Are you sure?')" }) |
+            </td>
             </tr>
         }
     </tbody>

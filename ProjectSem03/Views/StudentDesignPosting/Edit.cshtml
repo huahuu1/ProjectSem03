@@ -7,7 +7,6 @@
 @model ProjectSem03.Models.Design
 
 @using Microsoft.AspNetCore.Http
-
 <section class="up-load">
     @using (Html.BeginForm("Edit", "StudentDesignPosting", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row", @id = "upload-form" }))
     {
@@ -47,7 +46,7 @@
                 @Html.ValidationMessageFor(d => d.Price)
                 @*<textarea class="form-control form-control-lg" id="img-description" name="short_description" cols="30" rows="11"></textarea>*@
             </div>
-            <div class="button-upload"><a class="button-hover" onclick="document.forms['upload-form'].submit()"><span>Save</span></a></div>
+            <div class="button-upload"><a class="button-hover" onclick="confirm('Are you sure ?') && document.forms['upload-form'].submit()"><span>Save</span></a></div>
         </div>
     }
     <div style="color:red;">@ViewBag.Msg</div>

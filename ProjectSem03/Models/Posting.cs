@@ -19,10 +19,10 @@ namespace ProjectSem03.Models
         public string PostDescription { get; set; }
         public string Mark { get; set; }
         public string Remark { get; set; }
-        [ForeignKey("DesignID")]
-        public int DesignID { get; set; }
         public bool SoldStatus { get; set; }
         public bool PaidStatus { get; set; }
+        [ForeignKey("DesignID")]
+        public int DesignID { get; set; }
         [ForeignKey("CompetitionId")]
         public int CompetitionId { get; set; }
         [ForeignKey("StaffId")]

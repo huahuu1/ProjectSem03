@@ -1,4 +1,9 @@
-﻿@model ProjectSem03.Models.Student
+﻿@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
+}
+
+@model ProjectSem03.Models.Student
 
 @{
     ViewData["Title"] = "Edit";
@@ -65,7 +70,7 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(s => s.ProfileImage)
-                <img src="../@Html.DisplayFor(s=>s.ProfileImage)" width="100" height="100" alt="@Html.DisplayFor(s=>s.StudentId)" />
+                <img src="@Html.DisplayFor(s=>s.ProfileImage)" width="100" height="100" alt="@Html.DisplayFor(s=>s.StudentId)" />
                 <div>
                     <input type="file" name="file" />
                 </div>
@@ -82,6 +87,3 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

@@ -28,8 +28,8 @@
                             <li><i class="far fa-calendar-check"></i><span>@item.StartDate.ToShortDateString()</span></li>
                             <li><i class="far fa-calendar-times"></i><span>@item.EndDate.ToShortDateString()</span></li>
                             <script type="text/javascript">
-                                var startDate = '@item.StartDate';
-                                var endDate = '@item.EndDate';
+                                var startDate = '@DateTime.Now';
+                                var endDate = '@item.EndDate.ToString("yyyy/MM/dd hh:mm")';
                             </script>
                         </ul>
                     </div>

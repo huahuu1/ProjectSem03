@@ -25,7 +25,6 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                //IEnumerable<Student> list = db.Student.ToList();
                 var list = db.Student.ToList();
                 return View(list);
             }
@@ -87,18 +86,18 @@ namespace ProjectSem03.Controllers
         {
             try
             {
-                if (ModelState.IsValid && file != null) //check CreateViewStudent and profileimages
+                if (ModelState.IsValid) //check CreateViewStudent and profileimages
                 {
-                    if (file.Length > 0)
+                    if (file != null && file.Length > 0)
                     {
-                        //profile images must be .jpg or .png
-                        if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))
+                        //profile images must be .jpg
+                        if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
                         {
                             //choose image
                             string path = Path.Combine("wwwroot/images", file.FileName);
                             var stream = new FileStream(path, FileMode.Create);
                             file.CopyToAsync(stream);
-                            student.ProfileImage = "../images/" + file.FileName;
+                            student.ProfileImage = "/images/" + file.FileName;
                             //key
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             student.Password = AesEncDesc.EncryptString(key, student.Password);
@@ -159,7 +158,7 @@ namespace ProjectSem03.Controllers
                     {
                         if (file != null && file.Length > 0) //profile images must be .jpg
                         {
-                            if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg") || Path.GetExtension(file.FileName).ToLower().Equals(".png"))
+                            if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
                             {
                                 string path = Path.Combine("wwwroot/images", file.FileName);
                                 var stream = new FileStream(path, FileMode.Create);
@@ -172,11 +171,11 @@ namespace ProjectSem03.Controllers
                                 model.Email = student.Email;
                                 model.JoinDate = student.JoinDate;
                                 model.Address = student.Address;
-                                student.ProfileImage = "../images/" + file.FileName;
+                                student.ProfileImage = "/images/" + file.FileName;
                                 model.ProfileImage = student.ProfileImage;
                                 //Staff cannot change Student CompetitionId and Password
                                 db.SaveChanges();
-                                stream.Close();
+                                
                                 return RedirectToAction("Index", "Students");
                             }
                         }
