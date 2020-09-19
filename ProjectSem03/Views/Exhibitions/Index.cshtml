@@ -6,10 +6,6 @@
 @model IEnumerable<ProjectSem03.Models.CombineModels>
 @using Microsoft.AspNetCore.Http
 
-@{
-    ViewData["Title"] = "Index";
-}
-
 @using (Html.BeginForm("Index", "Exhibitions", FormMethod.Post, new { @class = "form-inline form-group" }))
 {
 
@@ -18,7 +14,6 @@
     <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="pname" placeholder="Enter place" />
     <button style="height: 2.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
 }
-<<<<<<< HEAD
 
 <div class="table-responsive">
     <table class="table table-bordered table-valign-middle">
@@ -59,10 +54,13 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Staffs.StaffName)
                     </td>
-                    
+
                     <td style="width: 15%;">
                         <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Exhibitions" asp-route-id="@item.Exhibitions.ExhibitionId"><i class="fas fa-folder"></i> Update</a>
+                    @if (Context.Session.GetInt32("staffRole") == 1)
+                    {
                         <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Exhibitions" asp-route-id="@item.Exhibitions.ExhibitionId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                    }
                     </td>
                 </tr>
             }
@@ -70,64 +68,4 @@
     </table>
 </div>
 
-=======
-<br />
-<p>
-    <a asp-action="Create">Create New Exhibition</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>ExhibitionName</th>
-            <th>Place</th>
-            <th>StartDate</th>
-            <th>EndDate</th>
-            <th>StaffName</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Context.Session.GetInt32("staffRole") == 1)
-        {
-            @foreach (var item in ViewBag.data)
-            {
-                <tr>
-                    <td>@item.Exhibitions.ExhibitionId</td>
-                    <td>@item.Exhibitions.ExhibitionName</td>
-                    <td>@item.Exhibitions.Place</td>
-                    <td>@item.Exhibitions.StartDate.ToString("dd/MM/yyyy")</td>
-                    <td>@item.Exhibitions.EndDate.ToString("dd/MM/yyyy")</td>
-                    <td>@item.Staffs.StaffName</td>
-                    <td>
-                        @Html.ActionLink("Update", "Edit", new { id = item.Exhibitions.ExhibitionId })
-                    </td>
-                </tr>
-            }
-        }
-        else
-        {
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>@item.Exhibitions.ExhibitionId</td>
-                    <td>@item.Exhibitions.ExhibitionName</td>
-                    <td>@item.Exhibitions.Place</td>
-                    <td>@item.Exhibitions.StartDate.ToString("dd/MM/yyyy")</td>
-                    <td>@item.Exhibitions.EndDate.ToString("dd/MM/yyyy")</td>
-                    <td>@item.Staffs.StaffName</td>
-                    <td>
-                        @Html.ActionLink("Update", "Edit", new { id = item.Exhibitions.ExhibitionId }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Exhibitions.ExhibitionId }, new { onClick = "return confirm('Are you sure?')" })
-                    </td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>
-<br />
-<p>
-    @Html.ActionLink("Back to Staff Functions", "Index", "Staffs")
-</p>
->>>>>>> 864c0a09e4f095f7912d0d195d779c4c4d1c895e
 

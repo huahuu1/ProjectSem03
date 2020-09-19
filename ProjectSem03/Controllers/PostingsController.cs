@@ -7,7 +7,6 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.AspNetCore.Http;
 
 namespace ProjectSem03.Controllers
 {
