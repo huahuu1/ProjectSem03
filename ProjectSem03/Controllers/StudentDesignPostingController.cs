@@ -350,66 +350,12 @@ namespace ProjectSem03.Controllers
                         return RedirectToAction("Upload", "Home");
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    return BadRequest("Delete Failed");
+                    ViewBag.msg = "You cannot delete this design because it's sent to your teacher";
                 }
             }
             return View();
         }
-
-        //LOGIN
-        public IActionResult Login()
-        {
-            return View();
-        }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Login(StudentLogin studentLogin)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            var model = db.Student.Where(s => s.StudentId.Equals(studentLogin.StudentId)).FirstOrDefault();
-        //            if (model != null) //if found
-        //            {
-        //                var key = "b14ca5898a4e4133bbce2ea2315a1916";
-        //                model.Password = AesEncDesc.DecryptString(key, model.Password);
-        //                if (model.Password.Equals(studentLogin.Password))
-        //                {
-        //                    HttpContext.Session.SetString("studentid", studentLogin.StudentId); //session
-        //                    return RedirectToAction("Index");
-        //                }
-        //                else
-        //                {
-        //                    ViewBag.Msg = "Wrong Password";
-        //                }
-        //            }
-        //            else
-        //            {
-        //                ViewBag.Msg = "Username not found";
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ViewBag.Msg = ex.Message;
-        //    }
-        //    return View();
-        //}
-
-        ////LOGOUT
-        //public IActionResult Logout()
-        //{
-        //    var model = HttpContext.Session.GetString("studentid");
-        //    if (model != null)
-        //    {
-        //        HttpContext.Session.Clear();
-        //        return RedirectToAction("Login");
-
-        //    }
-        //    return View();
-        //}
     }//end controller
 }

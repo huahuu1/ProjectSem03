@@ -21,10 +21,34 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string dname)
         {
-            var list = db.Design.ToList();
-            return View(list);
+            if (HttpContext.Session.GetString("staffId") == null) //check session
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                var list = from d in db.Design
+                           join e in db.Exhibition
+                           on d.ExhibitionID equals e.ExhibitionId into groupjoin
+                           from e in groupjoin.DefaultIfEmpty()
+                           select new CombineModels
+                           {
+                               Designs = d,
+                               Exhibitions = e
+                           };
+                if (string.IsNullOrEmpty(dname))
+                {
+                    return View(list);
+                }
+                else
+                {
+                    var filter = list.Where(d => d.Designs.DesignName.Contains(dname));
+                    return View(filter);
+                }
+
+            }
         }
 
 
@@ -64,17 +88,17 @@ namespace ProjectSem03.Controllers
                     if (editDesign != null)
                     {
                         editDesign.ExhibitionID = design.ExhibitionID;
-                        editDesign.Price = design.Price;
-
-                        if(design.Price > 0)
-                        {
-                            db.SaveChanges();
-                            return RedirectToAction("Index", "Designs");
-                        }
-                        else
-                        {
-                            return RedirectToAction("Edit", "Designs");
-                        }
+                        //editDesign.Price = design.Price;
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Designs");
+                        //if (design.Price > 0)
+                        //{
+                            
+                        //}
+                        //else
+                        //{
+                        //    return RedirectToAction("Edit", "Designs");
+                        //}
                     }
                     else
                     {

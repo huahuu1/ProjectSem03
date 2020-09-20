@@ -117,7 +117,7 @@ namespace ProjectSem03.Controllers
                             //key
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             student.Password = AesEncDesc.EncryptString(key, student.Password);
-                            student.StudentId = GenId();
+                            //student.StudentId = GenId();
                             db.Student.Add(student);
                             stream.Close();
                             db.SaveChanges();

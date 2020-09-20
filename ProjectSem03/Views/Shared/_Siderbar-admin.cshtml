@@ -16,172 +16,192 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
-         with font-awesome or any other icon font library -->
-            @if (Context.Session.GetInt32("staffRole") != 2)
-            {
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            Staff
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a asp-controller="Staffs" asp-action="Index" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Staff List</p>
-                            </a>
-                        </li>
-                    @if (Context.Session.GetInt32("staffRole") == 0)
-                    {
-                        <li class="nav-item">
-                            <a asp-controller="Staffs" asp-action="Create" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
-                                <p style="padding-left: 0.5rem">Add New Staff</p>
-                            </a>
-                        </li>
-                    }
-                    </ul>
-                </li>
-            }
-            @if (Context.Session.GetInt32("staffRole") != 2)
-            {
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-user-graduate"></i>
-                        <p>
-                            Student
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a asp-controller="Students" asp-action="Index" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Student List</p>
-                            </a>
-                        </li>
-                    @if (Context.Session.GetInt32("staffRole") == 0)
-                    {
-                        <li class="nav-item">
-                            <a asp-controller="Students" asp-action="Create" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
-                                <p style="padding-left: 0.5rem">Add New Student</p>
-                            </a>
-                        </li>
-                    }
-                    </ul>
-                </li>
-            }
-            @if (Context.Session.GetInt32("staffRole") != 0)
-            {
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-palette"></i>
-                        <p>
-                            Competition
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a asp-controller="Competitions" asp-action="Index" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Competition List</p>
-                            </a>
-                        </li>
-                    @if (Context.Session.GetInt32("staffRole") == 2)
-                    {
-                        <li class="nav-item">
-                            <a asp-controller="Competitions" asp-action="Create" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
-                                <p style="padding-left: 0.5rem">Add New Competition</p>
-                            </a>
-                        </li>
-                    }
-                    </ul>
-                </li>
-            }
-            @if (Context.Session.GetInt32("staffRole") != 0)
-            {
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-image"></i>
-                        <p>
-                            Exhibition
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a asp-controller="Exhibitions" asp-action="Index" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Exhibition List</p>
-                            </a>
-                        </li>
-                    @if (Context.Session.GetInt32("staffRole") == 2)
-                    {
-                        <li class="nav-item">
-                            <a asp-controller="Exhibitions" asp-action="Create" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
-                                <p style="padding-left: 0.5rem">Add New Exhibition</p>
-                            </a>
-                        </li>
-                    }
-                    </ul>
-                </li>
-            }
-            @if (Context.Session.GetInt32("staffRole") != 0)
-            {
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-trophy"></i>
-                        <p>
-                            Award
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a asp-controller="Awards" asp-action="Index" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Award List</p>
-                            </a>
-                        </li>
-                    @if (Context.Session.GetInt32("staffRole") == 2)
-                    {
-                        <li class="nav-item">
-                            <a asp-controller="Awards" asp-action="Create" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
-                                <p style="padding-left: 0.5rem">Add New Award</p>
-                            </a>
-                        </li>
-                    }
-                    </ul>
-                </li>
-            }
-            @if (Context.Session.GetInt32("staffRole") == 2)
-            {
-                <li class="nav-item has-treeview">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-clipboard"></i>
-                        <p>
-                            Posting
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a asp-controller="Postings" asp-action="Index" class="nav-link">
-                                <i style="padding-left: 1rem" class="fas fa-list"></i>
-                                <p style="padding-left: 0.5rem">Posting List</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            }
+    with font-awesome or any other icon font library -->
+                @if (Context.Session.GetInt32("staffRole") != 2)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                Staff
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Staffs" asp-action="Index" class="nav-link">
+                                    <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                    <p style="padding-left: 0.5rem">Staff List</p>
+                                </a>
+                            </li>
+                            @if (Context.Session.GetInt32("staffRole") == 0)
+                            {
+                                <li class="nav-item">
+                                    <a asp-controller="Staffs" asp-action="Create" class="nav-link">
+                                        <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
+                                        <p style="padding-left: 0.5rem">Add New Staff</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (Context.Session.GetInt32("staffRole") != 2)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-user-graduate"></i>
+                            <p>
+                                Student
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Students" asp-action="Index" class="nav-link">
+                                    <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                    <p style="padding-left: 0.5rem">Student List</p>
+                                </a>
+                            </li>
+                            @if (Context.Session.GetInt32("staffRole") == 0)
+                            {
+                                <li class="nav-item">
+                                    <a asp-controller="Students" asp-action="Create" class="nav-link">
+                                        <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
+                                        <p style="padding-left: 0.5rem">Add New Student</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (Context.Session.GetInt32("staffRole") != 0)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-palette"></i>
+                            <p>
+                                Competition
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Competitions" asp-action="Index" class="nav-link">
+                                    <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                    <p style="padding-left: 0.5rem">Competition List</p>
+                                </a>
+                            </li>
+                            @if (Context.Session.GetInt32("staffRole") == 2)
+                            {
+                                <li class="nav-item">
+                                    <a asp-controller="Competitions" asp-action="Create" class="nav-link">
+                                        <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
+                                        <p style="padding-left: 0.5rem">Add New Competition</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (Context.Session.GetInt32("staffRole") != 0)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-building"></i>
+                            <p>
+                                Exhibition
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Exhibitions" asp-action="Index" class="nav-link">
+                                    <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                    <p style="padding-left: 0.5rem">Exhibition List</p>
+                                </a>
+                            </li>
+                            @if (Context.Session.GetInt32("staffRole") == 2)
+                            {
+                                <li class="nav-item">
+                                    <a asp-controller="Exhibitions" asp-action="Create" class="nav-link">
+                                        <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
+                                        <p style="padding-left: 0.5rem">Add New Exhibition</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (Context.Session.GetInt32("staffRole") != 0)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-trophy"></i>
+                            <p>
+                                Award
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Awards" asp-action="Index" class="nav-link">
+                                    <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                    <p style="padding-left: 0.5rem">Award List</p>
+                                </a>
+                            </li>
+                            @if (Context.Session.GetInt32("staffRole") == 2)
+                            {
+                                <li class="nav-item">
+                                    <a asp-controller="Awards" asp-action="Create" class="nav-link">
+                                        <i style="padding-left: 1rem" class="fas fa-folder-plus"></i>
+                                        <p style="padding-left: 0.5rem">Add New Award</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+                @if (Context.Session.GetInt32("staffRole") == 2)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-clipboard"></i>
+                            <p>
+                                Posting
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Postings" asp-action="Index" class="nav-link">
+                                    <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                    <p style="padding-left: 0.5rem">Posting List</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
+                @if (Context.Session.GetInt32("staffRole") == 2)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-images"></i>
+                            <p>
+                                Design
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-controller="Designs" asp-action="Index" class="nav-link">
+                                    <i style="padding-left: 1rem" class="fas fa-list"></i>
+                                    <p style="padding-left: 0.5rem">Design List</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                }
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

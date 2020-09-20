@@ -1,65 +1,62 @@
-﻿@model IEnumerable<ProjectSem03.Models.Design>
-
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
-<h2>List of Designs</h2>
+@model IEnumerable<ProjectSem03.Models.CombineModels>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DesignName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Painting)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubmitDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ExhibitionID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
+@using (Html.BeginForm("Index", "Designs", FormMethod.Post, new { @class = "form-inline form-group" }))
+{
+
+    <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="dname" placeholder="Enter design name" />
+    <button style="height: 2.5rem; margin-right: 1rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-valign-middle">
+        <thead>
+            <tr class="text-center">
+                <th>ID</th>
+                <th>Design Name</th>
+                <th>Image</th>
+                <th>Description</th>
+                <th>Submit Date</th>
+                <th>Exhibition Name</th>
+                <th>Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr class="text-center">
                 <td>
-                    @Html.DisplayFor(modelItem => item.DesignName)
+                    @Html.DisplayFor(modelItem => item.Designs.DesignId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Painting)
+                    @Html.DisplayFor(modelItem => item.Designs.DesignName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    <img src="@item.Designs.Painting" width="100" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SubmitDate)
+                    @Html.DisplayFor(modelItem => item.Designs.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ExhibitionID)
+                    @item.Designs.SubmitDate.ToString("dd/MM/yyyy hh:mm tt")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price) $
+                    @Html.DisplayFor(modelItem => item.Exhibitions.ExhibitionName)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.DesignId">Edit</a>
+                    @Html.DisplayFor(modelItem => item.Designs.Price)
+                </td>
+
+                <td style="width: 15%;">
+                    <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Designs" asp-route-id="@item.Designs.DesignId"><i class="fas fa-folder"></i> Update</a>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
-<br />
-<p>
-    @Html.ActionLink("Back to Staff Functions", "Index", "Staffs")
-</p>
+            }
+        </tbody>
+    </table>
+</div>
