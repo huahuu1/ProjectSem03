@@ -51,12 +51,15 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Create()
         {
+            var listAward = db.Award.ToList();
+            
             if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
-                var list2 = db.Competition.ToList();
+                // show competition is not with any awards
+                var list2 = db.Competition.Where(c=> !db.Award.Select(a=>a.CompetitionID).Contains(c.CompetitionId));
                 ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
 
                 var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
@@ -72,14 +75,14 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Create(Award award)
         {
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+            //var list = db.Staff.Where(s => s.Role.Equals(2));
+            //ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
-            var list2 = db.Competition.ToList();
-            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
+            //var list2 = db.Competition.Where(c => c.CompetitionId != award.CompetitionID);
+            //ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
 
-            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
-            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
+            //var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+            //ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
 
             try
             {
@@ -106,7 +109,7 @@ namespace ProjectSem03.Controllers
             if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var listAward = db.Award.Find(id);
-
+                
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
 
@@ -133,14 +136,15 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Edit(Award award)
         {
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+            //var list = db.Staff.Where(s => s.Role.Equals(2));
+            //ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
-            var list2 = db.Competition.ToList();
-            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
+            ////var list2 = db.Competition.ToList();
+            //var list2 = db.Competition.Where(c=>c.CompetitionId != award.CompetitionID);
+            //ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
 
-            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
-            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
+            //var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+            //ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
 
             try
             {

@@ -350,7 +350,7 @@ namespace ProjectSem03.Controllers
                         return RedirectToAction("Upload", "Home");
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     ViewBag.msg = "You cannot delete this design because it's sent to your teacher";
                 }
