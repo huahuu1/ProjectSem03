@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<ProjectSem03.Models.CombineModels>
+
 @{
     ViewData["Title"] = "Exhibition";
     Layout = "~/Views/Shared/_Layout-noSlider.cshtml";
@@ -7,29 +8,33 @@
 @using (Html.BeginForm("Exhibition", "Home", FormMethod.Post))
 {
     <label>Select an Exhibition: </label>
-    @Html.DropDownList("ename", ViewBag.Exhibition as SelectList, "All")
-    <input type="submit" value="Search">
+    @Html.DropDownList("ename", ViewBag.data as SelectList, "All", new { onchange = @"form.submit();" } )
 }
 
 <section class="exhibition">
     <div class="wrapper-ex">
         <div class="ex-title"><span>Exhibition highlights</span><span>currently on display</span></div>
-
-        @foreach (var item in Model)
+        @foreach (var item in ViewBag.Exhibition)
         {
             <div class="ex-content">
-                @*<div class="conduct-time"><span>@item.Exhibitions.ExhibitionName / @item.Exhibitions.StartDate - @item.Exhibitions.EndDate / @item.Exhibitions.Place</span></div>*@
-                <div class="ex-designs row">
-                     <div class="designs-show col-lg-3">
-                         <div class="show-inner">
-                             <div class="show-image"><a href="#"><img src="../@item.Designs.Painting" alt="" /></a></div>
-                             <div class="show-info"><span>@item.Designs.SubmitDate</span><span>@item.Designs.DesignName</span><span>@item.Designs.StudentId</span><a class="button-hover" href="#"><span>View more</span></a></div>
-                             @*<div class="show-info"><span>$ @item.Designs.Price</span></div>*@
-                          </div>
-                     </div>
-                </div>
+                <div class="conduct-time"><span>@item.ExhibitionName / @item.StartDate - @item.EndDate / @item.Place</span></div>
+                @foreach (var itemA in Model)
+                {
+                    @if (item.ExhibitionId == itemA.Exhibitions.ExhibitionId)
+                    {
+                        <div class="ex-designs row">
+                            <div class="designs-show col-lg-3">
+                                <div class="show-inner">
+                                    <div class="show-image"><a href="#"><img src="../@itemA.Designs.Painting" alt="" /></a></div>
+                                    <div class="show-info"><span>@itemA.Designs.SubmitDate</span><span>@itemA.Designs.DesignName</span><span>@itemA.Designs.StudentId</span><a class="button-hover" href="#"><span>View more</span></a></div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
             </div>
-        }
+            <br /><br />
+         }
     </div>
 </section>
 
