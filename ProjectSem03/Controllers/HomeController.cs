@@ -45,8 +45,11 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Exhibition(string ename)
         {
+            
+            ViewBag.Exhibition = db.Exhibition.ToList();
+
             var exh = db.Exhibition.ToList();
-            ViewBag.Exhibition = new SelectList(exh, "ExhibitionId", "ExhibitionName");
+            ViewBag.data = new SelectList(exh, "ExhibitionId", "ExhibitionName");
 
             var list = from e in db.Exhibition
                        join d in db.Design on e.ExhibitionId equals d.ExhibitionID

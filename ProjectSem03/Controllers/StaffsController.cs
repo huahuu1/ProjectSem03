@@ -56,11 +56,15 @@ namespace ProjectSem03.Controllers
         [ActionName("Create")]
         public IActionResult Create(Staff staff, IFormFile file)
         {
+            var staffid = db.Staff.SingleOrDefault(s => s.StaffId.Equals(staff.StaffId));
+            var email = db.Staff.SingleOrDefault(e => e.Email.Equals(staff.Email));
+            var phone = db.Staff.SingleOrDefault(p => p.Phone.Equals(staff.Phone));
+
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (file.Length > 0)
+                    if (file!= null && file.Length > 0)
                     {
                         string path = Path.Combine("wwwroot/images", file.FileName);
                         var stream = new FileStream(path, FileMode.Create);
@@ -69,10 +73,36 @@ namespace ProjectSem03.Controllers
 
                         var key = "b14ca5898a4e4133bbce2ea2315a1916";
                         staff.Password = AesEncDesc.EncryptString(key, staff.Password);
-                        db.Staff.Add(staff);
-                        stream.Close();
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Staffs");
+
+                        if(staffid == null)
+                        {
+                            if (email == null)
+                            {
+                                if (phone == null)
+                                {
+                                    db.Staff.Add(staff);
+                                    stream.Close();
+                                    db.SaveChanges();
+                                    return RedirectToAction("Index", "Staffs");
+                                }
+                                else
+                                {
+                                    ViewBag.Phone = "Phone is already existed. Try again";
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.Email = "Email is already existed. Try again";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.StaffId = "StaffId is already existed. Try again";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Image = "Image Upload Container Cannot Be Empty";
                     }
                 }
                 else
