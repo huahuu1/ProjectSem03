@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +25,7 @@ namespace ProjectSem03
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //step 2
             services.AddSession();
             services.AddDbContext<ProjectDB>(option => option.UseSqlServer("server=.;database=Project03;Trusted_Connection=true"));
             //services.AddBreadcrumbs(GetType().Assembly);
