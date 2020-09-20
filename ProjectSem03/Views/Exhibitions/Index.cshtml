@@ -4,56 +4,68 @@
 }
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
+@using Microsoft.AspNetCore.Http
 
-@{
-    ViewData["Title"] = "Index";
-}
-
-<h2>List of Exhibitions</h2>
-<br />
-@using (Html.BeginForm("Index", "Exhibitions", FormMethod.Post))
+@using (Html.BeginForm("Index", "Exhibitions", FormMethod.Post, new { @class = "form-inline form-group" }))
 {
-    <div>
-        <input type="text" name="ename" placeholder="Enter an exhibition" /> |
-        <input type="text" name="pname" placeholder="Enter a place" />
-    </div>
-    <div><input type="submit" value="Search"></div>
+
+    <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="ename" placeholder="Enter exhibition name" />
+    <button style="height: 2.5rem; margin-right: 1rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
+    <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="pname" placeholder="Enter place" />
+    <button style="height: 2.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
 }
-<br />
-<p>
-    <a asp-action="Create">Create New Exhibition</a>
-</p>
-<p>
-    @Html.ActionLink("Assign Designs", "Index", "Displays")
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>ExhibitionName</th>
-            <th>Place</th>
-            <th>StartDate</th>
-            <th>EndDate</th>
-            <th>StaffName</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Exhibitions.ExhibitionId</td>
-                <td>@item.Exhibitions.ExhibitionName</td>
-                <td>@item.Exhibitions.Place</td>
-                <td>@item.Exhibitions.StartDate.ToShortDateString()</td>
-                <td>@item.Exhibitions.EndDate.ToShortDateString()</td>
-                <td>@item.Staffs.StaffName</td>
-                <td>
-                    @Html.ActionLink("Update", "Edit", new { id = item.Exhibitions.ExhibitionId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Exhibitions.ExhibitionId }, new { onClick = "return confirm('Are you sure?')" })
-                </td>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-valign-middle">
+        <thead>
+            <tr class="text-center">
+                <th>Id</th>
+                <th>Exhibition Name</th>
+                <th>Place</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Staff Name</th>
+                <th>
+                    <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Exhibitions">
+                        <i class="fas fa-plus"></i> Add New
+                    </a>
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="text-center">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Exhibitions.ExhibitionId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Exhibitions.ExhibitionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Exhibitions.Place)
+                    </td>
+                    <td>
+                        @item.Exhibitions.StartDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @item.Exhibitions.EndDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Staffs.StaffName)
+                    </td>
+
+                    <td style="width: 15%;">
+                        <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Exhibitions" asp-route-id="@item.Exhibitions.ExhibitionId"><i class="fas fa-folder"></i> Update</a>
+                    @if (Context.Session.GetInt32("staffRole") == 1)
+                    {
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Exhibitions" asp-route-id="@item.Exhibitions.ExhibitionId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                    }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 

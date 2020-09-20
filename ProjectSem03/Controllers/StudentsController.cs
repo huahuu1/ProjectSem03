@@ -17,7 +17,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string sname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -26,20 +26,74 @@ namespace ProjectSem03.Controllers
             else
             {
                 var list = db.Student.ToList();
-                return View(list);
+                if (string.IsNullOrEmpty(sname))
+                {
+                    return View(list);
+                }
+                else
+                {
+                    var filter = list.Where(s => s.FirstName.ToLower().Contains(sname) || s.FirstName.ToUpper().Contains(sname) || s.LastName.ToLower().Contains(sname) || s.LastName.ToUpper().Contains(sname));
+                    return View(filter);
+                }
+
             }
+        }
+
+        //Method
+        private string GenId()
+        {
+            var model = db.Student.Last();
+            string FirstId = model.StudentId.Substring(0, 3);
+            string AffterID = model.StudentId.Substring(3, 7);
+
+            string LastNummberId = "";
+            for (int i = 0; i <= AffterID.Length - 1; i++)
+            {
+                if (int.Parse(AffterID[i].ToString()) != 0)
+                {
+                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);
+                    break;
+                }
+            }
+
+            LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
+
+            int CountId = LastNummberId.Length; //full lenghtid
+            Console.WriteLine(CountId);
+            string FullId = FirstId;
+            for (int i = 0; i < 7; i++)
+            {
+                if (i == 7 - CountId)
+                {
+                    FullId += LastNummberId;
+                    break;
+                }
+                else
+                {
+                    FullId += "0";
+                }
+            }
+
+            return FullId;
         }
 
         //CREATE
         public IActionResult Create()
         {
-            if (HttpContext.Session.GetString("staffId") == null) //check login
+            if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                return RedirectToAction("Login");
+                if (HttpContext.Session.GetString("staffId") == null) //check login
+                {
+                    return RedirectToAction("Login");
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
@@ -59,13 +113,14 @@ namespace ProjectSem03.Controllers
                             string path = Path.Combine("wwwroot/images", file.FileName);
                             var stream = new FileStream(path, FileMode.Create);
                             file.CopyToAsync(stream);
-                            student.ProfileImage = "/images/" + file.FileName;
+                            student.ProfileImage = "/images/students/" + file.FileName;
                             //key
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             student.Password = AesEncDesc.EncryptString(key, student.Password);
+                            //student.StudentId = GenId();
                             db.Student.Add(student);
-                            db.SaveChanges();
                             stream.Close();
+                            db.SaveChanges();
                             return RedirectToAction("Index", "Students");
                         }
                     }
@@ -89,22 +144,29 @@ namespace ProjectSem03.Controllers
         //EDIT
         public IActionResult Edit(string id)
         {
-            if (HttpContext.Session.GetString("staffId") == null) //check session
+            if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                return RedirectToAction("Login");
-            }
-            else
-            {
-                var model = db.Student.Find(id);
-                if (model != null)
+                if (HttpContext.Session.GetString("staffId") == null) //check session
                 {
-                    return View(model); ;
+                    return RedirectToAction("Login");
                 }
                 else
                 {
-                    return View();
-                }
-            } //end check session
+                    var model = db.Student.Find(id);
+                    if (model != null)
+                    {
+                        return View(model); ;
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                } //end check session
+            }
+            else
+            {
+                return RedirectToAction("Index", "Staffs");
+            }
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -132,11 +194,12 @@ namespace ProjectSem03.Controllers
                                 model.Email = student.Email;
                                 model.JoinDate = student.JoinDate;
                                 model.Address = student.Address;
-                                student.ProfileImage = "/images/" + file.FileName;
+                                student.ProfileImage = "/images/students/" + file.FileName;
                                 model.ProfileImage = student.ProfileImage;
                                 //Staff cannot change Student CompetitionId and Password
+                                stream.Close();
                                 db.SaveChanges();
-                                
+
                                 return RedirectToAction("Index", "Students");
                             }
                         }
@@ -173,7 +236,7 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        //DELETE        
+        //DELETE
         public IActionResult Delete(string id)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session

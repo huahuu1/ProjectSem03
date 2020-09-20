@@ -1,45 +1,76 @@
-﻿@model IEnumerable<ProjectSem03.Models.CombineModels>
-
-@{
-    ViewData["Title"] = "Index";
+﻿@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
-<h2>List of Postings</h2>
+@model IEnumerable<ProjectSem03.Models.CombineModels>
+@using Microsoft.AspNetCore.Http
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Post Date</th>
-            <th>Post Description</th>
-            <th>Mark</th>
-            <th>Remark</th>
-            <th>Sold Status</th>
-            <th>Paid Status</th>
-            <th>Design Name</th>
-            <th>Competition Name</th>
-            <th>Staff Name</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Postings.PostingId</td>
-                <td>@item.Postings.PostDate</td>
-                <td>@item.Postings.PostDescription</td>
-                <td>@item.Postings.Mark</td>
-                <td>@item.Postings.Remark</td>
-                <td>@item.Postings.SoldStatus</td>
-                <td>@item.Postings.PaidStatus</td>
-                <td>@item.Designs.DesignName</td>
-                <td>@item.Competitions.CompetitionName</td>
-                <td>@item.Staffs.StaffName</td>
-                <td>
-                    @Html.ActionLink("Update", "Edit", new { id = item.Postings.PostingId })
-                </td>
+@using (Html.BeginForm("Index", "Postings", FormMethod.Post, new { @class = "form-inline form-group" }))
+{
+    <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="pname" placeholder="Enter student name" />
+    <button style="height: 2.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered table-valign-middle">
+        <thead>
+            <tr class="text-center">
+                <th>ID</th>
+                <th>Post Date</th>
+                <th>Post Description</th>
+                <th>Mark</th>
+                <th>Remark</th>
+                <th>Sold Status</th>
+                <th>Paid Status</th>
+                <th>Design Name</th>
+                <th>Competition Name</th>
+                <th>Staff Name</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="text-center">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Postings.PostingId)
+                    </td>
+                    <td>
+                        @item.Postings.PostDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Postings.PostDescription)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Postings.Mark)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Postings.Remark)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Postings.SoldStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Postings.PaidStatus)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Designs.DesignName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Competitions.CompetitionName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Staffs.StaffName)
+                    </td>
+                    <td style="width: 150px;">
+                        @if (Context.Session.GetInt32("staffRole") == 2)
+                        {
+                            <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Postings" asp-route-id="@item.Postings.PostingId"><i class="fas fa-folder"></i> Update</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

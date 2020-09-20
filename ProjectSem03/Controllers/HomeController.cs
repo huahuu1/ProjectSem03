@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ProjectSem03.Models;
 
@@ -50,6 +51,7 @@ namespace ProjectSem03.Controllers
             var list = from e in db.Exhibition
                        join d in db.Design on e.ExhibitionId equals d.ExhibitionID
                        join stu in db.Student on d.StudentId equals stu.StudentId
+                       where e.ExhibitionId.Equals(d.ExhibitionID)
                        orderby e.ExhibitionId
                        select new CombineModels
                        {
@@ -57,6 +59,7 @@ namespace ProjectSem03.Controllers
                            Designs = d,
                            Students = stu
                        };
+
             if (string.IsNullOrEmpty(ename))
             {
                 return View(list);
@@ -69,51 +72,30 @@ namespace ProjectSem03.Controllers
             }
         }
 
-        private List<DesignStudent> designStudentList()
+        private List<CombineModels> designStudentList()
         {
             var list = (from d in db.Design
                         join s in db.Student on d.StudentId equals s.StudentId
                         where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
-                        select new DesignStudent
+                        select new CombineModels
                         {
-                            Design = d,
-                            Student = s
+                            Designs = d,
+                            Students = s
                         }).ToList();
             return list;
         }
 
         public IActionResult Upload(int id)
         {
-            string stuId = HttpContext.Session.GetString("studentid");
-            if (stuId == null) //check login
+            if (HttpContext.Session.GetString("ename") == null) //check session
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 //Viewbag list of student designs
                 ViewBag.designList = designStudentList();
-
-                //check if student is already registered competition
-                var postList = (from p in db.Posting
-                                join d in db.Design on p.DesignID equals d.DesignId
-                                where p.CompetitionId == id && d.StudentId.Equals(stuId) && p.DesignID.Equals(d.DesignId)
-                                select new DesignPosting
-                                {
-                                    Design = d,
-                                    Posting = p
-                                }).ToList();
-                if (postList.Count > 0) //check row
-                {
-                    //TempData["testmsgs"] = "<script>alert('You have already registered for this competition');</script>";
-                    ViewBag.Msg = "You have already registered for this competition";
-                    return View();
-                }
-                else
-                {
-                    HttpContext.Session.SetInt32("registerCompetitionId", id); // competitionId
-                    return View();
-                }
+                return View();
             }
         }
 
@@ -130,7 +112,7 @@ namespace ProjectSem03.Controllers
             {
                 var staff = db.Staff.SingleOrDefault(s => s.Email.Equals(accName));
                 var student = db.Student.SingleOrDefault(s => s.Email.Equals(accName));
-                
+
                 if (staff != null)
                 {
                     var key = "b14ca5898a4e4133bbce2ea2315a1916";
@@ -138,9 +120,11 @@ namespace ProjectSem03.Controllers
                     if (staff.Password.Equals(accPass))
                     {
                         HttpContext.Session.SetString("ename", accName);
+                        HttpContext.Session.SetString("staffName", staff.StaffName);
                         HttpContext.Session.SetString("staffId", staff.StaffId);
                         HttpContext.Session.SetString("staffImage", staff.ProfileImage);
-                        return RedirectToAction("Index", "Staffs", new { area = "" });
+                        HttpContext.Session.SetInt32("staffRole", staff.Role);
+                        return RedirectToAction("Index", "Admin", new { area = "" });
                     }
                     else
                     {

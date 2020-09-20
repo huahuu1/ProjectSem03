@@ -4,21 +4,72 @@
 }
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
+@using Microsoft.AspNetCore.Http
 
-<h2>List of Competitions</h2>
 
-@foreach (var item in Model)
+@using (Html.BeginForm("Index", "Competitions", FormMethod.Post, new { @class = "form-inline form-group" }))
 {
-    <div style="font-size:medium" class="font-weight-bold border-dark">
-        <div class="border"><img src="@item.Competitions.CompetitionImages" width="100" height="100" /></div>
-        <div class="border">@item.Competitions.CompetitionName</div>
-        <div class="border">@item.Competitions.StartDate.ToString("dd/MM/yyyy hh:mm tt")&nbsp;|&nbsp;@item.Competitions.EndDate.ToString("dd/MM/yyyy hh:mm tt")</div>
-        <div class="border">Organizer: @item.Staffs.StaffName</div>
-        <div class="border">
-            @Html.ActionLink("Update", "Edit", new { id = item.Competitions.CompetitionId })&nbsp;|&nbsp;
-            @Html.ActionLink("Delete", "Delete", new { id = item.Competitions.CompetitionId }, new { onClick = "return confirm('Are you sure?')" })
-        </div>
-    </div>
-    <br />
-    <br />
+    <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="cname" placeholder="Enter competition name" />
+    <button style="height: 2.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
 }
+
+<div>
+    <table class="table table-bordered table-valign-middle">
+        <thead>
+            <tr class="text-center">
+                <th>Competition ID</th>
+                <th>Competition Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Description</th>
+                <th>Image</th>
+                <th>Staff Name</th>
+                <th>
+                @if (Context.Session.GetInt32("staffRole") == 2)
+                {
+                    <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Competitions">
+                        <i class="fas fa-plus"></i> Add New
+                    </a>
+                }
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="text-center">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Competitions.CompetitionId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Competitions.CompetitionName)
+                    </td>
+                    <td>
+                        @item.Competitions.StartDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @item.Competitions.EndDate.ToString("dd/MM/yyyy")
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Competitions.Description)
+                    </td>
+                    <td>
+                        <img src="@item.Competitions.CompetitionImages" width="100"/>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Staffs.StaffName)
+                    </td>
+                    <td style="width: 15%;">
+                    @if (Context.Session.GetInt32("staffRole") == 2)
+                    {
+                        <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Competitions" asp-route-id="@item.Competitions.CompetitionId"><i class="fas fa-folder"></i> Update</a>
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Competitions" asp-route-id="@item.Competitions.CompetitionId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                    }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+

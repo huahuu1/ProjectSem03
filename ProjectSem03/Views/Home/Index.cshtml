@@ -6,6 +6,12 @@
 @using Microsoft.AspNetCore.Http
 
 <section class="competition">
+    <div>
+        @if (TempData["testmsg"] != null)
+        {
+            @Html.Raw(TempData["testmsg"])
+        }
+    </div>
     <div class="container">
         <div class="comp-title">
             <div class="title-text"><span>Upcoming Competitions</span></div>
@@ -22,8 +28,8 @@
                             <li><i class="far fa-calendar-check"></i><span>@item.StartDate.ToShortDateString()</span></li>
                             <li><i class="far fa-calendar-times"></i><span>@item.EndDate.ToShortDateString()</span></li>
                             <script type="text/javascript">
-                                var startDate = '@item.StartDate';
-                                var endDate = '@item.EndDate';
+                                var startDate = '@DateTime.Now';
+                                var endDate = '@item.EndDate.ToString("yyyy/MM/dd hh:mm")';
                             </script>
                         </ul>
                     </div>
@@ -84,7 +90,6 @@
     </div>
 </section>
 
-
 <section class="teachers row">
     <div class="wrapper-teachers col-lg-6">
         <div class="owl-carousel owl-theme teacher-slider">
@@ -139,5 +144,40 @@
         <div class="about-title"><span></span>Tabula<br /> art school</div>
         <div class="about-text"><span>Twee echo park celiac YOLO dreamcatcher bushwick. Pitchfork fam tousled sustainable mumblecore tote bag trust fund tacos organic four dollar toast kickstarter pork belly.</span></div>
         <div class="about-button"><a class="button-hover" href="#"><span>view more</span></a></div>
+    </div>
+</section>
+
+<section class="count-up">
+    <div class="wrapper-countup">
+        <div class="container">
+            <div class="count-content">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="counter-list">
+                            <i class="fas fa-palette"></i><span class="counter">2500</span>
+                            <p>Designs</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="counter-list">
+                            <i class="fas fa-user-graduate"></i><span class="counter">3300</span>
+                            <p>Students</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="counter-list">
+                            <i class="fa fa-trophy"></i><span class="counter">20</span>
+                            <p>Winners</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <div class="counter-list">
+                            <i class="fas fa-images"></i><span class="counter">10</span>
+                            <p>Exhibition</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>

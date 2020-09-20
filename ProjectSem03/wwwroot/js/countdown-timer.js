@@ -1,7 +1,7 @@
 "use strict";
 $("#countdown").ClassyCountdown({
     end: parseInt(new Date(endDate) / 1000),
-    now: parseInt(new Date(startDate) / 1000),
+    now: parseInt($.now() / 1000),
     labels: true,
     style: {
         element: "",

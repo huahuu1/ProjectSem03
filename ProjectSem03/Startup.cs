@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using ProjectSem03.Models;
+using SmartBreadcrumbs.Extensions;
 
 namespace ProjectSem03
 {
@@ -26,6 +27,7 @@ namespace ProjectSem03
         {
             services.AddSession();
             services.AddDbContext<ProjectDB>(option => option.UseSqlServer("server=.;database=Project03;Trusted_Connection=true"));
+            //services.AddBreadcrumbs(GetType().Assembly);
             services.AddControllersWithViews();
         }
 

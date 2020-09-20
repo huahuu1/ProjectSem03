@@ -20,27 +20,58 @@ namespace ProjectSem03.Controllers
         {
             this.db = db;
         }
-        
-        public IActionResult Index()
+
+        public IActionResult Index(string dname)
         {
-            var list = db.Design.ToList();
-            return View(list);
+            if (HttpContext.Session.GetString("staffId") == null) //check session
+            {
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                var list = from d in db.Design
+                           join e in db.Exhibition
+                           on d.ExhibitionID equals e.ExhibitionId into groupjoin
+                           from e in groupjoin.DefaultIfEmpty()
+                           select new CombineModels
+                           {
+                               Designs = d,
+                               Exhibitions = e
+                           };
+                if (string.IsNullOrEmpty(dname))
+                {
+                    return View(list);
+                }
+                else
+                {
+                    var filter = list.Where(d => d.Designs.DesignName.Contains(dname));
+                    return View(filter);
+                }
+
+            }
         }
 
 
         public IActionResult Edit(int id)
         {
-            var exhibition = db.Exhibition.ToList();
-            ViewBag.exhibitionName = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
-
-            var design = db.Design.Find(id);
-            if (design != null)
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
-                return View(design);
+                var exhibition = db.Exhibition.ToList();
+                ViewBag.data = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
+
+                var design = db.Design.Find(id);
+                if (design != null)
+                {
+                    return View(design);
+                }
+                else
+                {
+                    return View();
+                }
             }
             else
             {
-                return View();
+                return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
@@ -51,23 +82,23 @@ namespace ProjectSem03.Controllers
 
             try
             {
-                var editDesign = db.Design.SingleOrDefault(d=>d.DesignId.Equals(design.DesignId));
-                if(ModelState.IsValid)
+                var editDesign = db.Design.SingleOrDefault(d => d.DesignId.Equals(design.DesignId));
+                if (ModelState.IsValid)
                 {
-                    if(editDesign != null)
+                    if (editDesign != null)
                     {
                         editDesign.ExhibitionID = design.ExhibitionID;
-                        editDesign.Price = editDesign.Price;
-
-                        if(editDesign.Price > 0)
-                        {
-                            db.SaveChanges();
-                            return RedirectToAction("Index", "Designs");
-                        }
-                        else
-                        {
-                            ViewBag.Msg = "Price must be larger than zero";
-                        }
+                        //editDesign.Price = design.Price;
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Designs");
+                        //if (design.Price > 0)
+                        //{
+                            
+                        //}
+                        //else
+                        //{
+                        //    return RedirectToAction("Edit", "Designs");
+                        //}
                     }
                     else
                     {

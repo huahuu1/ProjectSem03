@@ -1,52 +1,65 @@
-﻿@model ProjectSem03.Models.Design
-
-@{
-    ViewData["Title"] = "Edit";
+﻿@{
+    ViewData["Title"] = "Admin Page";
+    Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
-<h2>Edit Design</h2>
+@model ProjectSem03.Models.Design
 
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="DesignId" />
-            <input type="hidden" asp-for="DesignName" />
-            <input type="hidden" asp-for="Painting" />
-            <input type="hidden" asp-for="Description" />
-            <input type="hidden" asp-for="SubmitDate" />
-            <input type="hidden" asp-for="StudentId" />
-            <div class="form-group">
-                <label>Exhibition Name: </label>
-                @Html.DropDownList("ExhibitionId", (IEnumerable<SelectListItem>)ViewBag.exhibitionName, "--Choose--")
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12 mx-auto row">
+            <div class="card col-lg-5 col-sm-12 mx-auto">
+                <div class="card-header text-center">
+                    <h3 class="card-title float-none">
+                        Edit Desgin
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Edit", "Designs", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        <div>
+                            @Html.HiddenFor(model => model.DesignId)
+                            @Html.HiddenFor(model => model.DesignName)
+                            @Html.HiddenFor(model => model.Painting)
+                            @Html.HiddenFor(model => model.Description)
+                            @Html.HiddenFor(model => model.SubmitDate)
+                            @Html.HiddenFor(model => model.Price)
+                            @Html.HiddenFor(model => model.StudentId)
+                        </div>
+
+                        <div class="form-group">
+                            <label>Exhibition Name </label>
+                            @Html.DropDownList("ExhibitionID", (IEnumerable<SelectListItem>)ViewBag.data, new { @class = "form-control" })
+                        </div>
+
+                        @*<div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="@Model.Postings.SoldStatus" /> @Html.DisplayNameFor(model => model.Postings.SoldStatus)
+                            </label>
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" asp-for="@Model.Postings.PaidStatus" /> @Html.DisplayNameFor(model => model.Postings.PaidStatus)
+                            </label>
+                        </div>*@
+
+                        <br />
+                        <div class="form-group text-center">
+                            <input class="btn btn-primary" type="submit" value="Update" onclick="return confirm('Are you sure?')" />
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            @*<div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="SoldStatus" /> @Html.DisplayNameFor(model => model.SoldStatus)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="PaidStatus" /> @Html.DisplayNameFor(model => model.PaidStatus)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" onclick="return confirm('Are you sure?')" />
-            </div>*@
-        </form>
+        </div>
     </div>
+</div>
+
+<div>
+    <h3>@ViewBag.Msg</h3>
 </div>
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

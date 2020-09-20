@@ -1,18 +1,22 @@
 ﻿
 @{
-    ViewData["Title"] = "Upload";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout-noSlider.cshtml";
 }
 
 @model ProjectSem03.Models.Design
 
 @using Microsoft.AspNetCore.Http
-
 <section class="up-load">
-    @using (Html.BeginForm("Upload", "StudentDesignPosting", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row" , @id = "upload-form"}))
+    @using (Html.BeginForm("Edit", "StudentDesignPosting", FormMethod.Post, new { enctype = "multipart/form-data", @class = "row", @id = "upload-form" }))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true)
+
+        @Html.HiddenFor(d => d.DesignId)
+        @Html.HiddenFor(d => d.SubmitDate)
+        @Html.HiddenFor(d => d.StudentId)
+
         <div class="file-upload col-lg-6">
             <button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Add Image</button>
             <div class="image-upload-wrap">
@@ -41,14 +45,15 @@
                 @Html.EditorFor(d => d.Price, new { htmlAttributes = new { @type = "number", @min = "0", @value = "0", @step = "0.01", @class = "form-control form-control-lg" } })
                 @Html.ValidationMessageFor(d => d.Price)
                 @*<textarea class="form-control form-control-lg" id="img-description" name="short_description" cols="30" rows="11"></textarea>*@
-                <div class="des-title">
-                    <span>Submit Date:</span>
-                </div>
-                @Html.TextBox("SubmitDate", DateTime.Now, new { @readonly = "readonly", @class = "submit-date-title form-control form-control-lg" })
             </div>
-            <div class="button-upload"><a class="button-hover" onclick="document.forms['upload-form'].submit()"><span>Upload</span></a></div>
+            <div class="button-upload"><a class="button-hover" onclick="confirm('Are you sure ?') && document.forms['upload-form'].submit()"><span>Save</span></a></div>
         </div>
-}
+    }
     <div style="color:red;">@ViewBag.Msg</div>
 </section>
 
+
+
+@*@section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }*@
