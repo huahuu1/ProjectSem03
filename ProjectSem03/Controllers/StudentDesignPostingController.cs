@@ -13,6 +13,8 @@ using System.ComponentModel;
 using System.Dynamic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Net.Http.Headers;
+using System.Net;
+using System.Net.Mail;
 
 namespace ProjectSem03.Controllers
 {
@@ -102,6 +104,7 @@ namespace ProjectSem03.Controllers
                                 //add posting
                                 modelPosting.PostDate = today;
                                 db.SaveChanges();
+                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", "phathuyhuukhanh@gmail.com", "Student [" + model.StudentId + "] has updated the drawing design", "<p><strong>PostingId:" + modelPosting.PostingId + "</strong></p>", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg=="); //Staff gmail: phathuyhuukhanh@gmail.com                                    
                                 return RedirectToAction("Upload", "Home");
                             }
                             else
@@ -139,7 +142,7 @@ namespace ProjectSem03.Controllers
                                     {
                                         System.IO.File.Delete(tempCurFilePath);
                                     }
-
+                                    await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", "phathuyhuukhanh@gmail.com", "Student [" + model.StudentId + "] has updated the drawing design", "<p><strong>PostingId:" + modelPosting.PostingId + "</strong></p>", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg=="); //Staff gmail: phathuyhuukhanh@gmail.com                                    
                                     return RedirectToAction("Upload", "Home");
                                 }
                                 else if (file.Length > 8388608)
@@ -293,6 +296,7 @@ namespace ProjectSem03.Controllers
                                 db.SaveChanges();
                                 string message = "File uploaded Successful";
                                 TempData["message"] = "<script>alert('" + message + "');</script>";
+                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", "phathuyhuukhanh@gmail.com", "Student [" + design.StudentId + "] has uploaded the drawing design", "<p><strong>PostingId:" + modelPosting.PostingId + "</strong></p>", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg=="); //Staff gmail: phathuyhuukhanh@gmail.com                                    
                                 return RedirectToAction("Upload", "Home");
                             }
                             else if (file.Length > 8388608)
@@ -322,32 +326,51 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            string message = "";
             if (HttpContext.Session.GetString("studentid") == null) //check session
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Upload", "Home");
             }
             else
             {
                 try
                 {
                     var model = db.Design.SingleOrDefault(d => d.DesignId.Equals(id));
-                    if (model != null)
+                    var modelPosting = db.Posting.SingleOrDefault(p => p.DesignID.Equals(model.DesignId));
+                    var modelCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(modelPosting.CompetitionId));
+                    var today = DateTime.Now;
+                    ////check today SubmitDate                     
+                    if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
                     {
-                        string tempCurFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //old painting
-                        db.Design.Remove(model);
-                        db.SaveChanges();
-
-                        string message = "File deleted Successful";
-                        TempData["message"] = "<script>alert('" + message + "');</script>";
-
-                        //check old painting exists
-                        if (System.IO.File.Exists(tempCurFilePath))
+                        if (modelPosting.Mark != null || modelPosting.Remark != null)
                         {
-                            System.IO.File.Delete(tempCurFilePath);
+                            message = "This painting has been graded";
                         }
-                        return RedirectToAction("Upload", "Home");
+                        else
+                        {
+                            if (model != null)
+                            {
+                                string tempCurFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //old painting
+                                db.Design.Remove(model);
+                                db.SaveChanges();
+
+                                message = "File deleted Successful";
+
+                                //check old painting exists
+                                if (System.IO.File.Exists(tempCurFilePath))
+                                {
+                                    System.IO.File.Delete(tempCurFilePath);
+                                }
+                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", "phathuyhuukhanh@gmail.com", "Student [" + model.StudentId + "] has deleted the drawing design and posting", "<p><strong>PostingId:" + modelPosting.PostingId + "</strong></p>", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg=="); //Staff gmail: phathuyhuukhanh@gmail.com                                    
+                                return RedirectToAction("Upload", "Home");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        message = "This painting has been graded";
                     }
                 }
                 catch (Exception)
@@ -355,7 +378,69 @@ namespace ProjectSem03.Controllers
                     return BadRequest("Delete Failed");
                 }
             }
+            TempData["message"] = "<script>alert('" + message + "');</script>";
             return View();
+        }
+
+        public interface IEmailService
+        {
+            void Send(string from, string to, string subject, string html);
+        }
+
+        //Send Mail Gmail SMTP
+        public static async Task<bool> SendMail(string _from, string _to, string _subject, string _body, SmtpClient client)
+        {
+            // Tạo nội dung Email
+            MailMessage message = new MailMessage(
+                from: _from,
+                to: _to,
+                subject: _subject,
+                body: _body
+            );
+            message.BodyEncoding = System.Text.Encoding.UTF8;
+            message.SubjectEncoding = System.Text.Encoding.UTF8;
+            message.IsBodyHtml = true;
+            message.ReplyToList.Add(new MailAddress(_from));
+            message.Sender = new MailAddress(_from);
+
+
+            try
+            {
+                await client.SendMailAsync(message);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+    private async Task<bool> SendMailGoogleSmtp(string _from, string _to, string _subject, string _body, string _gmailsend, string _gmailpassword)
+        {
+            var key = "b14ca5898a4e4133bbce2ea2315a1916";
+            _gmailpassword = AesEncDesc.DecryptString(key, _gmailpassword);
+            MailMessage message = new MailMessage(
+                from: _from,
+                to: _to,
+                subject: _subject,
+                body: _body
+            );
+            message.BodyEncoding = System.Text.Encoding.UTF8;
+            message.SubjectEncoding = System.Text.Encoding.UTF8;
+            message.IsBodyHtml = true;
+            message.ReplyToList.Add(new MailAddress(_from));
+            message.Sender = new MailAddress(_from);
+
+            //SmtpClient connect to smtp.gmail.com
+            using (SmtpClient client = new SmtpClient("smtp.gmail.com"))
+            {
+                client.Port = 587;
+                client.Credentials = new NetworkCredential(_gmailsend, _gmailpassword);
+                client.EnableSsl = true;
+                return await SendMail(_from, _to, _subject, _body, client);
+            }
+
         }
 
         //LOGIN        
