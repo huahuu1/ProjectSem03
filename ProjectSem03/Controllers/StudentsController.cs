@@ -176,6 +176,10 @@ namespace ProjectSem03.Controllers
                     {
                         if (file == null) //if no change profile images
                         {
+                            //key
+                            var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                            student.Password = AesEncDesc.EncryptString(key, student.Password);
+                            model.Password = student.Password;
                             model.FirstName = student.FirstName;
                             model.LastName = student.LastName;
                             model.DateOfBirth = student.DateOfBirth;
@@ -203,6 +207,9 @@ namespace ProjectSem03.Controllers
                                     await file.CopyToAsync(stream);
                                     await stream.FlushAsync();
                                 }
+                                var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                                student.Password = AesEncDesc.EncryptString(key, student.Password);
+                                model.Password = student.Password;
                                 model.FirstName = student.FirstName;
                                 model.LastName = student.LastName;
                                 model.DateOfBirth = student.DateOfBirth;
