@@ -28,7 +28,7 @@ namespace ProjectSem03
             //step 2
             services.AddSession();
             services.AddDbContext<ProjectDB>(option => option.UseSqlServer("server=.;database=Project03;Trusted_Connection=true"));
-            //services.AddBreadcrumbs(GetType().Assembly);
+            services.AddBreadcrumbs(GetType().Assembly);
             services.AddControllersWithViews();
         }
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectSem03.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using SmartBreadcrumbs.Attributes;
 
 namespace ProjectSem03.Controllers
 {
@@ -17,6 +18,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Student List")]
         public IActionResult Index(string sname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
@@ -78,6 +80,8 @@ namespace ProjectSem03.Controllers
         }
 
         //CREATE
+        [HttpGet]
+        [Breadcrumb("Create Student")]
         public IActionResult Create()
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)
@@ -96,6 +100,7 @@ namespace ProjectSem03.Controllers
                 return RedirectToAction("Index", "Staffs");
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Student student, IFormFile file)
@@ -142,6 +147,8 @@ namespace ProjectSem03.Controllers
         }
 
         //EDIT
+        [HttpGet]
+        [Breadcrumb("Edit Student")]
         public IActionResult Edit(string id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)

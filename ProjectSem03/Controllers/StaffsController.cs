@@ -7,6 +7,7 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SmartBreadcrumbs.Attributes;
 
 namespace ProjectSem03.Controllers
 {
@@ -18,6 +19,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Staff List")]
         public IActionResult Index(string sname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
@@ -41,6 +43,7 @@ namespace ProjectSem03.Controllers
         }
 
         [HttpGet]
+        [Breadcrumb("Create Staff")]
         public IActionResult Create()
         {
             if(HttpContext.Session.GetInt32("staffRole") == 0)
@@ -117,6 +120,8 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Breadcrumb("Edit Staff")]
         public IActionResult Edit(string id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)

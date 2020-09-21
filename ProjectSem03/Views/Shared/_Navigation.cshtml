@@ -12,31 +12,34 @@
                         <li class="nav-item"><a class="circle" asp-action="Exhibition" asp-controller="Home"><span>exhibition</span></a></li>
                         <li class="nav-item"><a class="circle" asp-action="AboutUs" asp-controller="Home"><span>about us</span></a></li>
 
-                        @if (@Context.Session.GetString("ename") == null)
-                        {
-                            <li><a class="btn btn-login btn-hv btn-hv-bs btn-hv-up trigger-btn" asp-action="Login" asp-controller="Home"><span>login</span></a></li>
-                        }
-                        else if (@Context.Session.GetString("staffId") != null)
-                        {
-                            <li class="nav-item">
-                                <a class="circle student-nav" asp-action="Upload" asp-controller="Home"><img src="@Context.Session.GetString("studentImage")" alt="" /><span>@Context.Session.GetString("ename")</span></a>
-                                <ul class="sub-nav student-sub-nav">
-                                    <li><a asp-action="Index" asp-controller="Admin"><span>Admin Page</span></a></li>
-                                    <li><a asp-action="Logout" asp-controller="Home"><span>Logout</span></a></li>
-                                </ul>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="circle student-nav" asp-action="Upload" asp-controller="Home"><img src="@Context.Session.GetString("studentImage")" alt="" /><span>@Context.Session.GetString("ename")</span></a>
-                                <ul class="sub-nav student-sub-nav">
-                                    <li><a asp-action="Upload" asp-controller="Home"><span>Upload History</span></a></li>
-                                    <li><a asp-action="Logout" asp-controller="Home"><span>Logout</span></a></li>
-                                </ul>
-                            </li>
-                        }
-                        <!-- Modal HTML-->
+                    @if (@Context.Session.GetString("ename") == null)
+                    {
+                        <li><a class="btn btn-login btn-hv btn-hv-bs btn-hv-up trigger-btn" asp-action="Login" asp-controller="Home"><span>login</span></a></li>
+                    }
+                    else if (@Context.Session.GetString("staffId") != null)
+                    {
+                        <li class="nav-item test">
+                            <a class="circle student-nav" asp-action="Index" asp-controller="Admin">
+                                <img src="@Context.Session.GetString("staffImage")" alt="" />
+                                <span>@Context.Session.GetString("ename")</span>
+                            </a>
+                            <ul class="sub-nav student-sub-nav">
+                                <li><a asp-action="Index" asp-controller="Admin"><span>Admin Page</span></a></li>
+                                <li><a asp-action="Logout" asp-controller="Home"><span>Logout</span></a></li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="circle student-nav" asp-action="Upload" asp-controller="Home"><img src="@Context.Session.GetString("studentImage")" alt="" /><span>@Context.Session.GetString("ename")</span></a>
+                            <ul class="sub-nav student-sub-nav">
+                                <li><a asp-action="Upload" asp-controller="Home"><span>Upload History</span></a></li>
+                                <li><a asp-action="Logout" asp-controller="Home"><span>Logout</span></a></li>
+                            </ul>
+                        </li>
+                    }
+                        <li class="nav-item"></li>
                         @*<form asp-controller="Home" asp-action="Login" method="post" class="login-form">
             <div id="myModal" class="modal fade">
                 <div class="modal-dialog modal-login">

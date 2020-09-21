@@ -1276,7 +1276,7 @@ section.teachers {
   height: 600px; }
   section.teachers .wrapper-teachers {
     height: 100%;
-    background-image: url("../assets/images/yellow_brush_stroke_01.jpg");
+    background-image: url("../images/yellow_brush_stroke_01.jpg");
     background-size: contain; }
     section.teachers .wrapper-teachers .teacher-slider {
       height: 100%;
@@ -1348,7 +1348,7 @@ section.teachers {
     padding-left: 9rem;
     padding-right: 6rem;
     background-size: cover;
-    background-image: url("../assets/images/column_gallery.jpg"); }
+    background-image: url("../images/column_gallery.jpg"); }
 
 .owl-carousel .owl-item .owl-lazy:not([src]), .owl-carousel .owl-item .owl-lazy[src^=""] {
   max-height: none !important; }
@@ -1393,7 +1393,7 @@ section.teachers {
           height: 554px;
           top: -0.0015px;
           left: -407px;
-          background-image: url("../img/glenn.jpg");
+          background-image: url("../images/glenn.jpg");
           background-repeat: no-repeat;
           background-position: left top;
           background-size: cover;
@@ -1436,7 +1436,7 @@ section.teachers {
           height: 573px;
           top: -182px;
           left: -8.758px;
-          background-image: url("../img/Team.jpg");
+          background-image: url("../images/Team.jpg");
           background-repeat: no-repeat;
           background-position: left top;
           background-size: cover;
@@ -1624,7 +1624,7 @@ section.teachers {
               height: 298px;
               top: 0px;
               left: 0px;
-              background-image: url("../img/T3.jpg");
+              background-image: url("../images/T3.jpg");
               background-repeat: no-repeat;
               background-position: left top;
               background-size: cover;
@@ -1720,18 +1720,19 @@ section.teachers {
             height: 100%;
             overflow: hidden; }
             .courses .staffs-section .container .frame2-element .frame .image-element .image .image-backgorund {
-              width: 387.642px;
-              height: 298px;
-              top: 0px;
-              left: 0px;
-              background-image: url("../img/T2.jpg");
-              background-repeat: no-repeat;
-              background-position: left top;
-              background-size: cover;
-              background-attachment: scroll;
-              background-origin: content-box;
-              position: absolute;
-              margin: 0 auto; }
+                width: 387.642px;
+                height: 298px;
+                top: 0px;
+                left: 0px;
+                background-image: url("../images/T2.jpg");
+                background-repeat: no-repeat;
+                background-position: left top;
+                background-size: cover;
+                background-attachment: scroll;
+                background-origin: content-box;
+                position: absolute;
+                margin: 0 auto;
+            }
         .courses .staffs-section .container .frame2-element .frame .headline1-element {
           width: 272px;
           top: 317px;
@@ -1820,18 +1821,19 @@ section.teachers {
             height: 100%;
             overflow: hidden; }
             .courses .staffs-section .container .frame3-element .frame .image-element .image .image-backgorund {
-              width: 387.642px;
-              height: 298px;
-              top: 0px;
-              left: 0px;
-              background-image: url("../img/T1.jpg");
-              background-repeat: no-repeat;
-              background-position: left top;
-              background-size: cover;
-              background-attachment: scroll;
-              background-origin: content-box;
-              position: absolute;
-              margin: 0 auto; }
+                width: 387.642px;
+                height: 298px;
+                top: 0px;
+                left: 0px;
+                background-image: url("../images/T1.jpg");
+                background-repeat: no-repeat;
+                background-position: left top;
+                background-size: cover;
+                background-attachment: scroll;
+                background-origin: content-box;
+                position: absolute;
+                margin: 0 auto;
+            }
         .courses .staffs-section .container .frame3-element .frame .headline1-element {
           width: 272px;
           top: 317px;
@@ -2096,7 +2098,9 @@ form .file-upload {
     background-color: #c9ab81;
     position: absolute;
     bottom: 2%;
-    color: transparent; }
+    color: transparent;
+    left: 45%;
+  }
   .files-uploaded .files-uploaded-title:after {
     content: " ";
     width: 15%;
@@ -2105,7 +2109,7 @@ form .file-upload {
     background-color: #c9ab81;
     position: absolute;
     bottom: -24%;
-    left: 1.05%; }
+    left: 42.7%; }
 
 .files-uploaded .files-uploaded-content .img-uploaded .img-wrapper {
   width: 90%;
