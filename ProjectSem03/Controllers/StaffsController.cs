@@ -46,45 +46,7 @@ namespace ProjectSem03.Controllers
                 return View();
             }
 
-        }
-        //Method
-        private string GenId()
-        {
-            //var model = db.Student.LastOrDefault();
-            var model = (from s in db.Staff orderby s.StaffId descending select s).First();
-            string FirstId = model.StaffId.Substring(0, 3);
-            string AffterID = model.StaffId.Substring(3, 6);
-
-            string LastNummberId = "";
-            for (int i = 0; i <= AffterID.Length - 1; i++)
-            {
-                if (int.Parse(AffterID[i].ToString()) != 0)
-                {
-                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);
-                    break;
-                }
-            }
-
-            LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
-
-            int CountId = LastNummberId.Length; //full lenghtid
-            Console.WriteLine(CountId);
-            string FullId = FirstId;
-            for (int i = 0; i < 6; i++)
-            {
-                if (i == 6 - CountId)
-                {
-                    FullId += LastNummberId;
-                    break;
-                }
-                else
-                {
-                    FullId += "0";
-                }
-            }
-
-            return FullId;
-        }
+        }        
         [HttpGet]
         [Breadcrumb("Create Staff")]
         public IActionResult Create()
@@ -126,7 +88,6 @@ namespace ProjectSem03.Controllers
                             {
                                 if (phone == null)
                                 {
-                                    staff.StaffId = GenId();
                                     db.Staff.Add(staff);
                                     stream.Close();
                                     db.SaveChanges();
