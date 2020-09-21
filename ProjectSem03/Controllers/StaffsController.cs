@@ -36,7 +36,7 @@ namespace ProjectSem03.Controllers
                 }
                 else
                 {
-                    list = list.Where(s => s.StaffName.Contains(sname)).ToList().ToPagedList(numpage, maxsize);
+                    list = db.Staff.Where(s => s.StaffName.Contains(sname)).ToList().ToPagedList(numpage, maxsize);
                     ViewBag.page = list;
                     //return View(filter);
                 }
