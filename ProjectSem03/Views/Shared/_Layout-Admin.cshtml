@@ -14,13 +14,15 @@
     <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css" />
     <link rel="stylesheet" href="~/css/adminlte.min.css" />
     <link rel="stylesheet" href="~/css/styles-admin.css" />
+    <link rel="stylesheet" href="~/css/styleValidate.css" />
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-latest.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
     <!-- DateTime picker css-->
     <link rel="stylesheet" href="~/lib/jquery-datetimepicker/jquery.datetimepicker.css" />
-
+    <!--website icon tab-->
+    @Html.Partial("_Favicons")
 </head>
 <body class="hold-transition sidebar-mini">
     <!-- Site wrapper -->
@@ -40,8 +42,8 @@
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
-                                <li class="breadcrumb-item"><a style="text-decoration: none; color: #6C757D" href="">Home</a></li>
-                                <li class="breadcrumb-item active">breadcrumb</li>
+                                @*<li class="breadcrumb-item"><a style="text-decoration: none; color: #6C757D" href="">Home</a></li>*@
+                                <li class="breadcrumb-item active"><breadcrumb></breadcrumb></li>
                             </ol>
                         </div>
                     </div>

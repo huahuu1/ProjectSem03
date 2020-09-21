@@ -20,17 +20,7 @@
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true)
                         <div class="form-group">
-                            @Html.LabelFor(model => model.StudentId, "Student ID")
-                            <span class="text text-danger">*</span>
-                            @Html.EditorFor(model => model.StudentId, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.StudentId)
-                        </div>
-
-                        <div>
-                            @Html.LabelFor(model => model.Password)
-                            <span class="text text-danger">*</span>
-                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Password)
+                            @Html.HiddenFor(model => model.StudentId)
                         </div>
 
                         <div>
@@ -45,6 +35,13 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.LastName)
+                        </div>
+
+                        <div>
+                            @Html.LabelFor(model => model.Password)
+                            <span class="text text-danger">*</span>
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Password)
                         </div>
 
                         <div>

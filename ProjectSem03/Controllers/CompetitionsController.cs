@@ -7,6 +7,7 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using SmartBreadcrumbs.Attributes;
 
 namespace ProjectSem03.Controllers
 {
@@ -18,6 +19,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Competition List")]
         public IActionResult Index(string cname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
@@ -47,6 +49,8 @@ namespace ProjectSem03.Controllers
             }
         }
 
+        [HttpGet]
+        [Breadcrumb("Create Competition")]
         public IActionResult Create()
         {
             if(HttpContext.Session.GetInt32("staffRole") == 2)
@@ -94,9 +98,14 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Breadcrumb("Edit Competition")]
         public IActionResult Edit(int id)
         {
-            if(HttpContext.Session.GetInt32("staffRole") == 2)
+            var list = db.Staff.Where(s => s.Role.Equals(2));
+            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var competition = db.Competition.Find(id);
                 if (competition != null)

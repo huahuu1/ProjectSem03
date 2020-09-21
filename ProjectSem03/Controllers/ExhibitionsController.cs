@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
+using SmartBreadcrumbs.Attributes;
 
 namespace ProjectSem03.Controllers
 {
@@ -17,6 +18,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Exhibition List")]
         public IActionResult Index(string ename, string pname)
         {
             DateTime today = Convert.ToDateTime(DateTime.Today);
@@ -54,6 +56,8 @@ namespace ProjectSem03.Controllers
             }
         }
 
+        [HttpGet]
+        [Breadcrumb("Create Exhibition")]
         public IActionResult Create()
         {
             if (HttpContext.Session.GetInt32("staffRole") == 2)
@@ -93,6 +97,8 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Breadcrumb("Edit Exhibition")]
         public IActionResult Edit(int id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 2)
@@ -116,6 +122,7 @@ namespace ProjectSem03.Controllers
                 return RedirectToAction("Index", "Staffs");
             }
         }
+
         [HttpPost]
         public IActionResult Edit(Exhibition exhibition)
         {
