@@ -9,6 +9,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SmartBreadcrumbs.Attributes;
 using X.PagedList;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ProjectSem03.Controllers
 {
@@ -62,7 +63,9 @@ namespace ProjectSem03.Controllers
         }
         [HttpPost]
         [ActionName("Create")]
-        public IActionResult Create(Staff staff, IFormFile file)
+        [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
+        [RequestSizeLimit(8388608)]
+        public async Task<IActionResult> Create(Staff staff, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
             var staffid = db.Staff.SingleOrDefault(s => s.StaffId.Equals(staff.StaffId));
             var email = db.Staff.SingleOrDefault(e => e.Email.Equals(staff.Email));
@@ -72,40 +75,76 @@ namespace ProjectSem03.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if (file!= null && file.Length > 0)
-                    {                        
-                        string path = Path.Combine("wwwroot/images", file.FileName);
-                        var stream = new FileStream(path, FileMode.Create);
-                        file.CopyToAsync(stream);
-                        staff.ProfileImage = "/images/teachers/" + file.FileName;
 
-                        var key = "b14ca5898a4e4133bbce2ea2315a1916";
-                        staff.Password = AesEncDesc.EncryptString(key, staff.Password);
-
-                        if(staffid == null)
+                    //valid
+                    bool checkOk = true;
+                    //check unique email phone
+                    if (email != null || phone != null || staffid !=null)
+                    {
+                        if (email != null)
                         {
-                            if (email == null)
+                            ViewBag.Email = "Email is already existed. Try again";
+                        }
+                        if (phone != null)
+                        {
+                            ViewBag.Phone = "Phone is already existed. Try again";
+                        }
+                        if(staffid != null)
+                        {
+                            ViewBag.StaffId = "StaffId is already existed. Try again";
+                        }
+                        checkOk = false;
+                    }
+
+                    if (file!= null && file.Length > 0)
+                    {
+
+                        //check picture duplicate
+                        var modelDuplicate = db.Staff.SingleOrDefault(s => s.ProfileImage.Equals("/images/teachers/" + file.FileName));
+                        //if (modelDuplicate != null)
+                        //{
+                            if (modelDuplicate != null)
                             {
-                                if (phone == null)
-                                {
-                                    db.Staff.Add(staff);
-                                    stream.Close();
-                                    db.SaveChanges();
-                                    return RedirectToAction("Index", "Staffs");
-                                }
-                                else
-                                {
-                                    ViewBag.Phone = "Phone is already existed. Try again";
-                                }
+                                ViewBag.Painting = "File name already exists";
+                                checkOk = false;
                             }
-                            else
+                        //    checkOk = false;
+                        //}
+
+                        string ext = Path.GetExtension(file.FileName);
+                        var today = DateTime.Now;
+                        if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png")))
+                        {
+
+                            //check picture duplicate, unique email or phone
+                            if (checkOk == false)
                             {
-                                ViewBag.Email = "Email is already existed. Try again";
+                                return View();
                             }
+
+                            //choose image
+                            string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\teachers\\{file.FileName}";
+                            using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                                await stream.FlushAsync();
+                            }
+                            staff.ProfileImage = "/images/teachers/" + file.FileName;
+
+                            var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                            staff.Password = AesEncDesc.EncryptString(key, staff.Password);
+
+                            db.Staff.Add(staff);
+                            db.SaveChanges();
+                            return RedirectToAction("Index", "Staffs");
+                        }
+                        else if (file.Length > 8388608)
+                        {
+                            ViewBag.Painting = "Painting must be smaller than 8MB";
                         }
                         else
                         {
-                            ViewBag.StaffId = "StaffId is already existed. Try again";
+                            ViewBag.Painting = "Painting must be .jpg or .png";
                         }
                     }
                     else
@@ -116,7 +155,7 @@ namespace ProjectSem03.Controllers
                 else
                 {
                     ViewBag.Msg = "Failed .......";
-                }
+                }//end check file lenght
             }
             catch (Exception e)
             {
@@ -147,49 +186,45 @@ namespace ProjectSem03.Controllers
             }
         }
         [HttpPost]
-        public IActionResult Edit(Staff staff, IFormFile file)
+        [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
+        [RequestSizeLimit(8388608)]
+        public async Task<IActionResult> Edit(Staff staff, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
             try
             {
                 var editStaff = db.Staff.SingleOrDefault(c => c.StaffId.Equals(staff.StaffId));
                 if (ModelState.IsValid)
                 {
-                    var mEmail = db.Staff.SingleOrDefault(s => s.Email.Equals(staff.Email) && s.Email != editStaff.Email);
-                    var mPhone = db.Staff.SingleOrDefault(s => s.Phone.Equals(staff.Phone) && s.Phone != editStaff.Phone);
-                    if (mEmail != null || mPhone != null)
+                    if (editStaff != null)
                     {
-                        if (mEmail != null)
-                        {
-                            ViewBag.Email = "Email is already existed. Try again";
-                        }
-                        if (mPhone != null)
-                        {
-                            ViewBag.Phone = "Phone is already existed. Try again";
-                        }
-                    }
-                    else
-                    {
-                        if (editStaff != null)
-                        {
-                            if (file != null && file.Length > 0) //profile images must be .jpg
-                            {
-                                if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
-                                {
-                                    string path = Path.Combine("wwwroot/images", file.FileName);
-                                    var stream = new FileStream(path, FileMode.Create);
-                                    file.CopyToAsync(stream);
-                                    editStaff.ProfileImage = "/images/teachers/" + file.FileName;
 
-                                    editStaff.Email = staff.Email;
-                                    editStaff.Phone = staff.Phone;
-                                    editStaff.Address = staff.Address;
-                                    stream.Close();
-                                    db.SaveChanges();
-                                    return RedirectToAction("Index", "Staffs");
-                                }
-                            }
-                            else if (file == null) //if no change profile images
+                        //valid
+                        bool checkOk = true;
+                        //check unique phone and email
+                        var mEmail = db.Staff.SingleOrDefault(s => s.Email.Equals(staff.Email) && s.Email != editStaff.Email);
+                        var mPhone = db.Staff.SingleOrDefault(s => s.Phone.Equals(staff.Phone) && s.Phone != editStaff.Phone);
+                        if (mEmail != null || mPhone != null)
+                        {
+                            if (mEmail != null)
                             {
+                                ViewBag.Email = "Email is already existed. Try again";
+                            }
+                            if (mPhone != null)
+                            {
+                                ViewBag.Phone = "Phone is already existed. Try again";
+                            }
+                            checkOk = false;
+                        }
+
+                        //if no change profile images
+                        if (file == null) 
+                            {
+                                //check unique email or phone
+                                if(checkOk == false)
+                                {
+                                    ViewBag.Msg = "Fail";
+                                    return View();
+                                }
                                 editStaff.Email = staff.Email;
                                 editStaff.Phone = staff.Phone;
                                 editStaff.Address = staff.Address;
@@ -198,15 +233,68 @@ namespace ProjectSem03.Controllers
                             }
                             else
                             {
-                                ViewBag.Painting = "Profile images must be .jpg";
-                                return View();
-                            }
-                        }
-                        else
-                        {
-                            ViewBag.Msg = "Failed";
-                        } //end check staff !null
+                                
+                                //check picture duplicate
+                                var modelDuplicate = db.Staff.SingleOrDefault(s => s.ProfileImage.Equals("/images/teachers/"+file.FileName) && s.ProfileImage != editStaff.ProfileImage);                                
+                                //if (modelDuplicate != null)
+                                //{
+                                    if(modelDuplicate != null)
+                                    {
+                                        ViewBag.Painting = "File name already exists";
+                                        checkOk = false;
+                                    }
+                                    //checkOk = false;
+                                //}
+
+                                //check file
+                                string ext = Path.GetExtension(file.FileName);
+                                var today = DateTime.Now;
+                                if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                                {
+
+                                //check picture duplicate, unique email or phone
+                                if (checkOk == false)
+                                        {
+                                            return View();
+                                        }
+                                        string tempCurFilePath = Path.Combine("wwwroot/", editStaff.ProfileImage.Substring(1)); //old painting
+                                        
+                                        string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\teachers\\{file.FileName}";
+                                        using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                        {
+                                            await file.CopyToAsync(stream);
+                                            await stream.FlushAsync();
+                                        }
+
+                                        editStaff.ProfileImage = "/images/teachers/" + file.FileName;
+
+                                        editStaff.Email = staff.Email;
+                                        editStaff.Phone = staff.Phone;
+                                        editStaff.Address = staff.Address;                                 
+                                        db.SaveChanges();
+                                        System.GC.Collect();
+                                        System.GC.WaitForPendingFinalizers();
+                                        //check old painting exists
+                                        if (System.IO.File.Exists(tempCurFilePath))
+                                        {
+                                            System.IO.File.Delete(tempCurFilePath);
+                                        }
+                                        return RedirectToAction("Index", "Staffs");
+                                }
+                                else if (file.Length > 8388608)
+                                {
+                                    ViewBag.Painting = "Painting must be smaller than 8MB";
+                                }
+                                else
+                                {
+                                    ViewBag.Painting = "Painting must be .jpg or .png";
+                                }
+                            }//end check file null
                     }
+                    else
+                    {
+                        ViewBag.Msg = "Invalid field Failed";
+                    } //end check staff !null                    
                 }//end check model valid
             }
             catch (Exception e)
@@ -224,8 +312,18 @@ namespace ProjectSem03.Controllers
 
                 if (staff != null)
                 {
+                    string tempCurFilePath = Path.Combine("wwwroot/", staff.ProfileImage.Substring(1)); //old painting
+
                     db.Staff.Remove(staff);
                     db.SaveChanges();
+
+                    //check old painting exists
+                    System.GC.Collect();
+                    System.GC.WaitForPendingFinalizers();
+                    if (System.IO.File.Exists(tempCurFilePath))
+                    {
+                        System.IO.File.Delete(tempCurFilePath);
+                    }
                     return RedirectToAction("Index", "Staffs");
                 }
             }

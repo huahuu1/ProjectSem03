@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using SmartBreadcrumbs.Attributes;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Microsoft.CodeAnalysis.FlowAnalysis;
 
 namespace ProjectSem03.Controllers
 {
@@ -44,23 +45,42 @@ namespace ProjectSem03.Controllers
 
         //Method
         private string GenId()
-        {
-            //var model = db.Student.LastOrDefault();
-            var model = (from s in db.Student orderby s.StudentId descending select s).First();
-            string FirstId = model.StudentId.Substring(0, 3);
-            string AffterID = model.StudentId.Substring(3, 7);
+        {            
+            var modelcheck = db.Student.ToList();
+            bool check = false;
+            string FirstId = "";
+            string AffterID = "";
+            if (modelcheck.Count <= 0)
+            {
+                FirstId = "STU";
+                AffterID = "0000001";
+                check = true;
+            }            
+            else
+            {
+                var model = (from s in db.Student orderby s.StudentId descending select s).First();
+                FirstId = model.StudentId.Substring(0, 3);
+                AffterID = model.StudentId.Substring(3, 7);
+            }
 
             string LastNummberId = "";
             for (int i = 0; i <= AffterID.Length - 1; i++)
             {
                 if (int.Parse(AffterID[i].ToString()) != 0)
                 {
-                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);
+                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);                    
                     break;
                 }
             }
 
-            LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
+            if (check == false)
+            {
+                LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
+            }
+            else
+            {
+                LastNummberId = (Convert.ToInt32(LastNummberId)).ToString();
+            }
 
             int CountId = LastNummberId.Length; //full lenghtid
             Console.WriteLine(CountId);
@@ -115,6 +135,9 @@ namespace ProjectSem03.Controllers
                 {
                     var mEmail = db.Student.SingleOrDefault(s=>s.Email.Equals(student.Email));
                     var mPhone = db.Student.SingleOrDefault(s => s.Phone.Equals(student.Phone));
+                    //valid
+                    bool checkOk = true;
+                    //check unique email phone
                     if (mEmail != null || mPhone != null)
                     {
                         if (mEmail != null)
@@ -125,21 +148,22 @@ namespace ProjectSem03.Controllers
                         {
                             ViewBag.Phone = "Phone is already existed. Try again";
                         }
+                        checkOk = false;
                     }
-                    else
-                    {
-                        if (file == null)
-                        {
-                            ViewBag.Painting = "Profile images is required";
-                        }
-                        else
+                        if (file != null)
                         {
                             string ext = Path.GetExtension(file.FileName);
                             var today = DateTime.Now;
 
-                            //profile images must be .jpg
+                            //profile images must be .jpg or .png
                             if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png")))
                             {
+                                //check unique email or phone
+                                if (checkOk == false)
+                                {
+                                    return View();
+                                }
+                                //auto gen id
                                 student.StudentId = GenId();
                                 //choose image
                                 string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
@@ -149,7 +173,7 @@ namespace ProjectSem03.Controllers
                                     await file.CopyToAsync(stream);
                                     await stream.FlushAsync();
                                 }
-                                student.ProfileImage = "../images/students/" + renameFile;
+                                student.ProfileImage = "/images/students/" + renameFile;
                                 //key
                                 var key = "b14ca5898a4e4133bbce2ea2315a1916";
                                 student.Password = AesEncDesc.EncryptString(key, student.Password);
@@ -165,9 +189,13 @@ namespace ProjectSem03.Controllers
                             {
                                 ViewBag.Painting = "Painting must be .jpg or .png";
                             }
-                        }//end check file
-                    }//end check unique
+                        }//end check file not null
+                        else
+                        {
+                            ViewBag.Painting = "Profile images is required";
+                        }
                 }
+                else
                 {
                     ViewBag.Msg = "Invalid Field";
                 }
@@ -221,55 +249,37 @@ namespace ProjectSem03.Controllers
                 {
                     if (model != null)
                     {
+                        //valid
+                        bool checkOk = true;
+                        //check unique phone and email
                         var mEmail = db.Student.SingleOrDefault(s => s.Email.Equals(student.Email) && s.Email != model.Email);
                         var mPhone = db.Student.SingleOrDefault(s => s.Phone.Equals(student.Phone) && s.Phone != model.Phone);
-                    if (mEmail != null || mPhone != null)
-                    {
+                        if (mEmail != null || mPhone != null)
+                        {
 
-                        if (mEmail != null)
-                        {
-                            ViewBag.Email = "Email is already existed. Try again";
-                        }
-                        if (mPhone != null)
-                        {
-                            ViewBag.Phone = "Phone is already existed. Try again";
-                        }
-                    }
-                    else
-                    {
-                        if (file == null) //if no change profile images
-                        {
-                            //key
-                            var key = "b14ca5898a4e4133bbce2ea2315a1916";
-                            student.Password = AesEncDesc.EncryptString(key, student.Password);
-                            model.Password = student.Password;
-                            model.FirstName = student.FirstName;
-                            model.LastName = student.LastName;
-                            model.DateOfBirth = student.DateOfBirth;
-                            model.Gender = student.Gender;
-                            model.Phone = student.Phone;
-                            model.Email = student.Email;
-                            model.JoinDate = student.JoinDate;
-                            model.Address = student.Address;
-                            db.SaveChanges();
-                            return RedirectToAction("Index", "Students");
+                            if (mEmail != null)
+                            {
+                                ViewBag.Email = "Email is already existed. Try again";
+                            }
+                            if (mPhone != null)
+                            {
+                                ViewBag.Phone = "Phone is already existed. Try again";
+                            }
+                            checkOk = false;
                         }
                         else
                         {
-                            string ext = Path.GetExtension(file.FileName);
-                            var today = DateTime.Now;
-
-                            if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                            //if no change profile images
+                            if (file == null)
                             {
-                                string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(3)); //old painting
-                                string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
-                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\students\\{renameFile}";
-
-                                using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                
+                                //check unique email or phone
+                                if(checkOk == false)
                                 {
-                                    await file.CopyToAsync(stream);
-                                    await stream.FlushAsync();
+                                    ViewBag.Msg = "Fail";
+                                    return View();
                                 }
+                                //key
                                 var key = "b14ca5898a4e4133bbce2ea2315a1916";
                                 student.Password = AesEncDesc.EncryptString(key, student.Password);
                                 model.Password = student.Password;
@@ -281,34 +291,71 @@ namespace ProjectSem03.Controllers
                                 model.Email = student.Email;
                                 model.JoinDate = student.JoinDate;
                                 model.Address = student.Address;
-                                student.ProfileImage = "../images/students/" + renameFile;
-                                model.ProfileImage = student.ProfileImage;
-                                //Staff cannot change Student CompetitionId and Password
                                 db.SaveChanges();
-
-                                System.GC.Collect();
-                                System.GC.WaitForPendingFinalizers();
-                                //check old painting exists
-                                if (System.IO.File.Exists(tempCurFilePath))
-                                {
-                                    System.IO.File.Delete(tempCurFilePath);
-                                }
-                                //messagebox
-                                string message = "Student updated Successful";
-                                TempData["message"] = "<script>alert('" + message + "');</script>";
-
                                 return RedirectToAction("Index", "Students");
-                            }
-                            else if (file.Length > 8388608)
-                            {
-                                ViewBag.Painting = "Painting must be smaller than 8MB";
                             }
                             else
                             {
-                                ViewBag.Painting = "Painting must be .jpg or .png";
-                            }
-                        }//end check file !null
-                    }//end check unique phone email
+                                string ext = Path.GetExtension(file.FileName);
+                                var today = DateTime.Now;
+
+                                if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                                {
+                                    //check unique email or phone
+                                    if(checkOk == false)
+                                    {
+                                        ViewBag.Msg = "Fail";
+                                        return View();
+                                    }
+                                    string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(1)); //old painting
+
+                                    string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
+                                    string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\students\\{renameFile}";
+
+                                    using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                    {
+                                        await file.CopyToAsync(stream);
+                                        await stream.FlushAsync();
+                                    }
+                                    var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                                    student.Password = AesEncDesc.EncryptString(key, student.Password);
+                                    model.Password = student.Password;
+                                    model.FirstName = student.FirstName;
+                                    model.LastName = student.LastName;
+                                    model.DateOfBirth = student.DateOfBirth;
+                                    model.Gender = student.Gender;
+                                    model.Phone = student.Phone;
+                                    model.Email = student.Email;
+                                    model.JoinDate = student.JoinDate;
+                                    model.Address = student.Address;
+                                    student.ProfileImage = "/images/students/" + renameFile;
+                                    model.ProfileImage = student.ProfileImage;
+                                    //Staff cannot change Student CompetitionId and Password
+                                    db.SaveChanges();
+
+                                    System.GC.Collect();
+                                    System.GC.WaitForPendingFinalizers();
+                                    //check old painting exists
+                                    if (System.IO.File.Exists(tempCurFilePath))
+                                    {
+                                        System.IO.File.Delete(tempCurFilePath);
+                                    }
+                                    //messagebox
+                                    string message = "Student updated Successful";
+                                    TempData["message"] = "<script>alert('" + message + "');</script>";
+
+                                    return RedirectToAction("Index", "Students");
+                                }
+                                else if (file.Length > 8388608)
+                                {
+                                    ViewBag.Painting = "Painting must be smaller than 8MB";
+                                }
+                                else
+                                {
+                                    ViewBag.Painting = "Painting must be .jpg or .png";
+                                }
+                            }//end check file !null
+                        }//end check unique phone email
                     }//end check model !null
                 }//end check model valid
                 else
@@ -339,7 +386,7 @@ namespace ProjectSem03.Controllers
 
                     if (model != null)
                     {
-                        string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(3)); //old painting
+                        string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(1)); //old painting
                         db.Student.Remove(model);
                         db.SaveChanges();
                         //check old painting exists

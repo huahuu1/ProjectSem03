@@ -14,13 +14,14 @@ namespace ProjectSem03.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required(ErrorMessage = "StaffId is required.....")]
         [RegularExpression(@"^STA+[0-9]{2,6}$")]
-        [StringLength(10, MinimumLength = 3, ErrorMessage = "AccId must be from 3 to 10 characters")]
+        [StringLength(10, MinimumLength = 3, ErrorMessage = "AccId must be from 3 to 9 characters")]
         public string StaffId { get; set; }
         [Required(ErrorMessage = "StaffName is required.....")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "StaffName must be from 3 to 50 characters")]
         public string StaffName { get; set; }
         [Required(ErrorMessage = "Password is required.....")]
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "Password must be from 5 to 50 characters")]
+        [RegularExpression(@"^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).+$", ErrorMessage = "Password must including numbers and characters and do not contains whitespace")]
+        [StringLength(49, MinimumLength = 5, ErrorMessage = "Password must be from 5 to 49 characters")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required(ErrorMessage = "JoinDate is required.....")]
