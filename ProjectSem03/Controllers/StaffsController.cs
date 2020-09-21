@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SmartBreadcrumbs.Attributes;
+using X.PagedList;
 
 namespace ProjectSem03.Controllers
 {
@@ -20,7 +21,7 @@ namespace ProjectSem03.Controllers
         }
 
         [Breadcrumb("Staff List")]
-        public IActionResult Index(string sname)
+        public IActionResult Index(string sname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -28,18 +29,23 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                var list = db.Staff.ToList();
+                int maxsize = 3;
+                int numpage = page ?? 1;
+                var list = db.Staff.ToList().ToPagedList(numpage, maxsize);
                 if (string.IsNullOrEmpty(sname))
                 {
-                    return View(list);
+                    ViewBag.page = list;
+                    //return View(list);
                 }
                 else
                 {
-                    var filter = list.Where(s => s.StaffName.ToLower().Contains(sname) || s.StaffName.ToUpper().Contains(sname));
-                    return View(filter);
+                    list = list.Where(s => s.StaffName.Contains(sname)).ToList().ToPagedList(numpage, maxsize);
+                    ViewBag.page = list;
+                    //return View(filter);
                 }
+                return View();
             }
-            
+
         }
 
         [HttpGet]
