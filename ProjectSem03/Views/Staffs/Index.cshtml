@@ -5,11 +5,18 @@
 
 @model IEnumerable<ProjectSem03.Models.Staff>
 @using Microsoft.AspNetCore.Http
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@{
+    var pagedList = (IPagedList)ViewBag.page;
+}
 
 @using (Html.BeginForm("Index", "Staffs", FormMethod.Post, new { @class = "form-inline form-group" }))
 {
     <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="sname" placeholder="Enter staff name" />
     <button style="height: 2.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
+
+    @Html.PagedListPager(pagedList, page => Url.Action("Index", "Staffs", new { page }))
 }
 
 <table class="table table-bordered table-valign-middle">
@@ -28,7 +35,7 @@
             </a>
         </th>
     </tr>
-    @foreach (var item in Model)
+    @foreach (var item in ViewBag.page)
     {
         <tr class="text-center">
             <td>@item.StaffId</td>
@@ -61,8 +68,6 @@
         </tr>
     }
 </table>
-}
-
 
 
 

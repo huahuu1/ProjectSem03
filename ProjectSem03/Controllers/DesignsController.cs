@@ -8,6 +8,7 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SmartBreadcrumbs.Attributes;
 //using Microsoft.CodeAnalysis.CSharp.Syntax;
 //using Microsoft.AspNetCore.HttpOverrides;
 namespace ProjectSem03.Controllers
@@ -21,6 +22,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Design List")]
         public IActionResult Index(string dname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
@@ -51,7 +53,8 @@ namespace ProjectSem03.Controllers
             }
         }
 
-
+        [HttpGet]
+        [Breadcrumb("Edit Design")]
         public IActionResult Edit(int id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 2)

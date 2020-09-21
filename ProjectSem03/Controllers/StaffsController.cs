@@ -7,6 +7,8 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SmartBreadcrumbs.Attributes;
+using X.PagedList;
 
 namespace ProjectSem03.Controllers
 {
@@ -18,7 +20,8 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
-        public IActionResult Index(string sname)
+        [Breadcrumb("Staff List")]
+        public IActionResult Index(string sname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -26,21 +29,27 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                var list = db.Staff.ToList();
+                int maxsize = 3;
+                int numpage = page ?? 1;
+                var list = db.Staff.ToList().ToPagedList(numpage, maxsize);
                 if (string.IsNullOrEmpty(sname))
                 {
-                    return View(list);
+                    ViewBag.page = list;
+                    //return View(list);
                 }
                 else
                 {
-                    var filter = list.Where(s => s.StaffName.ToLower().Contains(sname) || s.StaffName.ToUpper().Contains(sname));
-                    return View(filter);
+                    list = list.Where(s => s.StaffName.Contains(sname)).ToList().ToPagedList(numpage, maxsize);
+                    ViewBag.page = list;
+                    //return View(filter);
                 }
+                return View();
             }
-            
+
         }
 
         [HttpGet]
+        [Breadcrumb("Create Staff")]
         public IActionResult Create()
         {
             if(HttpContext.Session.GetInt32("staffRole") == 0)
@@ -56,11 +65,15 @@ namespace ProjectSem03.Controllers
         [ActionName("Create")]
         public IActionResult Create(Staff staff, IFormFile file)
         {
+            var staffid = db.Staff.SingleOrDefault(s => s.StaffId.Equals(staff.StaffId));
+            var email = db.Staff.SingleOrDefault(e => e.Email.Equals(staff.Email));
+            var phone = db.Staff.SingleOrDefault(p => p.Phone.Equals(staff.Phone));
+
             try
             {
                 if (ModelState.IsValid)
                 {
-                    if (file.Length > 0)
+                    if (file!= null && file.Length > 0)
                     {
                         string path = Path.Combine("wwwroot/images", file.FileName);
                         var stream = new FileStream(path, FileMode.Create);
@@ -69,10 +82,36 @@ namespace ProjectSem03.Controllers
 
                         var key = "b14ca5898a4e4133bbce2ea2315a1916";
                         staff.Password = AesEncDesc.EncryptString(key, staff.Password);
-                        db.Staff.Add(staff);
-                        stream.Close();
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Staffs");
+
+                        if(staffid == null)
+                        {
+                            if (email == null)
+                            {
+                                if (phone == null)
+                                {
+                                    db.Staff.Add(staff);
+                                    stream.Close();
+                                    db.SaveChanges();
+                                    return RedirectToAction("Index", "Staffs");
+                                }
+                                else
+                                {
+                                    ViewBag.Phone = "Phone is already existed. Try again";
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.Email = "Email is already existed. Try again";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.StaffId = "StaffId is already existed. Try again";
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.Image = "Image Upload Container Cannot Be Empty";
                     }
                 }
                 else
@@ -87,6 +126,8 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Breadcrumb("Edit Staff")]
         public IActionResult Edit(string id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)

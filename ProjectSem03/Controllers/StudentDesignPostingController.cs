@@ -13,6 +13,9 @@ using System.ComponentModel;
 using System.Dynamic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Net.Http.Headers;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
 
 namespace ProjectSem03.Controllers
 {
@@ -85,7 +88,12 @@ namespace ProjectSem03.Controllers
                         //get DesignId for check Competition
                         var modelPosting = db.Posting.SingleOrDefault(p => p.DesignID.Equals(model.DesignId));
                         var modelCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(modelPosting.CompetitionId));
-;
+
+                        //get staff manage this competition
+                        var modelStudent = db.Student.SingleOrDefault(st=>st.StudentId.Equals(model.StudentId));
+                        var modelStaff = db.Staff.SingleOrDefault(s => s.StaffId.Equals(modelCompetition.StaffId));
+                        string newFilePath = ""; //images after update
+
                         var today = DateTime.Now;
                         ////check today SubmitDate
                         if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
@@ -102,6 +110,12 @@ namespace ProjectSem03.Controllers
                                 //add posting
                                 modelPosting.PostDate = today;
                                 db.SaveChanges();
+                                //message box
+                                string message = "File updated Successful";
+                                TempData["message"] = "<script>alert('" + message + "');</script>";
+                                newFilePath = Path.Combine("wwwroot/images/Medium", model.Painting);
+                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<h3><strong>Posting Id:" + modelPosting.PostingId + "</strong></h3><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
+
                                 return RedirectToAction("Upload", "Home");
                             }
                             else
@@ -119,7 +133,6 @@ namespace ProjectSem03.Controllers
                                         await file.CopyToAsync(stream);
                                         await stream.FlushAsync();
                                     }
-
                                     model.DesignName = design.DesignName;
                                     design.Painting = renameFile;
                                     model.Painting = design.Painting;
@@ -131,9 +144,13 @@ namespace ProjectSem03.Controllers
                                     modelPosting.PostDate = today;
                                     db.SaveChanges();
 
+                                    //messagebox
                                     string message = "File updated Successful";
                                     TempData["message"] = "<script>alert('" + message + "');</script>";
-
+                                    newFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //new painting
+                                    await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<p><strong>Posting Id:" + modelPosting.PostingId + "</strong></p><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
+                                    System.GC.Collect();
+                                    System.GC.WaitForPendingFinalizers();
                                     //check old painting exists
                                     if (System.IO.File.Exists(tempCurFilePath))
                                     {
@@ -198,6 +215,27 @@ namespace ProjectSem03.Controllers
                         }).ToList();
             return list;
         }
+        private bool CheckPosting(int id, string stuId)
+        {
+            //check if student is already registered competition
+            var postList = (from p in db.Posting
+                            join d in db.Design on p.DesignID equals d.DesignId
+                            where p.CompetitionId == id && d.StudentId.Equals(stuId) && p.DesignID.Equals(d.DesignId)
+                            select new CombineModels
+                            {
+                                Designs = d,
+                                Postings = p
+                            }).ToList();
+
+            if (postList.Count > 0) //check row
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         //UPLOAD
         public IActionResult Upload(int id)
         {
@@ -209,31 +247,22 @@ namespace ProjectSem03.Controllers
             else
             {
                 //check root
-                var compList = db.Competition.Where(c=>c.CompetitionId.Equals(id));
+                var compList = db.Competition.SingleOrDefault(c=>c.CompetitionId.Equals(id));
                 if (compList == null)
                 {
                     return NotFound();
                 }
 
                 //Viewbag list of student designs
-                ViewBag.designList = designStudentList();
+                //ViewBag.designList = designStudentList();
 
                 //check if student is already registered competition
-                var postList = (from p in db.Posting
-                           join d in db.Design on p.DesignID equals d.DesignId
-                           where p.CompetitionId == id && d.StudentId.Equals(stuId) && p.DesignID.Equals(d.DesignId)
-                           select new CombineModels
-                           {
-                               Designs = d,
-                               Postings = p
-                           }).ToList();
-
-                if (postList.Count>0) //check row
+                if(CheckPosting(id, stuId) == true)
                 {
                     TempData["testmsg"] = "<script>alert('You have already registered for this competition');</script>";
                     //ViewBag.Msg = "You have already registered for this competition";
                     //return View();
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -249,7 +278,7 @@ namespace ProjectSem03.Controllers
         public async Task<IActionResult> Upload(Design design, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
             //ViewBag list of student designs
-            ViewBag.designList = designStudentList();
+            //ViewBag.designList = designStudentList();
             try
             {
                 if (ModelState.IsValid)
@@ -258,7 +287,18 @@ namespace ProjectSem03.Controllers
                     int competitionId = (int)HttpContext.Session.GetInt32("registerCompetitionId");
                     var comp = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals((int)HttpContext.Session.GetInt32("registerCompetitionId")));
 
+                    //check if student is already registered competition
+                    if (CheckPosting(competitionId, student.StudentId) == true)
+                    {
+                        TempData["testmsg"] = "<script>alert('You have already registered for this competition');</script>";
+                        return RedirectToAction("Index", "Home");
+                    }
+                    //get staff manage this competition
+                    var modelStaff = db.Staff.SingleOrDefault(s => s.StaffId.Equals(comp.StaffId));
+                    string newFilePath = "";
+
                     var today = DateTime.Now;
+
                     ////check today SubmitDate
                     if (today >= comp.StartDate.Date && today <= comp.EndDate.Date) //null exception
                     {
@@ -291,8 +331,14 @@ namespace ProjectSem03.Controllers
                                 modelPosting.StaffId = comp.StaffId;
                                 db.Posting.Add(modelPosting);
                                 db.SaveChanges();
+
+                                //message box
                                 string message = "File uploaded Successful";
                                 TempData["message"] = "<script>alert('" + message + "');</script>";
+
+                                newFilePath = Path.Combine("wwwroot/images/Medium", design.Painting); //new painting
+                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + student.StudentId + "]-[" + student.FirstName + " " + student.LastName + "] Has uploaded the drawing design", "<p><strong>Posting Id:" + modelPosting.PostingId + "</strong></p><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + student.FirstName + " " + student.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
+
                                 return RedirectToAction("Upload", "Home");
                             }
                             else if (file.Length > 8388608)
@@ -322,40 +368,145 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            string message = "";
             if (HttpContext.Session.GetString("studentid") == null) //check session
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Upload", "Home");
             }
             else
             {
                 try
                 {
                     var model = db.Design.SingleOrDefault(d => d.DesignId.Equals(id));
-                    if (model != null)
+                    var modelPosting = db.Posting.SingleOrDefault(p => p.DesignID.Equals(model.DesignId));
+                    var modelCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(modelPosting.CompetitionId));
+                    var today = DateTime.Now;
+                    ////check today SubmitDate
+                    if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
                     {
-                        string tempCurFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //old painting
-                        db.Design.Remove(model);
-                        db.SaveChanges();
-
-                        string message = "File deleted Successful";
-                        TempData["message"] = "<script>alert('" + message + "');</script>";
-
-                        //check old painting exists
-                        if (System.IO.File.Exists(tempCurFilePath))
+                        if (modelPosting.Mark != null || modelPosting.Remark != null)
                         {
-                            System.IO.File.Delete(tempCurFilePath);
+                            message = "This painting has been graded";
                         }
-                        return RedirectToAction("Upload", "Home");
+                        else
+                        {
+                            if (model != null)
+                            {
+                                string tempCurFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //old painting
+                                db.Design.Remove(model);
+                                db.SaveChanges();
+
+                                message = "File deleted Successful";
+
+                                //check old painting exists
+                                System.GC.Collect();
+                                System.GC.WaitForPendingFinalizers();
+                                if (System.IO.File.Exists(tempCurFilePath))
+                                {
+                                    System.IO.File.Delete(tempCurFilePath);
+                                }
+                                TempData["message"] = "<script>alert('" + message + "');</script>";
+                                return RedirectToAction("Upload", "Home");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("delete fail ((competition has expired))");
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     ViewBag.msg = "You cannot delete this design because it's sent to your teacher";
                 }
             }
-            return View();
+            //return View();
+            TempData["message"] = "<script>alert('" + message + "');</script>";
+            return RedirectToAction("Upload", "Home");
+        }
+
+        public interface IEmailService
+        {
+            void Send(string from, string to, string subject, string html);
+        }
+
+        private AlternateView getEmbeddedImage(String filePath, string _body)
+        {
+            // below line was corrected to include the mediatype so it displays in all
+            // mail clients. previous solution only displays in Gmail the inline images
+            LinkedResource res = new LinkedResource(filePath, MediaTypeNames.Image.Jpeg);
+            res.ContentId = Guid.NewGuid().ToString();
+            string htmlBody = @""+_body+"<br/><img width=200 src='cid:" + res.ContentId + @"'/>"; //html code here
+            AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody,
+             null, MediaTypeNames.Text.Html);
+            alternateView.LinkedResources.Add(res);
+            return alternateView;
+        }
+
+        //Send Mail Gmail SMTP
+        public async Task<bool> SendMail(string _from, string _to, string _subject, string _body, SmtpClient client, string imageFilePath)
+        {
+            // Tạo nội dung Email
+            MailMessage message = new MailMessage(
+                from: _from,
+                to: _to,
+                subject: _subject,
+                body: _body
+            );
+            //images
+            message.AlternateViews.Add(getEmbeddedImage(imageFilePath, _body));
+            //end images
+            message.BodyEncoding = System.Text.Encoding.UTF8;
+            message.SubjectEncoding = System.Text.Encoding.UTF8;
+            message.IsBodyHtml = true;
+            message.ReplyToList.Add(new MailAddress(_from));
+            message.Sender = new MailAddress(_from);
+
+
+            try
+            {
+                await client.SendMailAsync(message);
+                return true;
+            }
+            catch (Exception /*ex*/)
+            {
+                throw;
+                //Console.WriteLine(ex.Message);
+                //return false;
+            }
+        }
+
+        private async Task<bool> SendMailGoogleSmtp(string _from, string _to, string _subject, string _body, string _gmailsend, string _gmailpassword, string imageFilePath)
+        {
+
+            var key = "b14ca5898a4e4133bbce2ea2315a1916";
+            _gmailpassword = AesEncDesc.DecryptString(key, _gmailpassword);
+            MailMessage message = new MailMessage(
+                from: _from,
+                to: _to,
+                subject: _subject,
+                body: _body
+            );
+            message.BodyEncoding = System.Text.Encoding.UTF8;
+            message.SubjectEncoding = System.Text.Encoding.UTF8;
+            message.IsBodyHtml = true;
+            //images
+            message.AlternateViews.Add(getEmbeddedImage(imageFilePath, _body));
+            //end images
+            message.ReplyToList.Add(new MailAddress(_from));
+            message.Sender = new MailAddress(_from);
+
+            //SmtpClient connect to smtp.gmail.com
+            using (SmtpClient client = new SmtpClient("smtp.gmail.com"))
+            {
+                client.Port = 587;
+                client.Credentials = new NetworkCredential(_gmailsend, _gmailpassword);
+                client.EnableSsl = true;
+                return await SendMail(_from, _to, _subject, _body, client, imageFilePath);
+            }
+
         }
     }//end controller
 }

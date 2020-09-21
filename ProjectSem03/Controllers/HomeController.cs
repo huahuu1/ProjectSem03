@@ -43,31 +43,41 @@ namespace ProjectSem03.Controllers
             return View(list);
         }
 
-        public IActionResult Exhibition(string ename)
+        public IActionResult Exhibition(string stuname)
         {
-            var exh = db.Exhibition.ToList();
-            ViewBag.Exhibition = new SelectList(exh, "ExhibitionId", "ExhibitionName");
+            ViewBag.Exhibition = db.Exhibition.ToList();
+            
+            //var exh = db.Exhibition.ToList();
+            //ViewBag.data = new SelectList(exh, "ExhibitionId", "ExhibitionName");
 
             var list = from e in db.Exhibition
                        join d in db.Design on e.ExhibitionId equals d.ExhibitionID
                        join stu in db.Student on d.StudentId equals stu.StudentId
                        where e.ExhibitionId.Equals(d.ExhibitionID)
-                       orderby e.ExhibitionId
+                       orderby e.StartDate
                        select new CombineModels
                        {
                            Exhibitions = e,
                            Designs = d,
                            Students = stu
                        };
-
-            if (string.IsNullOrEmpty(ename))
+            
+            if (string.IsNullOrEmpty(stuname))
             {
                 return View(list);
             }
             else
             {
-                int eId = int.Parse(ename);
-                var filter = list.Where(d => d.Exhibitions.ExhibitionId.Equals(eId));
+                var filter = from e in db.Exhibition
+                       join d in db.Design on e.ExhibitionId equals d.ExhibitionID
+                       join stu in db.Student on d.StudentId equals stu.StudentId
+                       where stu.FirstName.Contains(stuname) || stu.LastName.Contains(stuname)
+                             select new CombineModels
+                       {
+                           Exhibitions = e,
+                           Designs = d,
+                           Students = stu
+                       };
                 return View(filter);
             }
         }
@@ -89,7 +99,7 @@ namespace ProjectSem03.Controllers
         {
             if (HttpContext.Session.GetString("ename") == null) //check session
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Home");
             }
             else
             {
@@ -99,11 +109,21 @@ namespace ProjectSem03.Controllers
             }
         }
 
-        //[HttpGet]
-        //public IActionResult Login()
-        //{
-        //    return View();
-        //}
+        public IActionResult Courses()
+        {
+            return View();
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Login(string accName, string accPass)
@@ -128,7 +148,7 @@ namespace ProjectSem03.Controllers
                     }
                     else
                     {
-                        ViewBag.Msg = "Invalid Pasword....";
+                        ViewBag.Msg = "Wrong Email or Pasword....";
                     }
                 }
                 else if (student != null)
@@ -144,12 +164,12 @@ namespace ProjectSem03.Controllers
                     }
                     else
                     {
-                        ViewBag.Msg = "Invalid Pasword....";
+                        ViewBag.Msg = "Wrong Email or Pasword....";
                     }
                 }
                 else
                 {
-                    ViewBag.Msg = "Invalid Username....";
+                    ViewBag.Msg = "Wrong Email or Pasword....";
                 }
             }
             catch (Exception e)
