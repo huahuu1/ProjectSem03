@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
+using SmartBreadcrumbs.Attributes;
 
 namespace ProjectSem03.Controllers
 {
@@ -17,6 +18,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Award List")]
         public IActionResult Index(string aname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
@@ -49,14 +51,19 @@ namespace ProjectSem03.Controllers
             }
         }
 
+        [HttpGet]
+        [Breadcrumb("Create Award")]
         public IActionResult Create()
         {
+            var listAward = db.Award.ToList();
+            
             if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
-                var list2 = db.Competition.ToList();
+                // show competition is not with any awards
+                var list2 = db.Competition.Where(c=> !db.Award.Select(a=>a.CompetitionID).Contains(c.CompetitionId));
                 ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
 
                 var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
@@ -72,15 +79,6 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Create(Award award)
         {
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
-
-            var list2 = db.Competition.ToList();
-            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
-
-            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
-            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
-
             try
             {
                 if (ModelState.IsValid)
@@ -101,12 +99,14 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Breadcrumb("Edit Award")]
         public IActionResult Edit(int id)
         {
             if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var listAward = db.Award.Find(id);
-
+                
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
 
@@ -133,15 +133,6 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Edit(Award award)
         {
-            var list = db.Staff.Where(s => s.Role.Equals(2));
-            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
-
-            var list2 = db.Competition.ToList();
-            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
-
-            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
-            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
-
             try
             {
                 var editAward = db.Award.SingleOrDefault(c => c.AwardId.Equals(award.AwardId));

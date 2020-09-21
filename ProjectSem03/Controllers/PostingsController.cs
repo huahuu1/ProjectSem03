@@ -7,6 +7,7 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
+using SmartBreadcrumbs.Attributes;
 
 namespace ProjectSem03.Controllers
 {
@@ -18,6 +19,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Posting List")]
         public IActionResult Index(string pname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
@@ -49,6 +51,8 @@ namespace ProjectSem03.Controllers
             }
         }
 
+        [HttpGet]
+        [Breadcrumb("Edit Posting")]
         public IActionResult Edit(int id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 2)
@@ -71,6 +75,7 @@ namespace ProjectSem03.Controllers
                 return RedirectToAction("Index", "Staffs");
             }
         }
+
         [HttpPost]
         public IActionResult Edit(Posting posting)
         {

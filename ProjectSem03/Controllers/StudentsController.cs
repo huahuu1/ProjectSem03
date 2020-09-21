@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectSem03.Models;
 using Microsoft.AspNetCore.Http;
+using SmartBreadcrumbs.Attributes;
+using Microsoft.AspNetCore.Hosting;
 using System.IO;
 
 namespace ProjectSem03.Controllers
@@ -17,6 +19,7 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+        [Breadcrumb("Student List")]
         public IActionResult Index(string sname)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
@@ -42,7 +45,8 @@ namespace ProjectSem03.Controllers
         //Method
         private string GenId()
         {
-            var model = db.Student.Last();
+            //var model = db.Student.LastOrDefault();
+            var model = (from s in db.Student orderby s.StudentId descending select s).First();
             string FirstId = model.StudentId.Substring(0, 3);
             string AffterID = model.StudentId.Substring(3, 7);
 
@@ -78,6 +82,8 @@ namespace ProjectSem03.Controllers
         }
 
         //CREATE
+        [HttpGet]
+        [Breadcrumb("Create Student")]
         public IActionResult Create()
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)
@@ -96,38 +102,53 @@ namespace ProjectSem03.Controllers
                 return RedirectToAction("Index", "Staffs");
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Student student, IFormFile file)
+        [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
+        [RequestSizeLimit(8388608)]
+        public async Task<IActionResult> Create(Student student, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
             try
             {
                 if (ModelState.IsValid) //check CreateViewStudent and profileimages
                 {
-                    if (file != null && file.Length > 0)
+                    if (file == null)
                     {
+                        ViewBag.Msg = "Profile images is required";
+                    }
+                    else {
+                        string ext = Path.GetExtension(file.FileName);
+                        var today = DateTime.Now;
+
                         //profile images must be .jpg
-                        if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
+                        if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png")))
                         {
+                            student.StudentId = GenId();
                             //choose image
-                            string path = Path.Combine("wwwroot/images", file.FileName);
-                            var stream = new FileStream(path, FileMode.Create);
-                            file.CopyToAsync(stream);
-                            student.ProfileImage = "/images/students/" + file.FileName;
+                            string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
+                            string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\students\\{renameFile}";
+                            using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                            {
+                                await file.CopyToAsync(stream);
+                                await stream.FlushAsync();
+                            }
+                            student.ProfileImage = "../images/students/"+renameFile;
                             //key
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             student.Password = AesEncDesc.EncryptString(key, student.Password);
-                            //student.StudentId = GenId();
                             db.Student.Add(student);
-                            stream.Close();
                             db.SaveChanges();
                             return RedirectToAction("Index", "Students");
                         }
-                    }
-                    else
-                    {
-                        ViewBag.Msg = "Profile images must be .jpg";
-                        return View();
+                        else if (file.Length > 8388608)
+                        {
+                            ViewBag.Msg = "Painting must be smaller than 8MB";
+                        }
+                        else
+                        {
+                            ViewBag.Msg = "Painting must be .jpg or .png";
+                        }
                     }
                 }
                 {
@@ -142,6 +163,8 @@ namespace ProjectSem03.Controllers
         }
 
         //EDIT
+        [HttpGet]
+        [Breadcrumb("Edit Student")]
         public IActionResult Edit(string id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)
@@ -170,7 +193,9 @@ namespace ProjectSem03.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Student student, IFormFile file)
+        [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
+        [RequestSizeLimit(8388608)]
+        public async Task<IActionResult> Edit(Student student, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
             try
             {
@@ -179,31 +204,7 @@ namespace ProjectSem03.Controllers
                 {
                     if (model != null)
                     {
-                        if (file != null && file.Length > 0) //profile images must be .jpg
-                        {
-                            if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
-                            {
-                                string path = Path.Combine("wwwroot/images", file.FileName);
-                                var stream = new FileStream(path, FileMode.Create);
-                                file.CopyToAsync(stream);
-                                model.FirstName = student.FirstName;
-                                model.LastName = student.LastName;
-                                model.DateOfBirth = student.DateOfBirth;
-                                model.Gender = student.Gender;
-                                model.Phone = student.Phone;
-                                model.Email = student.Email;
-                                model.JoinDate = student.JoinDate;
-                                model.Address = student.Address;
-                                student.ProfileImage = "/images/students/" + file.FileName;
-                                model.ProfileImage = student.ProfileImage;
-                                //Staff cannot change Student CompetitionId and Password
-                                stream.Close();
-                                db.SaveChanges();
-
-                                return RedirectToAction("Index", "Students");
-                            }
-                        }
-                        else if (file == null) //if no change profile images
+                        if (file == null) //if no change profile images
                         {
                             model.FirstName = student.FirstName;
                             model.LastName = student.LastName;
@@ -218,13 +219,56 @@ namespace ProjectSem03.Controllers
                         }
                         else
                         {
-                            ViewBag.Msg = "Profile images must be .jpg";
-                            return View();
+                            string ext = Path.GetExtension(file.FileName);
+                            var today = DateTime.Now;
+
+                            if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                            {
+                                string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(3)); //old painting
+                                string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
+                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\students\\{renameFile}";
+
+                                using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(stream);
+                                    await stream.FlushAsync();
+                                }
+                                model.FirstName = student.FirstName;
+                                model.LastName = student.LastName;
+                                model.DateOfBirth = student.DateOfBirth;
+                                model.Gender = student.Gender;
+                                model.Phone = student.Phone;
+                                model.Email = student.Email;
+                                model.JoinDate = student.JoinDate;
+                                model.Address = student.Address;
+                                student.ProfileImage = "../images/students/"+renameFile;
+                                model.ProfileImage = student.ProfileImage;
+                                //Staff cannot change Student CompetitionId and Password
+                                //stream.Close();
+                                db.SaveChanges();
+
+                                System.GC.Collect();
+                                System.GC.WaitForPendingFinalizers();
+                                //check old painting exists
+                                if (System.IO.File.Exists(tempCurFilePath))
+                                {
+                                    System.IO.File.Delete(tempCurFilePath);
+                                }
+                                //messagebox
+                                string message = "Student updated Successful";
+                                TempData["message"] = "<script>alert('" + message + "');</script>";
+
+                                return RedirectToAction("Index", "Students");
+                            }
+                            else if (file.Length > 8388608)
+                            {
+                                ViewBag.Msg = "Painting must be smaller than 8MB";
+                            }
+                            else
+                            {
+                                ViewBag.Msg = "Painting must be .jpg or .png";
+                            }
                         }
-                    }
-                    else
-                    {
-                        ViewBag.Msg = "Failed";
                     }
                 }
             }
@@ -232,7 +276,7 @@ namespace ProjectSem03.Controllers
             {
                 ViewBag.Msg = e.Message;
             }
-            ViewBag.Msg = "Update Failed";
+            //ViewBag.Msg = "Update Failed";
             return View();
         }
 
@@ -251,15 +295,25 @@ namespace ProjectSem03.Controllers
 
                     if (model != null)
                     {
+                        string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(3)); //old painting
                         db.Student.Remove(model);
                         db.SaveChanges();
+                        //check old painting exists
+                        System.GC.Collect();
+                        System.GC.WaitForPendingFinalizers();
+                        if (System.IO.File.Exists(tempCurFilePath))
+                        {
+                            System.IO.File.Delete(tempCurFilePath);
+                        }
+                        TempData["message"] = "<script>alert('Students deleted Successful');</script>";
                         return RedirectToAction("Index", "Students");
                     }
                 }
                 catch (Exception)
                 {
-                    throw;
+                    return BadRequest("Delete Failed");
                 }
+                TempData["message"] = "<script>alert('Delete fail');</script>";
                 return View();
             } //end check session
         }

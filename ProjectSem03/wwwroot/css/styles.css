@@ -3,6 +3,7 @@
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=EB+Garamond:ital@1&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap");
+@import url("https://rsms.me/inter/inter-ui.css");
 html, body {
   width: 100%;
   height: auto;
@@ -1081,7 +1082,11 @@ section.teachers {
           border-radius: 50px;
           box-shadow: 0 0 0 1px #ee5b54 inset;
           transform: scale(0);
-          transition: all .3s ease; }
+          transition: all .3s ease;
+          -webkit-border-radius: 50px;
+          -moz-border-radius: 50px;
+          -ms-border-radius: 50px;
+          -o-border-radius: 50px; }
 
 .owl-carousel .owl-item .owl-lazy:not([src]), .owl-carousel .owl-item .owl-lazy[src^=""] {
   max-height: none !important; }
@@ -1223,6 +1228,704 @@ section.teachers {
             .exhibition .wrapper-ex .ex-content .ex-designs .designs-show .show-inner .show-info a.button-hover:hover:after {
               transform: scaleX(0);
               transition: .3s; }
+
+section.about-us {
+  padding-bottom: 4rem;
+  padding-top: 3rem;
+  margin: auto; }
+  section.about-us .wrapper-about-us {
+    padding: 2rem; }
+    section.about-us .wrapper-about-us .wrapper {
+      margin: 0 -20px;
+      padding-top: 2rem;
+      padding-bottom: 4rem; }
+      section.about-us .wrapper-about-us .wrapper .wrapper-col {
+        text-align: left;
+        padding-top: 2rem;
+        padding-bottom: 2rem; }
+        section.about-us .wrapper-about-us .wrapper .wrapper-col .h3 {
+          font-weight: 900;
+          font-family: "Playfair Display",Arial,Helvetica,sans-serif;
+          margin-bottom: 2rem; }
+          section.about-us .wrapper-about-us .wrapper .wrapper-col .h3 span {
+            line-height: 1.2;
+            font-size: 5rem;
+            font-weight: 900; }
+        section.about-us .wrapper-about-us .wrapper .wrapper-col .subline {
+          font-family: "Roboto",Arial,Helvetica,sans-serif;
+          font-weight: 300;
+          font-size: 1.8rem; }
+        section.about-us .wrapper-about-us .wrapper .wrapper-col .group.row .group-col .icon {
+          padding-top: 1rem;
+          font-size: 4rem;
+          color: #ee5b54; }
+        section.about-us .wrapper-about-us .wrapper .wrapper-col .group.row .group-col .title {
+          font-family: "Montserrat",Arial,Helvetica,sans-serif;
+          font-size: 1.5rem;
+          font-weight: 600;
+          line-height: 2.8;
+          text-transform: uppercase;
+          padding-left: 1rem; }
+        section.about-us .wrapper-about-us .wrapper .wrapper-col .group.row .group-col .content {
+          font-family: "Roboto",Arial,Helvetica,sans-serif;
+          font-size: 1.5rem;
+          padding-left: 1rem;
+          font-weight: 300; }
+
+section.teachers {
+  height: 600px; }
+  section.teachers .wrapper-teachers {
+    height: 100%;
+    background-image: url("../images/yellow_brush_stroke_01.jpg");
+    background-size: contain; }
+    section.teachers .wrapper-teachers .teacher-slider {
+      height: 100%;
+      width: 80%;
+      margin: auto;
+      top: 1%; }
+      section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer {
+        height: 100%; }
+        section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage {
+          height: 100%; }
+          section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item {
+            height: 100%; }
+            section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item {
+              height: 100%; }
+              section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                flex-direction: column; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-img {
+                  margin-bottom: 3rem; }
+                  section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-img img {
+                    width: 14rem;
+                    border-radius: 50%; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-quote blockquote {
+                  font-family: "Roboto",Arial,Helvetica,sans-serif;
+                  font-size: 2.7rem;
+                  font-style: italic;
+                  font-weight: 300;
+                  line-height: 5rem;
+                  display: block;
+                  quotes: "“" "”"; }
+                  section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-quote blockquote q {
+                    quotes: "“" "”"; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-name span:nth-child(1) {
+                  display: block;
+                  color: #ee5b54;
+                  text-transform: uppercase;
+                  font-size: 1.4rem;
+                  font-family: "Montserrat",Arial,Helvetica,sans-serif;
+                  font-weight: 600; }
+                section.teachers .wrapper-teachers .teacher-slider .owl-stage-outer .owl-stage .owl-item .item .teacher-content .teacher-name span:nth-child(2) {
+                  display: block;
+                  font-size: 1.6rem;
+                  font-family: "Roboto",Arial,Helvetica;
+                  font-weight: 300; }
+      section.teachers .wrapper-teachers .teacher-slider .owl-dots {
+        position: absolute;
+        left: 22%;
+        bottom: 8%;
+        transform: translate(-47%, -50%); }
+        section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot {
+          outline: none; }
+          section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot span {
+            background-color: #fff;
+            width: 1.2rem;
+            height: 1.2rem;
+            transition: all .2s ease; }
+          section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot:hover span {
+            background-color: #ee5b54; }
+        section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot.active span,
+        section.teachers .wrapper-teachers .teacher-slider .owl-dots .owl-dot.active:hover span {
+          background-color: #ee5b54; }
+  section.teachers .wrapper-about-us-bottom {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 9rem;
+    padding-right: 6rem;
+    background-size: cover;
+    background-image: url("../images/column_gallery.jpg"); }
+
+.owl-carousel .owl-item .owl-lazy:not([src]), .owl-carousel .owl-item .owl-lazy[src^=""] {
+  max-height: none !important; }
+
+.courses .courses-section {
+  height: 769px;
+  margin: auto;
+  position: relative; }
+  .courses .courses-section .section-background {
+    background-color: #ecf4ff;
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0; }
+  .courses .courses-section .section-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.65); }
+  .courses .courses-section .section-container {
+    width: 960px;
+    position: relative;
+    margin: auto;
+    height: 100%; }
+    .courses .courses-section .section-container #Image1.section-element {
+      width: 340px;
+      height: 554px;
+      top: 42px;
+      left: -56px;
+      position: absolute; }
+      .courses .courses-section .section-container #Image1.section-element .section-image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; }
+        .courses .courses-section .section-container #Image1.section-element .section-image .section-image-background {
+          width: 833px;
+          height: 554px;
+          top: -0.0015px;
+          left: -407px;
+          background-image: url("../images/glenn.jpg");
+          background-repeat: no-repeat;
+          background-position: left top;
+          background-size: cover;
+          background-attachment: scroll;
+          background-origin: content-box;
+          position: absolute; }
+        .courses .courses-section .section-container #Image1.section-element .section-image .section-overlay {
+          background-color: #363e92;
+          opacity: 0.73;
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%; }
+    .courses .courses-section .section-container #Paragraph1.section-element {
+      width: 391px;
+      top: 139px;
+      left: 508px;
+      position: absolute; }
+      .courses .courses-section .section-container #Paragraph1.section-element .p-paragraph {
+        font-size: 18px;
+        line-height: 1.6;
+        width: 100%;
+        display: inline-block; }
+    .courses .courses-section .section-container #Image2.section-element {
+      width: 363px;
+      height: 377px;
+      top: 130px;
+      left: 68px;
+      position: absolute; }
+      .courses .courses-section .section-container #Image2.section-element .section-image {
+        box-shadow: 20px 20px 30px -20px rgba(0, 0, 0, 0.2);
+        -webkit-box-shadow: 20px 20px 30px -20px rgba(0, 0, 0, 0.2);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; }
+        .courses .courses-section .section-container #Image2.section-element .section-image .section-image-background {
+          width: 377px;
+          height: 573px;
+          top: -182px;
+          left: -8.758px;
+          background-image: url("../images/Team.jpg");
+          background-repeat: no-repeat;
+          background-position: left top;
+          background-size: cover;
+          background-attachment: scroll;
+          background-origin: content-box;
+          position: absolute; }
+    .courses .courses-section .section-container #List_Paragrph.section-element {
+      width: 426px;
+      top: 436px;
+      left: 508px;
+      position: absolute; }
+      .courses .courses-section .section-container #List_Paragrph.section-element .section-list-paragraph {
+        font-size: 16px;
+        line-height: 1.6;
+        width: 100%;
+        display: inline-block; }
+        .courses .courses-section .section-container #List_Paragrph.section-element .section-list-paragraph ul {
+          list-style: inherit; }
+          .courses .courses-section .section-container #List_Paragrph.section-element .section-list-paragraph ul li {
+            padding-left: 10px;
+            position: relative; }
+    .courses .courses-section .section-container #Group1.section-element {
+      width: 441px;
+      height: 69px;
+      top: 47px;
+      left: 506.5px;
+      position: absolute; }
+      .courses .courses-section .section-container #Group1.section-element .section-group {
+        position: absolute;
+        width: 100%;
+        height: 100%; }
+        .courses .courses-section .section-container #Group1.section-element .section-group .section-headline {
+          width: 393px;
+          top: 15.5px;
+          left: 48px;
+          position: absolute; }
+          .courses .courses-section .section-container #Group1.section-element .section-group .section-headline h3.section-headline {
+            color: #363e92;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .courses-section .section-container #Group1.section-element .section-group .section-sharp {
+          width: 39.5px;
+          height: 69.1px;
+          top: 0px;
+          left: 0px;
+          position: absolute; }
+          .courses .courses-section .section-container #Group1.section-element .section-group .section-sharp .section-shape {
+            transform: rotate(-22deg);
+            -webkit-transform: rotate(-22deg);
+            position: absolute;
+            width: 100%;
+            height: 100%; }
+            .courses .courses-section .section-container #Group1.section-element .section-group .section-sharp .section-shape i.far.fa-lightbulb {
+              color: #ffc707;
+              font-size: 80px; }
+    .courses .courses-section .section-container #Group2.section-element {
+      width: 439px;
+      height: 69.16px;
+      top: 342.197px;
+      left: 508.5px;
+      position: absolute; }
+      .courses .courses-section .section-container #Group2.section-element .section-group {
+        position: absolute;
+        width: 100%;
+        height: 100%; }
+        .courses .courses-section .section-container #Group2.section-element .section-group .section-headline {
+          width: 393px;
+          top: 16.583px;
+          left: 46px;
+          position: absolute; }
+          .courses .courses-section .section-container #Group2.section-element .section-group .section-headline h3.section-headline {
+            color: #363e92;
+            font-size: 30px;
+            font-weight: bold;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .courses-section .section-container #Group2.section-element .section-group .section-sharp {
+          width: 39.5px;
+          height: 69.1px;
+          top: 0px;
+          left: 0px;
+          position: absolute; }
+          .courses .courses-section .section-container #Group2.section-element .section-group .section-sharp .section-shape {
+            transform: rotate(-22deg);
+            -webkit-transform: rotate(-22deg);
+            position: absolute;
+            width: 100%;
+            height: 100%; }
+            .courses .courses-section .section-container #Group2.section-element .section-group .section-sharp .section-shape i.far.fa-lightbulb {
+              color: #ffc707;
+              font-size: 80px; }
+
+.courses .staffs-section {
+  height: 890px;
+  margin: auto;
+  position: relative; }
+  .courses .staffs-section .section-background {
+    background-color: #363e92;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden; }
+  .courses .staffs-section .overlay {
+    background-color: #363e92;
+    opacity: 0.86;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%; }
+  .courses .staffs-section .container {
+    width: 960px;
+    position: relative;
+    margin: auto;
+    height: 100%; }
+    .courses .staffs-section .container .line-element {
+      width: 963px;
+      top: 151px;
+      left: -1px;
+      position: absolute; }
+      .courses .staffs-section .container .line-element .line {
+        width: 100%;
+        padding: 8px 0px;
+        position: relative; }
+        .courses .staffs-section .container .line-element .line .line-container {
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          border-right: 1px solid rgba(255, 255, 255, 0.06);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          border-left: 0px !important;
+          border-bottom: 0 !important;
+          border-right: 0 !important;
+          width: 100%;
+          height: 100%; }
+    .courses .staffs-section .container .paragraph-element {
+      width: 960px;
+      top: 123px;
+      left: 1.18234px;
+      position: absolute; }
+      .courses .staffs-section .container .paragraph-element .p-paragraph {
+        color: white;
+        font-size: 16px;
+        text-align: justify;
+        line-height: 1.4;
+        width: 100%;
+        display: inline-block; }
+    .courses .staffs-section .container .frame1-element {
+      width: 300px;
+      height: 606px;
+      top: 222px;
+      left: 0px;
+      position: absolute; }
+      .courses .staffs-section .container .frame1-element .frame {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; }
+        .courses .staffs-section .container .frame1-element .frame .frame-background {
+          height: 100%;
+          width: 100%; }
+        .courses .staffs-section .container .frame1-element .frame .image-element {
+          width: 311px;
+          height: 298px;
+          top: 0px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame1-element .frame .image-element .image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; }
+            .courses .staffs-section .container .frame1-element .frame .image-element .image .image-backgorund {
+              width: 387.642px;
+              height: 298px;
+              top: 0px;
+              left: 0px;
+              background-image: url("../images/T3.jpg");
+              background-repeat: no-repeat;
+              background-position: left top;
+              background-size: cover;
+              background-attachment: scroll;
+              background-origin: content-box;
+              position: absolute;
+              margin: 0 auto; }
+        .courses .staffs-section .container .frame1-element .frame .headline1-element {
+          width: 272px;
+          top: 317px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame1-element .frame .headline1-element .h6.headline {
+            color: #ffc707;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .staffs-section .container .frame1-element .frame .headline2-element {
+          width: 272px;
+          top: 341px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame1-element .frame .headline2-element .p.headline {
+            color: white;
+            font-size: 15px;
+            font-style: italic;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .staffs-section .container .frame1-element .frame .paragraph-element {
+          width: 300px;
+          top: 396px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame1-element .frame .paragraph-element .paragraph {
+            color: white;
+            font-size: 14px;
+            text-align: justify;
+            letter-spacing: 0px;
+            line-height: 1.4;
+            width: 100%;
+            display: inline-block; }
+        .courses .staffs-section .container .frame1-element .frame .line-element {
+          width: 145px;
+          top: 384px;
+          left: 98px;
+          position: absolute; }
+          .courses .staffs-section .container .frame1-element .frame .line-element .line {
+            width: 100%;
+            padding: 8px 0px;
+            position: relative; }
+            .courses .staffs-section .container .frame1-element .frame .line-element .line .line-container {
+              border-top: 1px solid rgba(255, 255, 255, 0.08);
+              border-right: 1px solid rgba(255, 255, 255, 0.08);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+              border-left: 0px !important;
+              border-bottom: 0 !important;
+              border-right: 0 !important;
+              width: 100%;
+              height: 100%; }
+    .courses .staffs-section .container .frame2-element {
+      width: 300px;
+      height: 606px;
+      top: 222px;
+      left: 330px;
+      position: absolute; }
+      .courses .staffs-section .container .frame2-element .frame {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; }
+        .courses .staffs-section .container .frame2-element .frame .frame-background {
+          height: 100%;
+          width: 100%; }
+        .courses .staffs-section .container .frame2-element .frame .image-element {
+          width: 311px;
+          height: 298px;
+          top: 0px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame2-element .frame .image-element .image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; }
+            .courses .staffs-section .container .frame2-element .frame .image-element .image .image-backgorund {
+                width: 387.642px;
+                height: 298px;
+                top: 0px;
+                left: 0px;
+                background-image: url("../images/T2.jpg");
+                background-repeat: no-repeat;
+                background-position: left top;
+                background-size: cover;
+                background-attachment: scroll;
+                background-origin: content-box;
+                position: absolute;
+                margin: 0 auto;
+            }
+        .courses .staffs-section .container .frame2-element .frame .headline1-element {
+          width: 272px;
+          top: 317px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame2-element .frame .headline1-element .h6.headline {
+            color: #ffc707;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .staffs-section .container .frame2-element .frame .headline2-element {
+          width: 272px;
+          top: 341px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame2-element .frame .headline2-element .p.headline {
+            color: white;
+            font-size: 15px;
+            font-style: italic;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .staffs-section .container .frame2-element .frame .paragraph-element {
+          width: 300px;
+          top: 396px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame2-element .frame .paragraph-element .paragraph {
+            color: white;
+            font-size: 14px;
+            text-align: left;
+            letter-spacing: 0px;
+            line-height: 1.4;
+            width: 100%;
+            display: inline-block; }
+        .courses .staffs-section .container .frame2-element .frame .line-element {
+          width: 145px;
+          top: 384px;
+          left: 98px;
+          position: absolute; }
+          .courses .staffs-section .container .frame2-element .frame .line-element .line {
+            width: 100%;
+            padding: 8px 0px;
+            position: relative; }
+            .courses .staffs-section .container .frame2-element .frame .line-element .line .line-container {
+              border-top: 1px solid rgba(255, 255, 255, 0.08);
+              border-right: 1px solid rgba(255, 255, 255, 0.08);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+              border-left: 0px !important;
+              border-bottom: 0 !important;
+              border-right: 0 !important;
+              width: 100%;
+              height: 100%; }
+    .courses .staffs-section .container .frame3-element {
+      width: 300px;
+      height: 606px;
+      top: 222px;
+      left: 660px;
+      position: absolute; }
+      .courses .staffs-section .container .frame3-element .frame {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden; }
+        .courses .staffs-section .container .frame3-element .frame .frame-background {
+          height: 100%;
+          width: 100%; }
+        .courses .staffs-section .container .frame3-element .frame .image-element {
+          width: 311px;
+          height: 298px;
+          top: 0px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame3-element .frame .image-element .image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; }
+            .courses .staffs-section .container .frame3-element .frame .image-element .image .image-backgorund {
+                width: 387.642px;
+                height: 298px;
+                top: 0px;
+                left: 0px;
+                background-image: url("../images/T1.jpg");
+                background-repeat: no-repeat;
+                background-position: left top;
+                background-size: cover;
+                background-attachment: scroll;
+                background-origin: content-box;
+                position: absolute;
+                margin: 0 auto;
+            }
+        .courses .staffs-section .container .frame3-element .frame .headline1-element {
+          width: 272px;
+          top: 317px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame3-element .frame .headline1-element .h6.headline {
+            color: #ffc707;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .staffs-section .container .frame3-element .frame .headline2-element {
+          width: 272px;
+          top: 341px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame3-element .frame .headline2-element .p.headline {
+            color: white;
+            font-size: 15px;
+            font-style: italic;
+            text-align: left;
+            line-height: 1.2;
+            width: 100%;
+            display: inline-block;
+            background-size: cover;
+            background-position: center center; }
+        .courses .staffs-section .container .frame3-element .frame .paragraph-element {
+          width: 300px;
+          top: 396px;
+          left: 0px;
+          position: absolute; }
+          .courses .staffs-section .container .frame3-element .frame .paragraph-element .paragraph {
+            color: white;
+            font-size: 14px;
+            text-align: justify;
+            letter-spacing: 0px;
+            line-height: 1.4;
+            width: 100%;
+            display: inline-block; }
+        .courses .staffs-section .container .frame3-element .frame .line-element {
+          width: 145px;
+          top: 384px;
+          left: 98px;
+          position: absolute; }
+          .courses .staffs-section .container .frame3-element .frame .line-element .line {
+            width: 100%;
+            padding: 8px 0px;
+            position: relative; }
+            .courses .staffs-section .container .frame3-element .frame .line-element .line .line-container {
+              border-top: 1px solid rgba(255, 255, 255, 0.08);
+              border-right: 1px solid rgba(255, 255, 255, 0.08);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+              border-left: 0px !important;
+              border-bottom: 0 !important;
+              border-right: 0 !important;
+              width: 100%;
+              height: 100%; }
+    .courses .staffs-section .container .headline-element {
+      width: 393px;
+      top: 61.4px;
+      left: 52.4px;
+      position: absolute; }
+      .courses .staffs-section .container .headline-element .h3.headline {
+        color: #ffc707;
+        font-size: 30px;
+        font-weight: bold;
+        text-align: left;
+        line-height: 1.2;
+        width: 100%;
+        display: inline-block;
+        background-size: cover;
+        background-position: center center; }
+    .courses .staffs-section .container .shape-element {
+      width: 39.6px;
+      height: 69.16px;
+      top: 44.9px;
+      left: 1.18px;
+      position: absolute; }
+      .courses .staffs-section .container .shape-element .shape {
+        transform: rotate(-22deg);
+        -webkit-transform: rotate(-22deg);
+        position: absolute;
+        width: 100%;
+        height: 100%; }
+        .courses .staffs-section .container .shape-element .shape i.far.fa-lightbulb {
+          color: white;
+          font-size: 60px; }
 
 form .file-upload {
   background-color: #ffffff;
@@ -1377,17 +2080,16 @@ form .file-upload {
         transition: all .3s ease; }
 
 .files-uploaded .files-uploaded-title {
-    font-family: 'EB Garamond', serif;
-    color: #525252;
-    font-weight: 400;
-    font-size: 5.1rem;
-    text-transform: uppercase;
-    font-style: normal;
-    padding-left: 1.5rem;
-    margin-bottom: 5rem;
-    text-align: center;
-    position: relative;
-}
+  font-family: 'EB Garamond', serif;
+  color: #525252;
+  font-weight: 400;
+  font-size: 5.1rem;
+  text-transform: uppercase;
+  font-style: normal;
+  padding-left: 1.5rem;
+  margin-bottom: 5rem;
+  text-align: center;
+  position: relative; }
   .files-uploaded .files-uploaded-title:before {
     content: " ";
     width: 10%;
@@ -1396,7 +2098,7 @@ form .file-upload {
     background-color: #c9ab81;
     position: absolute;
     bottom: 2%;
-    color: transparent; 
+    color: transparent;
     left: 45%;
   }
   .files-uploaded .files-uploaded-title:after {
@@ -1552,3 +2254,124 @@ body {
 .trigger-btn {
   display: inline-block;
   margin: 100px auto; }
+
+section.login-page {
+  background-color: #F2EDEB;
+  height: 46rem; }
+  section.login-page ::selection, section.login-page ::-webkit-selection, section.login-page ::-moz-selection {
+    background: #2D2F36; }
+  section.login-page body {
+    background: #e7e7e7;
+    font-family: 'Inter UI', sans-serif;
+    margin: 0;
+    padding: 20px; }
+  section.login-page .page {
+    display: contents;
+    flex-direction: column;
+    height: calc(100% - 40px);
+    position: absolute;
+    place-content: center;
+    width: calc(100% - 40px); }
+    section.login-page .page .container {
+      display: flex;
+      height: 320px;
+      margin: 0 auto;
+      width: 640px; }
+      section.login-page .page .container .left {
+        background-color: #fff;
+        height: calc(100% - 40px);
+        top: 25%;
+        position: relative;
+        width: 50%; }
+        section.login-page .page .container .left .login {
+          font-size: 45px;
+          font-weight: 900;
+          margin: 50px 40px 40px;
+          color: #181818;
+          text-decoration: underline; }
+        section.login-page .page .container .left .eula {
+          color: #999;
+          font-size: 14px;
+          line-height: 1.5;
+          margin: 40px; }
+      @media (max-width: 767px) {
+        section.login-page .page .container .left {
+          height: 100%;
+          left: 20px;
+          width: calc(100% - 40px);
+          max-height: 270px; } }
+      section.login-page .page .container .right {
+        background: #474A59;
+        box-shadow: 0px 0px 40px 16px rgba(0, 0, 0, 0.22);
+        color: #F1F1F2;
+        position: relative;
+        width: 50%;
+        top: 19%; }
+        section.login-page .page .container .right svg {
+          position: absolute;
+          width: 320px; }
+          section.login-page .page .container .right svg path {
+            fill: none;
+            stroke: url(#linearGradient);
+            stroke-width: 4;
+            stroke-dasharray: 240 1386; }
+        section.login-page .page .container .right .form {
+          margin: 40px;
+          position: absolute; }
+          section.login-page .page .container .right .form label {
+            color: #c2c2c5;
+            display: block;
+            font-size: 14px;
+            height: 16px;
+            margin-top: 20px;
+            margin-bottom: 5px; }
+          section.login-page .page .container .right .form input {
+            background: transparent;
+            border: 0;
+            color: #f2f2f2;
+            font-size: 20px;
+            height: 30px;
+            line-height: 30px;
+            outline: none !important;
+            width: 100%; }
+            section.login-page .page .container .right .form input::-moz-focus-inner {
+              border: 0; }
+          section.login-page .page .container .right .form #submit {
+            color: #707075;
+            margin-top: 40px;
+            transition: color 300ms; }
+            section.login-page .page .container .right .form #submit:focus {
+              color: #f2f2f2; }
+            section.login-page .page .container .right .form #submit:active {
+              color: #d0d0d2; }
+      @media (max-width: 767px) {
+        section.login-page .page .container .right {
+          flex-shrink: 0;
+          height: 100%;
+          width: 100%;
+          max-height: 350px; } }
+    @media (max-width: 767px) {
+      section.login-page .page .container {
+        flex-direction: column;
+        height: 630px;
+        width: 320px; } }
+  @media (max-width: 767px) {
+    section.login-page .page {
+      height: auto;
+      margin-bottom: 20px;
+      padding-bottom: 20px; } }
+
+/* Change the white to any color ;) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    /*-webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
+    -webkit-transition-delay: 9999s;*/
+    -webkit-box-shadow: 0 0 0 30px #474A59 inset !important;
+}
+
+/*Change text in autofill textbox*/
+input:-webkit-autofill {
+    -webkit-text-fill-color: #f2f2f2 !important;
+}
