@@ -244,7 +244,6 @@ namespace ProjectSem03.Controllers
                                 student.ProfileImage = "../images/students/"+renameFile;
                                 model.ProfileImage = student.ProfileImage;
                                 //Staff cannot change Student CompetitionId and Password
-                                //stream.Close();
                                 db.SaveChanges();
 
                                 System.GC.Collect();
