@@ -10,10 +10,8 @@
         <div class="ex-title"><span>Exhibition highlights</span><span>currently on display</span></div>
         @using (Html.BeginForm("Exhibition", "Home", FormMethod.Post, new { @class = "form-inline form-group", @style = "margin-left: 1.3rem" }))
         {
-            @*@Html.DropDownList("ename", ViewBag.data as SelectList, "All", new { onchange = @"form.submit();" })*@
             <input style="height: 3.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%; font-size: 1.2rem;" type="text" class="form-control" name="stuname" placeholder="Enter student name" />
             <button style="height: 3.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0 1.5rem;" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search" style="font-size: 1.4rem;"></i></button>
-            @*<input type="text" name="stuname" value="" onchange="form.submit();" />*@
         }
         @foreach (var item in ViewBag.Exhibition)
         {
@@ -23,17 +21,16 @@
                 <div class="ex-designs row">
                     @foreach (var itemA in Model)
                     {
-                        <div class="designs-show col-lg-3">
                             @if (item.ExhibitionId == itemA.Exhibitions.ExhibitionId)
                             {
-
+                            <div class="designs-show col-lg-3">
                                 <div class="show-inner">
-                                    <div class="show-image"><a href="#"><img src="../images/Medium/@itemA.Designs.Painting" alt="" /></a></div>
+                                    <div class="show-image"><a><img src="../images/Medium/@itemA.Designs.Painting" alt="" /></a></div>
                                     <div class="show-info"><span>@itemA.Designs.SubmitDate.ToShortDateString()</span><span>@itemA.Designs.DesignName</span><span>@itemA.Students.FirstName @itemA.Students.LastName</span><a class="button-hover" href="../images/Medium/@itemA.Designs.Painting" download="@itemA.Designs.Painting"><span>Download</span></a></div>
                                 </div>
+                            </div>
 
                             }
-                        </div>
                     }
                 </div>
             </div>
