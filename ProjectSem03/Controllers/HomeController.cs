@@ -45,7 +45,6 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Exhibition(string ename)
         {
-            
             ViewBag.Exhibition = db.Exhibition.ToList();
 
             var exh = db.Exhibition.ToList();
