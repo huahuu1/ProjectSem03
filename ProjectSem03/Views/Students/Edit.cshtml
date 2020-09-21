@@ -26,7 +26,13 @@
 
                         <div>
                             @Html.HiddenFor(model => model.StudentId)
-                            @Html.HiddenFor(model => model.Password)
+                        </div>
+
+                        <div>
+                            @Html.LabelFor(model => model.Password, "Password")
+                            <span class="text text-danger">*</span>
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Password)
                         </div>
 
                         <div>
@@ -71,6 +77,7 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Phone)
+                            @ViewBag.Phone
                         </div>
 
                         <div>
@@ -78,6 +85,7 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Email)
+                            @ViewBag.Email
                         </div>
 
                         <div>
@@ -100,6 +108,7 @@
                             <div class="text-center">
                                 <img src="@Html.DisplayFor(s => s.ProfileImage)" alt="" />
                             </div>
+                            @ViewBag.Painting
                         </div>
                         <br />
                         <div class="form-group text-center">

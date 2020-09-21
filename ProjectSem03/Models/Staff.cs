@@ -12,9 +12,9 @@ namespace ProjectSem03.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        [Required(ErrorMessage = "StaffId is required.....")]
-        [RegularExpression(@"^STA+[0-9]*$")]
-        [StringLength(10, MinimumLength = 3, ErrorMessage = "AccId must be from 3 to 10 characters")]
+        //[Required(ErrorMessage = "StaffId is required.....")]
+        //[RegularExpression(@"^STA+[0-9]*$")]
+        //[StringLength(10, MinimumLength = 3, ErrorMessage = "AccId must be from 3 to 10 characters")]
         public string StaffId { get; set; }
         [Required(ErrorMessage = "StaffName is required.....")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "StaffName must be from 3 to 50 characters")]

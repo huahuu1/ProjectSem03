@@ -47,7 +47,44 @@ namespace ProjectSem03.Controllers
             }
 
         }
+        //Method
+        private string GenId()
+        {
+            //var model = db.Student.LastOrDefault();
+            var model = (from s in db.Staff orderby s.StaffId descending select s).First();
+            string FirstId = model.StaffId.Substring(0, 3);
+            string AffterID = model.StaffId.Substring(3, 6);
 
+            string LastNummberId = "";
+            for (int i = 0; i <= AffterID.Length - 1; i++)
+            {
+                if (int.Parse(AffterID[i].ToString()) != 0)
+                {
+                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);
+                    break;
+                }
+            }
+
+            LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
+
+            int CountId = LastNummberId.Length; //full lenghtid
+            Console.WriteLine(CountId);
+            string FullId = FirstId;
+            for (int i = 0; i < 6; i++)
+            {
+                if (i == 6 - CountId)
+                {
+                    FullId += LastNummberId;
+                    break;
+                }
+                else
+                {
+                    FullId += "0";
+                }
+            }
+
+            return FullId;
+        }
         [HttpGet]
         [Breadcrumb("Create Staff")]
         public IActionResult Create()
@@ -74,7 +111,7 @@ namespace ProjectSem03.Controllers
                 if (ModelState.IsValid)
                 {
                     if (file!= null && file.Length > 0)
-                    {
+                    {                        
                         string path = Path.Combine("wwwroot/images", file.FileName);
                         var stream = new FileStream(path, FileMode.Create);
                         file.CopyToAsync(stream);
@@ -89,6 +126,7 @@ namespace ProjectSem03.Controllers
                             {
                                 if (phone == null)
                                 {
+                                    staff.StaffId = GenId();
                                     db.Staff.Add(staff);
                                     stream.Close();
                                     db.SaveChanges();
@@ -155,44 +193,60 @@ namespace ProjectSem03.Controllers
                 var editStaff = db.Staff.SingleOrDefault(c => c.StaffId.Equals(staff.StaffId));
                 if (ModelState.IsValid)
                 {
-                    if (editStaff != null)
+                    var mEmail = db.Staff.SingleOrDefault(s => s.Email.Equals(staff.Email) && s.Email != editStaff.Email);
+                    var mPhone = db.Staff.SingleOrDefault(s => s.Phone.Equals(staff.Phone) && s.Phone != editStaff.Phone);
+                    if (mEmail != null || mPhone != null)
                     {
-                        if (file != null && file.Length > 0) //profile images must be .jpg
+                        if (mEmail != null)
                         {
-                            if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
-                            {
-                                string path = Path.Combine("wwwroot/images", file.FileName);
-                                var stream = new FileStream(path, FileMode.Create);
-                                file.CopyToAsync(stream);
-                                editStaff.ProfileImage = "/images/teachers/" + file.FileName;
-
-                                editStaff.Email = staff.Email;
-                                editStaff.Phone = staff.Phone;
-                                editStaff.Address = staff.Address;
-                                stream.Close();
-                                db.SaveChanges();
-                                return RedirectToAction("Index", "Staffs");
-                            }
+                            ViewBag.Email = "Email is already existed. Try again";
                         }
-                        else if (file == null) //if no change profile images
+                        if (mPhone != null)
                         {
-                            editStaff.Email = staff.Email;
-                            editStaff.Phone = staff.Phone;
-                            editStaff.Address = staff.Address;
-                            db.SaveChanges();
-                            return RedirectToAction("Index", "Staffs");
-                        }
-                        else
-                        {
-                            ViewBag.Msg = "Profile images must be .jpg";
-                            return View();
+                            ViewBag.Phone = "Phone is already existed. Try again";
                         }
                     }
                     else
                     {
-                        ViewBag.Msg = "Failed";
+                        if (editStaff != null)
+                        {
+                            if (file != null && file.Length > 0) //profile images must be .jpg
+                            {
+                                if (Path.GetExtension(file.FileName).ToLower().Equals(".jpg"))
+                                {
+                                    string path = Path.Combine("wwwroot/images", file.FileName);
+                                    var stream = new FileStream(path, FileMode.Create);
+                                    file.CopyToAsync(stream);
+                                    editStaff.ProfileImage = "/images/teachers/" + file.FileName;
+
+                                    editStaff.Email = staff.Email;
+                                    editStaff.Phone = staff.Phone;
+                                    editStaff.Address = staff.Address;
+                                    stream.Close();
+                                    db.SaveChanges();
+                                    return RedirectToAction("Index", "Staffs");
+                                }
+                            }
+                            else if (file == null) //if no change profile images
+                            {
+                                editStaff.Email = staff.Email;
+                                editStaff.Phone = staff.Phone;
+                                editStaff.Address = staff.Address;
+                                db.SaveChanges();
+                                return RedirectToAction("Index", "Staffs");
+                            }
+                            else
+                            {
+                                ViewBag.Painting = "Profile images must be .jpg";
+                                return View();
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.Msg = "Failed";
+                        } //end check staff !null
                     }
-                }
+                }//end check model valid
             }
             catch (Exception e)
             {
