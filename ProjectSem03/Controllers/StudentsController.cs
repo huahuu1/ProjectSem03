@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectSem03.Models;
 using Microsoft.AspNetCore.Http;
-using System.IO;
 using SmartBreadcrumbs.Attributes;
 using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace ProjectSem03.Controllers
 {
@@ -244,7 +244,7 @@ namespace ProjectSem03.Controllers
                                 student.ProfileImage = "../images/students/"+renameFile;
                                 model.ProfileImage = student.ProfileImage;
                                 //Staff cannot change Student CompetitionId and Password
-                                stream.Close();
+                                //stream.Close();
                                 db.SaveChanges();
 
                                 System.GC.Collect();
