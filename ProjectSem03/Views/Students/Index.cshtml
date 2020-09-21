@@ -75,3 +75,7 @@
         </tbody>
     </table>
 </div>
+@if (TempData["message"] != null)
+{
+    @Html.Raw(TempData["message"])
+}

@@ -4,12 +4,6 @@
     Layout = "~/Views/Shared/_Layout-noSlider.cshtml";
 }
 @model ProjectSem03.Models.CombineModels
-<div>
-    @if (TempData["message"] != null)
-    {
-        @Html.Raw(TempData["message"])
-    }
-</div>
 <div class="files-uploaded">
     <div class="files-uploaded-title"><span>Files Uploaded</span></div>
     <div class="files-uploaded-content row">
@@ -40,4 +34,7 @@
     </div>
 </div>
 <div>@ViewBag.Msg</div>
-
+@if (TempData["message"] != null)
+{
+    @Html.Raw(TempData["message"])
+}
