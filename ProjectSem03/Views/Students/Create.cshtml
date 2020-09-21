@@ -15,9 +15,10 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true)
             <div class="form-group">
-                <label asp-for="StudentId" class="control-label"></label>
-                <input asp-for="StudentId" class="form-control" />
-                <span asp-validation-for="StudentId" class="text-danger"></span>
+                @*<label asp-for="StudentId" class="control-label"></label>
+        <input asp-for="StudentId" class="form-control" />
+        <span asp-validation-for="StudentId" class="text-danger"></span>*@
+                @Html.HiddenFor(s => s.StudentId)
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>

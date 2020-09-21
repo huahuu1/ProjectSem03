@@ -62,8 +62,12 @@
             <td>
                 @Html.ActionLink("Update", "Edit", new { id = item.StudentId }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.StudentId }, new { onClick = "return confirm('Are you sure?')" })
-            </td>
+            </td>            
         </tr>
 }
     </tbody>
 </table>
+    @if (TempData["message"] != null)
+    {
+        @Html.Raw(TempData["message"])
+    }
