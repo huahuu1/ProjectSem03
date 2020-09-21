@@ -148,7 +148,7 @@ namespace ProjectSem03.Controllers
                     }
                     else
                     {
-                        ViewBag.Msg = "Invalid Pasword....";
+                        ViewBag.Msg = "Wrong Email or Pasword....";
                     }
                 }
                 else if (student != null)
@@ -164,12 +164,12 @@ namespace ProjectSem03.Controllers
                     }
                     else
                     {
-                        ViewBag.Msg = "Invalid Pasword....";
+                        ViewBag.Msg = "Wrong Email or Pasword....";
                     }
                 }
                 else
                 {
-                    ViewBag.Msg = "Invalid Username....";
+                    ViewBag.Msg = "Wrong Email or Pasword....";
                 }
             }
             catch (Exception e)

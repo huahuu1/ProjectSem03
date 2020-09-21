@@ -102,7 +102,10 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Edit Competition")]
         public IActionResult Edit(int id)
         {
-            if(HttpContext.Session.GetInt32("staffRole") == 2)
+            var list = db.Staff.Where(s => s.Role.Equals(2));
+            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var competition = db.Competition.Find(id);
                 if (competition != null)

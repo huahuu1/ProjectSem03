@@ -114,7 +114,7 @@ namespace ProjectSem03.Controllers
                                 string message = "File updated Successful";
                                 TempData["message"] = "<script>alert('" + message + "');</script>";
                                 newFilePath = Path.Combine("wwwroot/images/Medium", model.Painting);
-                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<p><strong>PostingId:" + modelPosting.PostingId + "</strong></p><h3>DesignName: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>StudentName: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
+                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<h3><strong>Posting Id:" + modelPosting.PostingId + "</strong></h3><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
 
                                 return RedirectToAction("Upload", "Home");
                             }
@@ -148,7 +148,7 @@ namespace ProjectSem03.Controllers
                                     string message = "File updated Successful";
                                     TempData["message"] = "<script>alert('" + message + "');</script>";
                                     newFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //new painting
-                                    await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<p><strong>PostingId:" + modelPosting.PostingId + "</strong></p><h3>DesignName: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>StudentName: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
+                                    await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<p><strong>Posting Id:" + modelPosting.PostingId + "</strong></p><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
                                     System.GC.Collect();
                                     System.GC.WaitForPendingFinalizers();
                                     //check old painting exists
@@ -337,7 +337,7 @@ namespace ProjectSem03.Controllers
                                 TempData["message"] = "<script>alert('" + message + "');</script>";
 
                                 newFilePath = Path.Combine("wwwroot/images/Medium", design.Painting); //new painting
-                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + student.StudentId + "]-[" + student.FirstName + " " + student.LastName + "] Has uploaded the drawing design", "<p><strong>PostingId:" + modelPosting.PostingId + "</strong></p><h3>DesignName: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>StudentName: " + student.FirstName + " " + student.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
+                                await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + student.StudentId + "]-[" + student.FirstName + " " + student.LastName + "] Has uploaded the drawing design", "<p><strong>Posting Id:" + modelPosting.PostingId + "</strong></p><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + student.FirstName + " " + student.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
 
                                 return RedirectToAction("Upload", "Home");
                             }
@@ -438,7 +438,7 @@ namespace ProjectSem03.Controllers
             // mail clients. previous solution only displays in Gmail the inline images
             LinkedResource res = new LinkedResource(filePath, MediaTypeNames.Image.Jpeg);
             res.ContentId = Guid.NewGuid().ToString();
-            string htmlBody = @""+_body+"<br/><img src='cid:" + res.ContentId + @"'/>"; //html code here
+            string htmlBody = @""+_body+"<br/><img width=200 src='cid:" + res.ContentId + @"'/>"; //html code here
             AlternateView alternateView = AlternateView.CreateAlternateViewFromString(htmlBody,
              null, MediaTypeNames.Text.Html);
             alternateView.LinkedResources.Add(res);
