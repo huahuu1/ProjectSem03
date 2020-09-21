@@ -99,7 +99,7 @@ namespace ProjectSem03.Controllers
         {
             if (HttpContext.Session.GetString("ename") == null) //check session
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Home");
             }
             else
             {
