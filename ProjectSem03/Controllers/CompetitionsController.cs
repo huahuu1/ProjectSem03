@@ -70,14 +70,14 @@ namespace ProjectSem03.Controllers
                 var modelComp = db.Competition.Where(c => c.StartDate.Date <= today && c.EndDate >= today);
                 //if (modelComp.ToList().Count >= 1)
                 //{
-                //    return RedirectToAction("Index", "Staffs");
+                //    return RedirectToAction("Create", "Competitions");
                 //}
                 //else
                 //{
                     var list = db.Staff.Where(s => s.Role.Equals(2));
                     ViewBag.data = new SelectList(list, "StaffId", "StaffName");
                     return View();
-                //}                
+                //}
             }
             else
             {
@@ -90,7 +90,7 @@ namespace ProjectSem03.Controllers
         [RequestSizeLimit(8388608)]
         public async Task<IActionResult> Create(Competition competition, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
-            
+
             var list = db.Staff.Where(s => s.Role.Equals(2));
             ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
@@ -219,7 +219,7 @@ namespace ProjectSem03.Controllers
                         if (mName != null)
                         {
                             ViewBag.Cpt = "Competition Name is already existed. Try again";
-                            checkOk = false;                            
+                            checkOk = false;
                         }
 
                         if (file == null)

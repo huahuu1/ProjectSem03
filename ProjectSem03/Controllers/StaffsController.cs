@@ -81,7 +81,6 @@ namespace ProjectSem03.Controllers
             {
                 if (ModelState.IsValid)
                 {
-
                     //valid
                     bool checkOk = true;
                     //check unique email phone staff id
@@ -207,7 +206,6 @@ namespace ProjectSem03.Controllers
                     //check conditions of editting
                     if (editStaff != null)
                     {
-
                         //valid
                         bool checkOk = true;
                         //check unique phone and email
