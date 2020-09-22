@@ -97,6 +97,15 @@ namespace ProjectSem03.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Award award)
         {
+            var list = db.Staff.Where(s => s.Role.Equals(2));
+            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+
+            var list2 = db.Competition.Where(c => !db.Award.Select(a => a.CompetitionID).Contains(c.CompetitionId));
+            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
+
+            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
+
             //start
             try
             {
@@ -145,7 +154,6 @@ namespace ProjectSem03.Controllers
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
 
-                //show list of competitions
                 var list2 = db.Competition.ToList();
                 ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName", listAward.CompetitionID);
 
@@ -169,6 +177,14 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Edit(Award award)
         {
+            var list = db.Staff.Where(s => s.Role.Equals(2));
+            ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+
+            var list2 = db.Competition.ToList();
+            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
+
+            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
 
             //start
             try
