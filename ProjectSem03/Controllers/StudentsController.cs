@@ -55,10 +55,12 @@ namespace ProjectSem03.Controllers
         //Method
         private string GenId()
         {            
-            var modelcheck = db.Student.ToList();
+            var modelcheck = db.Student.ToList(); //get model Student
+
             bool check = false;
             string FirstId = "";
             string AffterID = "";
+            //check if database <= 0
             if (modelcheck.Count <= 0)
             {
                 FirstId = "STU";
@@ -67,38 +69,37 @@ namespace ProjectSem03.Controllers
             }            
             else
             {
-                var model = (from s in db.Student orderby s.StudentId descending select s).First();
+                var model = (from s in db.Student orderby s.StudentId descending select s).First(); //Get Last Id
                 FirstId = model.StudentId.Substring(0, 3);
                 AffterID = model.StudentId.Substring(3, 7);
             }
-
             string LastNummberId = "";
             for (int i = 0; i <= AffterID.Length - 1; i++)
             {
                 if (int.Parse(AffterID[i].ToString()) != 0)
                 {
-                    LastNummberId = AffterID.Substring(i, AffterID.Length - i);                    
+                    LastNummberId = AffterID.Substring(i, AffterID.Length - i); //get all id where != 0                    
                     break;
                 }
             }
-
+            //if row > 0
             if (check == false)
             {
-                LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString();
+                LastNummberId = (Convert.ToInt32(LastNummberId) + 1).ToString(); //id number + 1 to string
             }
             else
             {
                 LastNummberId = (Convert.ToInt32(LastNummberId)).ToString();
             }
 
-            int CountId = LastNummberId.Length; //full lenghtid
-            Console.WriteLine(CountId);
+            int CountId = LastNummberId.Length; //full lenght id
+            //Console.WriteLine(CountId);
             string FullId = FirstId;
             for (int i = 0; i < 7; i++)
             {
                 if (i == 7 - CountId)
                 {
-                    FullId += LastNummberId;
+                    FullId += LastNummberId; //valid
                     break;
                 }
                 else
@@ -173,9 +174,9 @@ namespace ProjectSem03.Controllers
                                 {
                                     return View();
                                 }
-                                //auto gen id
+                                //auto generated id
                                 student.StudentId = GenId();
-                                //choose image
+                                //generate images name choose image path
                                 string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
                                 string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\students\\{renameFile}";
                                 using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
@@ -193,16 +194,16 @@ namespace ProjectSem03.Controllers
                             }
                             else if (file.Length > 8388608)
                             {
-                                ViewBag.Painting = "Painting must be smaller than 8MB";
+                                ViewBag.PImage = "ProfileImage must be smaller than 8MB";
                             }
                             else
                             {
-                                ViewBag.Painting = "Painting must be .jpg or .png";
+                                ViewBag.PImage = "ProfileImage must be .jpg or .png";
                             }
                         }//end check file not null
                         else
                         {
-                            ViewBag.Painting = "Profile images is required";
+                            ViewBag.PImage = "Profile images is required";
                         }
                 }
                 else
@@ -306,6 +307,8 @@ namespace ProjectSem03.Controllers
                             }
                             else
                             {
+
+                                //get file .Extension
                                 string ext = Path.GetExtension(file.FileName);
                                 var today = DateTime.Now;
 
@@ -318,17 +321,22 @@ namespace ProjectSem03.Controllers
                                         return View();
                                     }
                                     string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(1)); //old painting
-
+                                    
+                                    //auto generate filename
                                     string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
                                     string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\students\\{renameFile}";
-
+                                    
+                                    //Copy to file path
                                     using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
                                     {
                                         await file.CopyToAsync(stream);
                                         await stream.FlushAsync();
                                     }
+
+                                    //key
                                     var key = "b14ca5898a4e4133bbce2ea2315a1916";
                                     student.Password = AesEncDesc.EncryptString(key, student.Password);
+
                                     model.Password = student.Password;
                                     model.FirstName = student.FirstName;
                                     model.LastName = student.LastName;
@@ -345,7 +353,7 @@ namespace ProjectSem03.Controllers
 
                                     System.GC.Collect();
                                     System.GC.WaitForPendingFinalizers();
-                                    //check old painting exists
+                                    //check old painting exists to delete
                                     if (System.IO.File.Exists(tempCurFilePath))
                                     {
                                         System.IO.File.Delete(tempCurFilePath);
@@ -356,13 +364,13 @@ namespace ProjectSem03.Controllers
 
                                     return RedirectToAction("Index", "Students");
                                 }
-                                else if (file.Length > 8388608)
+                                else if (file.Length > 8388608) //check file capacity
                                 {
-                                    ViewBag.Painting = "Painting must be smaller than 8MB";
+                                    ViewBag.PImage = "Painting must be smaller than 8MB";
                                 }
                                 else
                                 {
-                                    ViewBag.Painting = "Painting must be .jpg or .png";
+                                    ViewBag.PImage = "Painting must be .jpg or .png";
                                 }
                             }//end check file !null
                         }//end check unique phone email
@@ -384,39 +392,46 @@ namespace ProjectSem03.Controllers
         //DELETE
         public IActionResult Delete(string id)
         {
-            if (HttpContext.Session.GetString("staffId") == null) //check session
+            if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                return RedirectToAction("Login");
+                if (HttpContext.Session.GetString("staffId") == null) //check session
+                {
+                    return RedirectToAction("Index", "Staffs");
+                }
+                else
+                {
+                    try
+                    {
+                        var model = db.Student.SingleOrDefault(s => s.StudentId.Equals(id));
+
+                        if (model != null)
+                        {
+                            string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(1)); //old painting
+                            db.Student.Remove(model);
+                            db.SaveChanges();
+                            //check old painting exists
+                            System.GC.Collect();
+                            System.GC.WaitForPendingFinalizers();
+                            if (System.IO.File.Exists(tempCurFilePath))
+                            {
+                                System.IO.File.Delete(tempCurFilePath);
+                            }
+                            TempData["message"] = "<script>alert('Students deleted Successful');</script>";
+                            return RedirectToAction("Index", "Students");
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        return BadRequest("Delete Failed");
+                    }
+                    TempData["message"] = "<script>alert('Delete fail');</script>";
+                    return View();
+                } //end check session
             }
             else
             {
-                try
-                {
-                    var model = db.Student.SingleOrDefault(s => s.StudentId.Equals(id));
-
-                    if (model != null)
-                    {
-                        string tempCurFilePath = Path.Combine("wwwroot/", model.ProfileImage.Substring(1)); //old painting
-                        db.Student.Remove(model);
-                        db.SaveChanges();
-                        //check old painting exists
-                        System.GC.Collect();
-                        System.GC.WaitForPendingFinalizers();
-                        if (System.IO.File.Exists(tempCurFilePath))
-                        {
-                            System.IO.File.Delete(tempCurFilePath);
-                        }
-                        TempData["message"] = "<script>alert('Students deleted Successful');</script>";
-                        return RedirectToAction("Index", "Students");
-                    }
-                }
-                catch (Exception)
-                {
-                    return BadRequest("Delete Failed");
-                }
-                TempData["message"] = "<script>alert('Delete fail');</script>";
-                return View();
-            } //end check session
+                return RedirectToAction("Index", "Staffs");
+            }
         }
     }
 }
