@@ -19,41 +19,44 @@
         <div class="comps row">
             @foreach (var item in ViewBag.data)
             {
-                <div class="comp-col col-lg-12">
+            <div class="comp-col col-lg-12">
 
-                    <div class="comp-img"><img src="@item.CompetitionImages" alt="" /></div>
-                    <div class="comp-name"><span>@item.CompetitionName</span></div>
-                    <div class="comp-calendar">
-                        <ul>
-                            <li><i class="far fa-calendar-check"></i><span>@item.StartDate.ToShortDateString()</span></li>
-                            <li><i class="far fa-calendar-times"></i><span>@item.EndDate.ToShortDateString()</span></li>
-                            <script type="text/javascript">
+                <div class="comp-img"><img src="@item.Competitions.CompetitionImages" alt="" /></div>
+                <div class="comp-name"><span>@item.Competitions.CompetitionName</span></div>
+                <div class="wrapper-award">
+                    <div class="award-content d-flex" style="justify-content:flex-start; margin-left: -1.3rem; margin-bottom: 1rem;"><img src="~/images/trophy.png" alt="" /> <span>@item.Awards.AwardName</span></div>
+                </div>
+                <div class="comp-calendar">
+                    <ul>
+                        <li><i class="far fa-calendar-check"></i><span>@item.Competitions.StartDate.ToShortDateString()</span></li>
+                        <li><i class="far fa-calendar-times"></i><span>@item.Competitions.EndDate.ToShortDateString()</span></li>
+                        <script type="text/javascript">
                                 var startDate = '@DateTime.Now';
-                                var endDate = '@item.EndDate.ToString("yyyy/MM/dd hh:mm")';
-                            </script>
-                        </ul>
-                    </div>
-                    <div class="comp-countdown">
-                        <div class="ClassyCountdownDemo" id="countdown"></div>
-                    </div>
-                    <div class="comp-content"><span>@item.Description</span></div>
-                    <div class="comp-button">
-                        <div class="button-apply">
-                            @if (@Context.Session.GetString("ename") == null)
-                            {
-                                <a class="button-hover" asp-action="Login" asp-controller="Home">
-                                    <span>register now</span>
-                                </a>
-                            }
-                            else
-                            {
-                                <a class="button-hover" asp-action="Upload" asp-controller="StudentDesignPosting" asp-route-id="@item.CompetitionId">
-                                    <span>register now</span>
-                                </a>
-                            }
-                        </div>
+                                var endDate = '@item.Competitions.EndDate.ToString("yyyy/MM/dd hh:mm")';
+                        </script>
+                    </ul>
+                </div>
+                <div class="comp-countdown">
+                    <div class="ClassyCountdownDemo" id="countdown"></div>
+                </div>
+                <div class="comp-content"><span>@item.Competitions.Description</span></div>
+                <div class="comp-button">
+                    <div class="button-apply">
+                        @if (@Context.Session.GetString("ename") == null)
+                        {
+                            <a class="button-hover" asp-action="Login" asp-controller="Home">
+                                <span>register now</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="button-hover" asp-action="Upload" asp-controller="StudentDesignPosting" asp-route-id="@item.Competitions.CompetitionId">
+                                <span>register now</span>
+                            </a>
+                        }
                     </div>
                 </div>
+            </div>
             }
         </div>
     </div>
@@ -61,7 +64,7 @@
 
 
 <section class="top-students">
-    <div class="top-students-icon"><img src="~/images/trophy.png" alt="" /></div>
+    @*<div class="top-students-icon"><img src="~/images/trophy.png" alt="" /></div>*@
     <div class="top-students-title"><span>Winners</span></div>
     <div class="owl-carousel owl-theme student-slider">
         @foreach (var item in Model)
@@ -70,6 +73,9 @@
                 <div class="owl-lazy" data-src="@Url.Content("~/images/back-white.jpg")">
                     <div class="top-student">
                         <div class="wrapper-top-student">
+                            <div class="wrapper-award">
+                                <div class="award-content d-flex"><img src="~/images/trophy.png" alt="" /> <span>@item.Awards.AwardName</span></div>
+                            </div>
                             <div class="student-icon">
                                 <div class="student-trophy"><img src="~/images/jing.fm-laurel-wreath-clipart-1236472.png" alt="" /></div>
                                 <div class="student-img"><img src="@item.Students.ProfileImage" alt="" /></div>
@@ -79,8 +85,9 @@
                                 <div class="student-name"><span>@item.Students.FirstName&nbsp;@item.Students.LastName</span></div>
                                 <div class="student-design row">
                                     <div class="design-img col-lg-6"><img src="../images/Medium/@item.Designs.Painting" alt="" /></div>
-                                    <div class="design-description col-lg-6"><span style="display:block; font-family: 'Playfair Display',Arial,Helvetica,sans-serif; font-weight: 600; text-transform: uppercase;" >@item.Designs.DesignName</span><span>@item.Designs.Description</span></div>
+                                    <div class="design-description col-lg-6"><span style="display:block; font-family: 'Playfair Display',Arial,Helvetica,sans-serif; font-weight: 600; text-transform: uppercase;"><span style="margin-bottom: 2rem; display: block;">@item.Designs.DesignName</span></span><span>@item.Designs.Description</span></div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
