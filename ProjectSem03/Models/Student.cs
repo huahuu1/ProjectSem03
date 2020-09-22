@@ -16,8 +16,8 @@ namespace ProjectSem03.Models
 
 
         [RegularExpression(@"^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).+$", ErrorMessage = "Password must including numbers and characters and do not contains whitespace")]
-        [Required(ErrorMessage = "Password is required.")]
-        [StringLength(50, MinimumLength = 5, ErrorMessage = "Password must be from 5 to 49 characters")]
+        //[Required(ErrorMessage = "Password is required.")]
+        [StringLength(49, MinimumLength = 5, ErrorMessage = "Password must be from 5 to 49 characters")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
