@@ -746,7 +746,6 @@ section.competition {
       section.competition .container .comps .comp-col .comp-img img {
         width: 80%; }
     section.competition .container .comps .comp-col .comp-name {
-      margin-bottom: 2.2rem;
       margin-top: 2.8rem; }
       section.competition .container .comps .comp-col .comp-name span {
         font-family: "Montserrat",Arial,Helvetica,sans-serif;
@@ -817,7 +816,7 @@ section.competition {
             transition: all .3s ease; }
 
 section.top-students {
-  height: 900px;
+  height: 960px;
   background-color: #e6e7e8; }
   section.top-students .top-students-icon {
     text-align: center; }
@@ -838,7 +837,7 @@ section.top-students {
   section.top-students .owl-loading {
     opacity: 1; }
   section.top-students .student-slider {
-    height: 71%;
+    height: 82%;
     width: 80%;
     margin: auto;
     top: 1%; }
@@ -864,14 +863,14 @@ section.top-students {
                     section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-trophy {
                       position: absolute;
                       left: 50%;
-                      top: 50%;
+                      top: 37%;
                       transform: translate(-50%, -50%); }
                       section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-trophy img {
                         width: 18rem; }
                     section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-img {
                         position: absolute;
                         left: 50%;
-                        top: 48%;
+                        top: 34%;
                         transform: translate(-50%, -50%);
                         width: 13rem;
                     }
@@ -880,14 +879,16 @@ section.top-students {
                     section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-stars {
                       position: absolute;
                       left: 50%;
-                      bottom: -32%;
+                      bottom: -9%;
                       transform: translate(-50%, -50%); }
                       section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-stars img {
                         width: 12rem; }
                   section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-content {
                     margin-top: .5rem; }
                     section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-content .student-name {
-                      text-align: center; }
+                      text-align: center;
+                      margin-top: -4rem;
+                    }
                       section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-content .student-name span {
                         text-transform: uppercase;
                         font-family: "Playfair Display",Arial,Helvetica,sans-serif;
@@ -2376,4 +2377,21 @@ input:-webkit-autofill:active {
 /*Change text in autofill textbox*/
 input:-webkit-autofill {
     -webkit-text-fill-color: #f2f2f2 !important;
+}
+
+.wrapper-award .award-content {
+    align-items: center;
+    justify-content: center;
+}
+
+.wrapper-award .award-content img {
+    width: 5rem;
+}
+
+.wrapper-award .award-content span {
+    margin-right: 4rem;
+    font-family: "Playfair Display",Arial,Helvetica,sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    text-decoration: underline
 }

@@ -25,13 +25,23 @@ namespace ProjectSem03.Controllers
         {
             DateTime localDate = DateTime.Now; //convert current day to comparable value
             //ViewBag.data = db.Competition.ToList();
-            ViewBag.data = db.Competition.Where(c => c.StartDate <= localDate && c.EndDate >= localDate); //get list of upcoming competitions
+            //ViewBag.data = db.Competition.Where(c => c.StartDate <= localDate && c.EndDate >= localDate); //get list of upcoming competitions
+            ViewBag.data = from c in db.Competition
+                           join a in db.Award on c.CompetitionId equals a.CompetitionID
+                           where c.StartDate <= localDate && c.EndDate >= localDate
+                           select new CombineModels
+                           {
+                               Competitions = c,
+                               Awards = a
+                           };
 
             var list = from p in db.Posting
                        join s in db.Staff on p.StaffId equals s.StaffId
                        join c in db.Competition on p.CompetitionId equals c.CompetitionId
+                       join a in db.Award on c.CompetitionId equals a.CompetitionID
                        join d in db.Design on p.DesignID equals d.DesignId
                        join stu in db.Student on d.StudentId equals stu.StudentId
+                       
                        where p.Mark.Equals("best")
                        select new CombineModels
                        {
@@ -39,7 +49,8 @@ namespace ProjectSem03.Controllers
                            Designs = d,
                            Competitions = c,
                            Staffs = s,
-                           Students = stu
+                           Students = stu,
+                           Awards = a
                        }; //get combine list of "best" designs
             return View(list);
         }
@@ -88,12 +99,14 @@ namespace ProjectSem03.Controllers
         private List<CombineModels> designStudentList()
         {
             var list = (from d in db.Design
+                        join p in db.Posting on d.DesignId equals p.DesignID
                         join s in db.Student on d.StudentId equals s.StudentId
                         where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
                         select new CombineModels
                         {
                             Designs = d,
-                            Students = s
+                            Students = s,
+                            Postings = p
                         }).ToList();
             return list;
         }

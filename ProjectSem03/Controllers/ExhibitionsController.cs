@@ -46,11 +46,11 @@ namespace ProjectSem03.Controllers
                            Exhibitions = e
                        }; //get combine list of exhibitions
 
-            var model = list.ToList().ToPagedList(); //pagination
+            var model = list.ToList().ToPagedList(numpage, maxsize); //pagination
             if (ename != null) //if exhibition name is found
             {
                 //show result of exhibition names
-                var filter = list.Where(e => e.Exhibitions.ExhibitionName.ToLower().Contains(ename)).ToList().ToPagedList(numpage, maxsize);
+                var filter = list.Where(e => e.Exhibitions.ExhibitionName.ToLower().Contains(ename)).ToList().ToPagedList();
                 ViewBag.page = filter;
             }
             else if (pname != null) //if place is found

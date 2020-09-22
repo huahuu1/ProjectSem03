@@ -46,7 +46,7 @@ namespace ProjectSem03.Controllers
                                Competitions = c,
                                Staffs = s
                            };
-                var model = list.ToList().ToPagedList(); //pagination
+                var model = list.ToList().ToPagedList(numpage, maxsize); //pagination
 
                 //check if result is found or not
                 if (string.IsNullOrEmpty(pname))  //empty

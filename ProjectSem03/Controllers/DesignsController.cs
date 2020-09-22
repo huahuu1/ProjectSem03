@@ -46,7 +46,7 @@ namespace ProjectSem03.Controllers
                                Designs = d,
                                Exhibitions = e
                            };
-                var model = list.ToList().ToPagedList(); //pagination
+                var model = list.ToList().ToPagedList(numpage, maxsize); //pagination
 
                 //check if result is found or not
                 if (string.IsNullOrEmpty(dname)) //empty
@@ -56,7 +56,7 @@ namespace ProjectSem03.Controllers
                 else
                 {
                     //show the result
-                    var filter = list.Where(d => d.Designs.DesignName.ToLower().Contains(dname)).ToList().ToPagedList(numpage, maxsize);
+                    var filter = list.Where(d => d.Designs.DesignName.ToLower().Contains(dname)).ToList().ToPagedList();
                     ViewBag.page = filter;
                 }
                 return View();

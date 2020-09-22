@@ -19,41 +19,44 @@
         <div class="comps row">
             @foreach (var item in ViewBag.data)
             {
-                <div class="comp-col col-lg-12">
+            <div class="comp-col col-lg-12">
 
-                    <div class="comp-img"><img src="@item.CompetitionImages" alt="" /></div>
-                    <div class="comp-name"><span>@item.CompetitionName</span></div>
-                    <div class="comp-calendar">
-                        <ul>
-                            <li><i class="far fa-calendar-check"></i><span>@item.StartDate.ToShortDateString()</span></li>
-                            <li><i class="far fa-calendar-times"></i><span>@item.EndDate.ToShortDateString()</span></li>
-                            <script type="text/javascript">
+                <div class="comp-img"><img src="@item.Competitions.CompetitionImages" alt="" /></div>
+                <div class="comp-name"><span>@item.Competitions.CompetitionName</span></div>
+                <div class="wrapper-award">
+                    <div class="award-content d-flex" style="justify-content:flex-start; margin-left: -1.3rem; margin-bottom: 1rem;"><img src="~/images/trophy.png" alt="" /> <span>@item.Awards.AwardName</span></div>
+                </div>
+                <div class="comp-calendar">
+                    <ul>
+                        <li><i class="far fa-calendar-check"></i><span>@item.Competitions.StartDate.ToShortDateString()</span></li>
+                        <li><i class="far fa-calendar-times"></i><span>@item.Competitions.EndDate.ToShortDateString()</span></li>
+                        <script type="text/javascript">
                                 var startDate = '@DateTime.Now';
-                                var endDate = '@item.EndDate.ToString("yyyy/MM/dd hh:mm")';
-                            </script>
-                        </ul>
-                    </div>
-                    <div class="comp-countdown">
-                        <div class="ClassyCountdownDemo" id="countdown"></div>
-                    </div>
-                    <div class="comp-content"><span>@item.Description</span></div>
-                    <div class="comp-button">
-                        <div class="button-apply">
-                            @if (@Context.Session.GetString("ename") == null)
-                            {
-                                <a class="button-hover" asp-action="Login" asp-controller="Home">
-                                    <span>register now</span>
-                                </a>
-                            }
-                            else
-                            {
-                                <a class="button-hover" asp-action="Upload" asp-controller="StudentDesignPosting" asp-route-id="@item.CompetitionId">
-                                    <span>register now</span>
-                                </a>
-                            }
-                        </div>
+                                var endDate = '@item.Competitions.EndDate.ToString("yyyy/MM/dd hh:mm")';
+                        </script>
+                    </ul>
+                </div>
+                <div class="comp-countdown">
+                    <div class="ClassyCountdownDemo" id="countdown"></div>
+                </div>
+                <div class="comp-content"><span>@item.Competitions.Description</span></div>
+                <div class="comp-button">
+                    <div class="button-apply">
+                        @if (@Context.Session.GetString("ename") == null)
+                        {
+                            <a class="button-hover" asp-action="Login" asp-controller="Home">
+                                <span>register now</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="button-hover" asp-action="Upload" asp-controller="StudentDesignPosting" asp-route-id="@item.Competitions.CompetitionId">
+                                <span>register now</span>
+                            </a>
+                        }
                     </div>
                 </div>
+            </div>
             }
         </div>
     </div>
@@ -61,7 +64,7 @@
 
 
 <section class="top-students">
-    <div class="top-students-icon"><img src="~/images/trophy.png" alt="" /></div>
+    @*<div class="top-students-icon"><img src="~/images/trophy.png" alt="" /></div>*@
     <div class="top-students-title"><span>Winners</span></div>
     <div class="owl-carousel owl-theme student-slider">
         @foreach (var item in Model)
@@ -70,6 +73,9 @@
                 <div class="owl-lazy" data-src="@Url.Content("~/images/back-white.jpg")">
                     <div class="top-student">
                         <div class="wrapper-top-student">
+                            <div class="wrapper-award">
+                                <div class="award-content d-flex"><img src="~/images/trophy.png" alt="" /> <span>@item.Awards.AwardName</span></div>
+                            </div>
                             <div class="student-icon">
                                 <div class="student-trophy"><img src="~/images/jing.fm-laurel-wreath-clipart-1236472.png" alt="" /></div>
                                 <div class="student-img"><img src="@item.Students.ProfileImage" alt="" /></div>
@@ -79,8 +85,9 @@
                                 <div class="student-name"><span>@item.Students.FirstName&nbsp;@item.Students.LastName</span></div>
                                 <div class="student-design row">
                                     <div class="design-img col-lg-6"><img src="../images/Medium/@item.Designs.Painting" alt="" /></div>
-                                    <div class="design-description col-lg-6"><span style="display:block; font-family: 'Playfair Display',Arial,Helvetica,sans-serif; font-weight: 600; text-transform: uppercase;" >@item.Designs.DesignName</span><span>@item.Designs.Description</span></div>
+                                    <div class="design-description col-lg-6"><span style="display:block; font-family: 'Playfair Display',Arial,Helvetica,sans-serif; font-weight: 600; text-transform: uppercase;"><span style="margin-bottom: 2rem; display: block;">@item.Designs.DesignName</span></span><span>@item.Designs.Description</span></div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -98,52 +105,52 @@
                     <div class="teacher-img"><img src="~/images/teachers/teacher1.jpg" alt="" /></div>
                     <div class="teacher-quote">
                         <blockquote>
-                            <q>The Tabula drawing school in Greenpoint NY is a MUST for anyone interested in bettering their skills.</q>
+                            <q>A life spent making mistakes is not only more honorable, but more useful than a life spent doing nothing.</q>
                         </blockquote>
                     </div>
-                    <div class="teacher-name"><span>RICARDO LOGAN</span><span>Teacher</span></div>
+                    <div class="teacher-name"><span>George Bernard Shaw</span><span>Teacher</span></div>
                 </div>
             </div>
             <div class="item">
                 <div class="teacher-content">
-                    <div class="teacher-img"><img src="~/images/teachers/teacher1.jpg" alt="" /></div>
+                    <div class="teacher-img"><img src="~/images/teachers/teacher2.jpg" alt="" /></div>
                     <div class="teacher-quote">
                         <blockquote>
-                            <q>The Tabula drawing school in Greenpoint NY is a MUST for anyone interested in bettering their skills.</q>
+                            <q>Every child is an artist. The problem is how to remain an artist once he grows up.</q>
                         </blockquote>
                     </div>
-                    <div class="teacher-name"><span>RICARDO LOGAN</span><span>Teacher</span></div>
+                    <div class="teacher-name"><span>Friedrich Nietzsche</span><span>Teacher</span></div>
                 </div>
             </div>
             <div class="item">
                 <div class="teacher-content">
-                    <div class="teacher-img"><img src="~/images/teachers/teacher1.jpg" alt="" /></div>
+                    <div class="teacher-img"><img src="~/images/teachers/teacher3.jpg" alt="" /></div>
                     <div class="teacher-quote">
                         <blockquote>
-                            <q>The Tabula drawing school in Greenpoint NY is a MUST for anyone interested in bettering their skills.</q>
+                            <q>It is good to love many things, for therein lies the true strength, and whosoever loves much performs much.</q>
                         </blockquote>
                     </div>
-                    <div class="teacher-name"><span>RICARDO LOGAN</span><span>Teacher</span></div>
+                    <div class="teacher-name"><span>Kurt Vonnegut</span><span>Teacher</span></div>
                 </div>
             </div>
             <div class="item">
                 <div class="teacher-content">
-                    <div class="teacher-img"><img src="~/images/teachers/teacher1.jpg" alt="" /></div>
+                    <div class="teacher-img"><img src="~/images/teachers/teacher4.jpg" alt="" /></div>
                     <div class="teacher-quote">
                         <blockquote>
-                            <q>The Tabula drawing school in Greenpoint NY is a MUST for anyone interested in bettering their skills.</q>
+                            <q>One ought, every day at least, to hear a little song, read a good poem, see a fine picture, and, if it were possible, to speak a few reasonable words.</q>
                         </blockquote>
                     </div>
-                    <div class="teacher-name"><span>RICARDO LOGAN</span><span>Teacher</span></div>
+                    <div class="teacher-name"><span>Émile Zola</span><span>Teacher</span></div>
                 </div>
             </div>
         </div>
     </div>
     <div class="wrapper-about col-lg-6">
         <div class="about-page"><span>about us</span></div>
-        <div class="about-title"><span></span>Tabula<br /> art school</div>
-        <div class="about-text"><span>Twee echo park celiac YOLO dreamcatcher bushwick. Pitchfork fam tousled sustainable mumblecore tote bag trust fund tacos organic four dollar toast kickstarter pork belly.</span></div>
-        <div class="about-button"><a class="button-hover" href="#"><span>view more</span></a></div>
+        <div class="about-title"><span></span>Fine Arts<br /> institute</div>
+        <div class="about-text"><span>As we enter a new decade, we remain committed to our mission to inspire learning and growth through the arts. We invite you to embark on your learning journey with us and one day join the ranks of our numerous award-winning alumni. </span></div>
+        <div class="about-button"><a class="button-hover" asp-action="AboutUs" asp-controller="Home"><span>view more</span></a></div>
     </div>
 </section>
 
@@ -166,7 +173,7 @@
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-3">
                         <div class="counter-list">
-                            <i class="fa fa-trophy"></i><span class="counter">20</span>
+                            <i class="fa fa-trophy"></i><span class="counter">10</span>
                             <p>Winners</p>
                         </div>
                     </div>

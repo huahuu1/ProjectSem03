@@ -43,7 +43,7 @@ namespace ProjectSem03.Controllers
                                Staffs = s,
                                Competitions = c
                            };
-                var model = list.ToList().ToPagedList(); //pagination
+                var model = list.ToList().ToPagedList(numpage, maxsize); //pagination
 
                 //check if result is found or not
                 if (string.IsNullOrEmpty(cname)) //empty
@@ -53,7 +53,7 @@ namespace ProjectSem03.Controllers
                 else
                 {
                     //show the result
-                    var filter = list.Where(c=>c.Competitions.CompetitionName.ToLower().Contains(cname)).ToList().ToPagedList(numpage, maxsize);
+                    var filter = list.Where(c=>c.Competitions.CompetitionName.ToLower().Contains(cname)).ToList().ToPagedList();
                     ViewBag.page = filter;
                 }
                 return View();
@@ -68,16 +68,16 @@ namespace ProjectSem03.Controllers
             {
                 var today = DateTime.Now;
                 var modelComp = db.Competition.Where(c => c.StartDate.Date <= today && c.EndDate >= today);
-                if (modelComp.ToList().Count >= 1)
-                {
-                    return RedirectToAction("Index", "Staffs");
-                }
-                else
-                {
+                //if (modelComp.ToList().Count >= 1)
+                //{
+                //    return RedirectToAction("Create", "Competitions");
+                //}
+                //else
+                //{
                     var list = db.Staff.Where(s => s.Role.Equals(2));
                     ViewBag.data = new SelectList(list, "StaffId", "StaffName");
                     return View();
-                }                
+                //}
             }
             else
             {
@@ -90,7 +90,7 @@ namespace ProjectSem03.Controllers
         [RequestSizeLimit(8388608)]
         public async Task<IActionResult> Create(Competition competition, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
-            
+
             var list = db.Staff.Where(s => s.Role.Equals(2));
             ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
@@ -117,7 +117,7 @@ namespace ProjectSem03.Controllers
                         //{
                         if (modelDuplicate != null)
                         {
-                            ViewBag.images = "File name already exists";
+                            ViewBag.CImage = "File name already exists";
                             checkOk = false;
                         }
 
@@ -148,16 +148,16 @@ namespace ProjectSem03.Controllers
                         }
                         else if (file.Length > 8388608)
                         {
-                            ViewBag.Painting = "CompetitionImages must be smaller than 8MB";
+                            ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
                         }
                         else
                         {
-                            ViewBag.Painting = "CompetitionImages must be .jpg or .png";
+                            ViewBag.CImage = "CompetitionImages must be .jpg or .png";
                         }
                     }
                     else
                     {
-                        ViewBag.Painting = "CompetitionImages Required";
+                        ViewBag.CImage = "CompetitionImages Required";
                     }
                 }
                 else
@@ -219,7 +219,7 @@ namespace ProjectSem03.Controllers
                         if (mName != null)
                         {
                             ViewBag.Cpt = "Competition Name is already existed. Try again";
-                            checkOk = false;                            
+                            checkOk = false;
                         }
 
                         if (file == null)
@@ -247,7 +247,7 @@ namespace ProjectSem03.Controllers
                             //{
                             if (modelDuplicate != null)
                             {
-                                ViewBag.images = "File name already exists";
+                                ViewBag.CImage = "File name already exists";
                                 checkOk = false;
                             }
                             //check file
@@ -299,11 +299,11 @@ namespace ProjectSem03.Controllers
                             }
                             else if (file.Length > 8388608)
                             {
-                                ViewBag.Painting = "CompetitionImages must be smaller than 8MB";
+                                ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
                             }
                             else
                             {
-                                ViewBag.Painting = "CompetitionImages must be .jpg or .png";
+                                ViewBag.CImage = "CompetitionImages must be .jpg or .png";
                             }
                         }//end check file null
                     }
