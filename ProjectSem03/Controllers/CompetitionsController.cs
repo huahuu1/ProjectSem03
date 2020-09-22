@@ -8,12 +8,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using SmartBreadcrumbs.Attributes;
+using X.PagedList; //using for pagination
 using Microsoft.AspNetCore.Hosting;
 
 namespace ProjectSem03.Controllers
 {
     public class CompetitionsController : Controller
     {
+        //connection to database
         ProjectDB db;
         public CompetitionsController(ProjectDB db)
         {
@@ -21,7 +23,7 @@ namespace ProjectSem03.Controllers
         }
 
         [Breadcrumb("Competition List")]
-        public IActionResult Index(string cname)
+        public IActionResult Index(string cname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -29,24 +31,32 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //set number of records per page and starting page
+                int maxsize = 3;
+                int numpage = page ?? 1;
+
+                //get combine list for Competition
                 var list = from c in db.Competition
-                           join s in db.Staff
-                           on c.StaffId equals s.StaffId
+                           join s in db.Staff on c.StaffId equals s.StaffId
                            select new CombineModels
                            {
                                Staffs = s,
                                Competitions = c
                            };
-                if (string.IsNullOrEmpty(cname))
+                var model = list.ToList().ToPagedList(); //pagination
+
+                //check if result is found or not
+                if (string.IsNullOrEmpty(cname)) //empty
                 {
-                    return View(list);
+                    ViewBag.page = model;
                 }
                 else
                 {
-                    var filter = list.Where(c=>c.Competitions.CompetitionName.Contains(cname));
-                    return View(filter);
+                    //show the result
+                    var filter = list.Where(c=>c.Competitions.CompetitionName.ToLower().Contains(cname)).ToList().ToPagedList(numpage, maxsize);
+                    ViewBag.page = filter;
                 }
-
+                return View();
             }
         }
 
@@ -54,7 +64,7 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Create Competition")]
         public IActionResult Create()
         {
-            if(HttpContext.Session.GetInt32("staffRole") == 2)
+            if(HttpContext.Session.GetInt32("staffRole") == 2) //check session for Staff Role
             {
                 var today = DateTime.Now;
                 var modelComp = db.Competition.Where(c => c.StartDate.Date <= today && c.EndDate >= today);
@@ -71,6 +81,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //return to Index page of Staffs
                 return RedirectToAction("Index", "Staffs");
             }
         }
@@ -156,7 +167,7 @@ namespace ProjectSem03.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.msg = e.Message;
+                ViewBag.msg = e.Message; //show other error messages
             }
             return View();
         }
@@ -170,7 +181,7 @@ namespace ProjectSem03.Controllers
 
             if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
-                var competition = db.Competition.Find(id);
+                var competition = db.Competition.Find(id); //find CompetitionId
                 if (competition != null)
                 {
                     return View(competition);
@@ -196,7 +207,7 @@ namespace ProjectSem03.Controllers
             ViewBag.data = new SelectList(list, "StaffId", "StaffName");
             try
             {
-                var editCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(competition.CompetitionId));
+                var editCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(competition.CompetitionId)); //check CompetitionId
                 if (ModelState.IsValid)
                 {
                     if (editCompetition != null)
@@ -309,11 +320,11 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id) //delete competition
         {
             try
             {
-                var competition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(id));
+                var competition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(id)); //find Competition Id
                 if (competition != null)
                 {
                     string tempCurFilePath = Path.Combine("wwwroot/", competition.CompetitionImages.Substring(1)); //old painting

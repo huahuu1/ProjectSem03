@@ -15,6 +15,7 @@ namespace ProjectSem03.Controllers
 {
     public class StaffsController : Controller
     {
+        //connection to database
         ProjectDB db;
         public StaffsController(ProjectDB db)
         {
@@ -30,19 +31,22 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //set number of records per page and starting page
                 int maxsize = 3;
                 int numpage = page ?? 1;
-                var list = db.Staff.ToList().ToPagedList(numpage, maxsize);
-                if (string.IsNullOrEmpty(sname))
+
+                var list = db.Staff.ToList().ToPagedList(numpage, maxsize); //get list of Staffs and pagination
+
+                //check if result is found or not
+                if (string.IsNullOrEmpty(sname))//empty
                 {
                     ViewBag.page = list;
-                    //return View(list);
                 }
                 else
                 {
-                    list = list.Where(s => s.StaffName.Contains(sname)).ToList().ToPagedList(numpage, maxsize);
+                    //show the result
+                    list = db.Staff.Where(s => s.StaffName.ToLower().Contains(sname)).ToList().ToPagedList(numpage, maxsize);
                     ViewBag.page = list;
-                    //return View(filter);
                 }
                 return View();
             }
@@ -52,12 +56,13 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Create Staff")]
         public IActionResult Create()
         {
-            if(HttpContext.Session.GetInt32("staffRole") == 0)
+            if(HttpContext.Session.GetInt32("staffRole") == 0) //check session for Staff Role
             {
                 return View();
             }
-            else
+            else //if Staff Role doesn't equal 0
             {
+                //return to Index page of Staffs
                 return RedirectToAction("Index", "Staffs");
             }
         }
@@ -67,9 +72,9 @@ namespace ProjectSem03.Controllers
         [RequestSizeLimit(8388608)]
         public async Task<IActionResult> Create(Staff staff, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
         {
-            var staffid = db.Staff.SingleOrDefault(s => s.StaffId.Equals(staff.StaffId));
-            var email = db.Staff.SingleOrDefault(e => e.Email.Equals(staff.Email));
-            var phone = db.Staff.SingleOrDefault(p => p.Phone.Equals(staff.Phone));
+            var staffid = db.Staff.SingleOrDefault(s => s.StaffId.Equals(staff.StaffId)); //check if input Staff Id is existed in database or not
+            var email = db.Staff.SingleOrDefault(e => e.Email.Equals(staff.Email)); //check if input Email is existed in database or not
+            var phone = db.Staff.SingleOrDefault(p => p.Phone.Equals(staff.Phone));//check if input Phone Id is existed in database or not
 
             try
             {
@@ -159,7 +164,7 @@ namespace ProjectSem03.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.Msg = e.Message;
+                ViewBag.Msg = e.Message; //show other error messages
             }
             return View();
         }
@@ -170,7 +175,7 @@ namespace ProjectSem03.Controllers
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                var stf = db.Staff.Find(id);
+                var stf = db.Staff.Find(id); //Find Staff Id
                 if (stf != null)
                 {
                     return View(stf);
@@ -192,9 +197,10 @@ namespace ProjectSem03.Controllers
         {
             try
             {
-                var editStaff = db.Staff.SingleOrDefault(c => c.StaffId.Equals(staff.StaffId));
+                var editStaff = db.Staff.SingleOrDefault(c => c.StaffId.Equals(staff.StaffId)); //check Staff Id
                 if (ModelState.IsValid)
                 {
+                    //check conditions of editting
                     if (editStaff != null)
                     {
 
@@ -314,11 +320,11 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        public IActionResult Delete(string id)
+        public IActionResult Delete(string id) //delete staff
         {
             try
             {
-                var staff = db.Staff.SingleOrDefault(s => s.StaffId.Equals(id));
+                var staff = db.Staff.SingleOrDefault(s => s.StaffId.Equals(id)); //find staff id
 
                 if (staff != null)
                 {
@@ -339,7 +345,7 @@ namespace ProjectSem03.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Cannot delete object that is existed in other tables");
+                return BadRequest("Cannot delete object that is existed in other tables"); //error message if chosen Staff found in other databases
             }
             return View();
         }
