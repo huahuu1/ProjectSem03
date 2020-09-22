@@ -1,10 +1,16 @@
 ﻿@{
-    ViewData["Title"] = "Admin Page";
+    ViewData["Title"] = "Competition";
     Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
 @using Microsoft.AspNetCore.Http
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Bootstrap4.Core;
+@{
+    var pagedList = (IPagedList)ViewBag.page;
+}
 
 
 @using (Html.BeginForm("Index", "Competitions", FormMethod.Post, new { @class = "form-inline form-group" }))
@@ -25,24 +31,24 @@
                 <th>Image</th>
                 <th>Staff Name</th>
                 <th>
-                @if (Context.Session.GetInt32("staffRole") == 2)
-                {
-                    <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Competitions">
-                        <i class="fas fa-plus"></i> Add New
-                    </a>
-                }
+                    @if (Context.Session.GetInt32("staffRole") == 2)
+                    {
+                        <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Competitions">
+                            <i class="fas fa-plus"></i> Add New
+                        </a>
+                    }
                 </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in ViewBag.page)
             {
                 <tr class="text-center">
                     <td>
-                        @Html.DisplayFor(modelItem => item.Competitions.CompetitionId)
+                        @item.Competitions.CompetitionId
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Competitions.CompetitionName)
+                        @item.Competitions.CompetitionName
                     </td>
                     <td>
                         @item.Competitions.StartDate.ToString("dd/MM/yyyy")
@@ -51,25 +57,31 @@
                         @item.Competitions.EndDate.ToString("dd/MM/yyyy")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Competitions.Description)
+                        @item.Competitions.Description
                     </td>
                     <td>
-                        <img src="@item.Competitions.CompetitionImages" width="100"/>
+                        <img src="@item.Competitions.CompetitionImages" width="100" />
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Staffs.StaffName)
+                        @item.Staffs.StaffName
                     </td>
                     <td style="width: 15%;">
-                    @if (Context.Session.GetInt32("staffRole") == 2)
-                    {
-                        <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Competitions" asp-route-id="@item.Competitions.CompetitionId"><i class="fas fa-folder"></i> Update</a>
-                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Competitions" asp-route-id="@item.Competitions.CompetitionId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
-                    }
+                        @if (Context.Session.GetInt32("staffRole") == 2)
+                        {
+                            <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Competitions" asp-route-id="@item.Competitions.CompetitionId"><i class="fas fa-folder"></i> Update</a>
+                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Competitions" asp-route-id="@item.Competitions.CompetitionId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                        }
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-
+<br />
+<div>
+    @using (Html.BeginForm("Index", "Competitions", FormMethod.Post))
+    {
+        <p>@Html.PagedListPager(pagedList, page => Url.Action("Index", "Competitions", new { page, currentFilter = ViewBag.page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)</p>
+    }
+</div>
 

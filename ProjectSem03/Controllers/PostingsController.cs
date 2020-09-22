@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Internal;
 using SmartBreadcrumbs.Attributes;
+using X.PagedList; //using for pagination
 
 namespace ProjectSem03.Controllers
 {
     public class PostingsController : Controller
     {
+        //connection to database
         ProjectDB db;
         public PostingsController(ProjectDB db)
         {
@@ -20,7 +22,7 @@ namespace ProjectSem03.Controllers
         }
 
         [Breadcrumb("Posting List")]
-        public IActionResult Index(string pname)
+        public IActionResult Index(string pname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -28,6 +30,11 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //set number of records per page and starting page
+                int maxsize = 3;
+                int numpage = page ?? 1;
+
+                //get combine list for Posting
                 var list = from p in db.Posting
                            join d in db.Design on p.DesignID equals d.DesignId
                            join c in db.Competition on p.CompetitionId equals c.CompetitionId
@@ -39,15 +46,20 @@ namespace ProjectSem03.Controllers
                                Competitions = c,
                                Staffs = s
                            };
-                if (string.IsNullOrEmpty(pname))
+                var model = list.ToList().ToPagedList(); //pagination
+
+                //check if result is found or not
+                if (string.IsNullOrEmpty(pname))  //empty
                 {
-                    return View(list);
+                    ViewBag.page = model;
                 }
                 else
                 {
-                    var filter = list.Where(s => s.Postings.PostDescription.ToLower().Contains(pname) || s.Postings.PostDescription.ToUpper().Contains(pname));
-                    return View(filter);
+                    //show the result
+                    var filter = list.Where(s => s.Postings.PostDescription.ToLower().Contains(pname)).ToList().ToPagedList();
+                    ViewBag.page = filter;
                 }
+                return View();
             }
         }
 
@@ -55,12 +67,12 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Edit Posting")]
         public IActionResult Edit(int id)
         {
-            if (HttpContext.Session.GetInt32("staffRole") == 2)
+            if (HttpContext.Session.GetInt32("staffRole") == 2) //check session for Staff Role
             {
-                var list = db.Staff.Where(s => s.Role.Equals(2));
+                var list = db.Staff.Where(s => s.Role.Equals(2)); //get list of staffs
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
-                var posting = db.Posting.Find(id);
+                var posting = db.Posting.Find(id); //Find Posting id
                 if (posting != null)
                 {
                     return View(posting);
@@ -72,41 +84,44 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //return to Index page of Staffs
                 return RedirectToAction("Index", "Staffs");
             }
         }
 
         [HttpPost]
-        public IActionResult Edit(Posting posting)
+        public IActionResult Edit(Posting posting) //edit posting
         {
             var list = db.Staff.Where(s => s.Role.Equals(2));
             ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
             try
             {
-                var editPosting = db.Posting.SingleOrDefault(p => p.PostingId.Equals(posting.PostingId));
+                var editPosting = db.Posting.SingleOrDefault(p => p.PostingId.Equals(posting.PostingId)); //check posting Id
                 if (ModelState.IsValid)
                 {
+                    //check conditions of editting
                     if (editPosting != null)
                     {
+                        //edit posting value
                         editPosting.PostDescription = posting.PostDescription;
                         editPosting.Mark = posting.Mark;
                         editPosting.Remark = posting.Remark;
                         editPosting.SoldStatus = posting.SoldStatus;
                         editPosting.PaidStatus = posting.PaidStatus;
                         editPosting.StaffId = posting.StaffId;
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Postings");
+                        db.SaveChanges(); //save changes
+                        return RedirectToAction("Index", "Postings"); //return to Index page of Positngs
                     }
                     else
                     {
-                        ViewBag.Msg = "Failed .......";
+                        ViewBag.Msg = "Failed ......."; //show error message if conditions are invalid
                     }
                 }
             }
             catch (Exception e)
             {
-                ViewBag.Msg = e.Message;
+                ViewBag.Msg = e.Message; //show other error messagess
             }
             return View();
         }

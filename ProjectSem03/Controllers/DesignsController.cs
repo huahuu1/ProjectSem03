@@ -9,13 +9,14 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SmartBreadcrumbs.Attributes;
-//using Microsoft.CodeAnalysis.CSharp.Syntax;
-//using Microsoft.AspNetCore.HttpOverrides;
+using X.PagedList; //using for pagination
+
 namespace ProjectSem03.Controllers
 {
     public class DesignsController : Controller
     {
         //step 2
+        //Connection to database
         ProjectDB db;
         public DesignsController(ProjectDB db)
         {
@@ -23,7 +24,7 @@ namespace ProjectSem03.Controllers
         }
 
         [Breadcrumb("Design List")]
-        public IActionResult Index(string dname)
+        public IActionResult Index(string dname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -31,6 +32,11 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //set number of records per page and starting page
+                int maxsize = 3;
+                int numpage = page ?? 1;
+
+                //get combine list for Design
                 var list = from d in db.Design
                            join e in db.Exhibition
                            on d.ExhibitionID equals e.ExhibitionId into groupjoin
@@ -40,16 +46,20 @@ namespace ProjectSem03.Controllers
                                Designs = d,
                                Exhibitions = e
                            };
-                if (string.IsNullOrEmpty(dname))
+                var model = list.ToList().ToPagedList(); //pagination
+
+                //check if result is found or not
+                if (string.IsNullOrEmpty(dname)) //empty
                 {
-                    return View(list);
+                    ViewBag.page = model;
                 }
                 else
                 {
-                    var filter = list.Where(d => d.Designs.DesignName.Contains(dname));
-                    return View(filter);
+                    //show the result
+                    var filter = list.Where(d => d.Designs.DesignName.ToLower().Contains(dname)).ToList().ToPagedList(numpage, maxsize);
+                    ViewBag.page = filter;
                 }
-
+                return View();
             }
         }
 
@@ -57,12 +67,12 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Edit Design")]
         public IActionResult Edit(int id)
         {
-            if (HttpContext.Session.GetInt32("staffRole") == 2)
+            if (HttpContext.Session.GetInt32("staffRole") == 2) //check session for Staff Role
             {
-                var exhibition = db.Exhibition.ToList();
+                var exhibition = db.Exhibition.ToList(); //get list of exhibitions
                 ViewBag.data = new SelectList(exhibition, "ExhibitionId", "ExhibitionName");
 
-                var design = db.Design.Find(id);
+                var design = db.Design.Find(id); //Find design Id
                 if (design != null)
                 {
                     return View(design);
@@ -74,44 +84,37 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //return to Index page of Staffs
                 return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
-        public IActionResult Edit(Design design)
+        public IActionResult Edit(Design design) //edit design
         {
             var exhibition = db.Exhibition.ToList();
             ViewBag.data = new SelectList(exhibition, "ExhibitionID", "ExhibitionName");
 
             try
             {
-                var editDesign = db.Design.SingleOrDefault(d => d.DesignId.Equals(design.DesignId));
+                var editDesign = db.Design.SingleOrDefault(d => d.DesignId.Equals(design.DesignId)); //check Design Id
                 if (ModelState.IsValid)
                 {
                     if (editDesign != null)
                     {
+                        //edit Design values
                         editDesign.ExhibitionID = design.ExhibitionID;
-                        //editDesign.Price = design.Price;
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Designs");
-                        //if (design.Price > 0)
-                        //{
-                            
-                        //}
-                        //else
-                        //{
-                        //    return RedirectToAction("Edit", "Designs");
-                        //}
+                        db.SaveChanges(); // save changes
+                        return RedirectToAction("Index", "Designs"); //return to Index page of Designs
                     }
                     else
                     {
-                        ViewBag.Msg = "Failed .......";
+                        ViewBag.Msg = "Failed ......."; //show error message if Design Id is not found
                     }
                 }
             }
             catch (Exception e)
             {
-                ViewBag.Msg = e.Message;
+                ViewBag.Msg = e.Message; //show other error messages
             }
             return View();
         }

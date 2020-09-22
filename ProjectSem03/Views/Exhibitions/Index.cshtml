@@ -1,10 +1,16 @@
 ﻿@{
-    ViewData["Title"] = "Admin Page";
+    ViewData["Title"] = "Exhibition";
     Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
 @using Microsoft.AspNetCore.Http
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Bootstrap4.Core;
+@{
+    var pagedList = (IPagedList)ViewBag.page;
+}
 
 @using (Html.BeginForm("Index", "Exhibitions", FormMethod.Post, new { @class = "form-inline form-group" }))
 {
@@ -25,25 +31,28 @@
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Staff Name</th>
-                <th>
-                    <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Exhibitions">
-                        <i class="fas fa-plus"></i> Add New
-                    </a>
-                </th>
+                @if (Context.Session.GetInt32("staffRole") == 2)
+                {
+                    <th>
+                        <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Exhibitions">
+                            <i class="fas fa-plus"></i> Add New
+                        </a>
+                    </th>
+                }
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in ViewBag.page)
             {
                 <tr class="text-center">
                     <td>
-                        @Html.DisplayFor(modelItem => item.Exhibitions.ExhibitionId)
+                        @item.Exhibitions.ExhibitionId
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Exhibitions.ExhibitionName)
+                        @item.Exhibitions.ExhibitionName
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Exhibitions.Place)
+                        @item.Exhibitions.Place
                     </td>
                     <td>
                         @item.Exhibitions.StartDate.ToString("dd/MM/yyyy")
@@ -52,20 +61,26 @@
                         @item.Exhibitions.EndDate.ToString("dd/MM/yyyy")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Staffs.StaffName)
+                        @item.Staffs.StaffName
                     </td>
 
                     <td style="width: 15%;">
                         <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Exhibitions" asp-route-id="@item.Exhibitions.ExhibitionId"><i class="fas fa-folder"></i> Update</a>
-                    @if (Context.Session.GetInt32("staffRole") == 1)
-                    {
-                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Exhibitions" asp-route-id="@item.Exhibitions.ExhibitionId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
-                    }
+                        @if (Context.Session.GetInt32("staffRole") == 2)
+                        {
+                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Exhibitions" asp-route-id="@item.Exhibitions.ExhibitionId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                        }
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
-
+<br />
+<div>
+    @using (Html.BeginForm("Index", "Exhibitions", FormMethod.Post))
+    {
+        <p>@Html.PagedListPager(pagedList, page => Url.Action("Index", "Exhibitions", new { page, currentFilter = ViewBag.page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)</p>
+    }
+</div>
 

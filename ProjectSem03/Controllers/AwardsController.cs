@@ -7,11 +7,13 @@ using ProjectSem03.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using SmartBreadcrumbs.Attributes;
+using X.PagedList; //using for paginantion
 
 namespace ProjectSem03.Controllers
 {
     public class AwardsController : Controller
     {
+        //connection to database
         ProjectDB db;
         public AwardsController(ProjectDB db)
         {
@@ -19,7 +21,7 @@ namespace ProjectSem03.Controllers
         }
 
         [Breadcrumb("Award List")]
-        public IActionResult Index(string aname)
+        public IActionResult Index(string aname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -27,6 +29,11 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //set number of records per page and starting page
+                int maxsize = 3;
+                int numpage = page ?? 1;
+
+                //get combined list for Award
                 var list = from a in db.Award
                            join c in db.Competition on a.CompetitionID equals c.CompetitionId
                            join s in db.Staff on a.StaffId equals s.StaffId
@@ -39,15 +46,20 @@ namespace ProjectSem03.Controllers
                                Staffs = s,
                                Postings = p
                            };
-                if (string.IsNullOrEmpty(aname))
+                var model = list.ToList().ToPagedList(); //pagination
+
+                //check if the search has result or not
+                if (string.IsNullOrEmpty(aname)) //empty
                 {
-                    return View(list);
+                    ViewBag.page = model;
                 }
                 else
                 {
-                    var filter = list.Where(s => s.Awards.AwardName.ToLower().Contains(aname) || s.Awards.AwardName.ToUpper().Contains(aname));
-                    return View(filter);
+                    //show the search result
+                    var filter = list.Where(s => s.Awards.AwardName.ToLower().Contains(aname)).ToList().ToPagedList(numpage, maxsize);
+                    ViewBag.page = filter;
                 }
+                return View();
             }
         }
 
@@ -55,10 +67,13 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Create Award")]
         public IActionResult Create()
         {
+            //Get list of Awards
             var listAward = db.Award.ToList();
             
+            //check if current Staff Role equals 2 or not
             if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
+                //show list of staffs
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName");
 
@@ -66,6 +81,7 @@ namespace ProjectSem03.Controllers
                 var list2 = db.Competition.Where(c=> !db.Award.Select(a=>a.CompetitionID).Contains(c.CompetitionId));
                 ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
 
+                //show list of "best" postings
                 var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
                 ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
 
@@ -73,16 +89,51 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //return to Index page of Staffs Controller
                 return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Award award)
         {
+            //call from get
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
+            {
+                var list = db.Staff.Where(s => s.Role.Equals(2));
+                ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+
+                // show competition is not with any awards
+                var list2 = db.Competition.Where(c => !db.Award.Select(a => a.CompetitionID).Contains(c.CompetitionId));
+                ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
+
+                var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+                ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
+            }
+
+            //start
             try
             {
                 if (ModelState.IsValid)
                 {
+                    db.Award.Add(award); //Add new Award
+                    db.SaveChanges(); //Save Changes
+                    return RedirectToAction("Index", "Awards");// return to Index page of Awards Controller
+                    //valid
+                    bool checkOk = true;
+                    //check picture duplicate AwardName
+                    var mName = db.Award.SingleOrDefault(s => s.AwardName.Equals(award.AwardName));
+                    if (mName != null)
+                    {
+                        ViewBag.AwName = "Award Name is already existed. Try again";
+                        checkOk = false;
+                    }
+                    //check duplicate AwardName
+                    if (checkOk == false)
+                    {
+                        ViewBag.Msg = "Failed";
+                        return View();
+                    }
                     db.Award.Add(award);
                     db.SaveChanges();
                     return RedirectToAction("Index", "Awards");
@@ -94,6 +145,7 @@ namespace ProjectSem03.Controllers
             }
             catch (Exception e)
             {
+                //Show error messages
                 ViewBag.msg = e.Message;
             }
             return View();
@@ -110,6 +162,7 @@ namespace ProjectSem03.Controllers
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
 
+                //show list of competitions
                 var list2 = db.Competition.ToList();
                 ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName", listAward.CompetitionID);
 
@@ -133,13 +186,43 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Edit(Award award)
         {
+
+            //call from get
+            var listAward = db.Award.Find(HttpContext.Session.GetInt32("Awardid"));
+
+            var list = db.Staff.Where(s => s.Role.Equals(2));
+            ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
+
+            var list2 = db.Competition.ToList();
+            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName", listAward.CompetitionID);
+
+            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription", listAward.PostingID);
+
+            //start
             try
             {
+                //check Award ID
                 var editAward = db.Award.SingleOrDefault(c => c.AwardId.Equals(award.AwardId));
                 if (ModelState.IsValid)
                 {
                     if (editAward != null)
                     {
+                        //valid
+                        bool checkOk = true;
+                        //check picture duplicate AwardName
+                        var mName = db.Award.SingleOrDefault(s => s.AwardName.Equals(award.AwardName) && s.AwardName != editAward.AwardName);
+                        if (mName != null)
+                        {
+                            ViewBag.AwName = "Award Name is already existed. Try again";
+                            checkOk = false;
+                        }
+                        //check duplicate AwardName
+                        if (checkOk == false)
+                        {
+                            ViewBag.Msg = "Failed";
+                            return View();                            
+                        }
                         editAward.AwardName = award.AwardName;
                         editAward.CompetitionID = award.CompetitionID;
                         editAward.StaffId = award.StaffId;
@@ -164,11 +247,12 @@ namespace ProjectSem03.Controllers
         {
             try
             {
+                //Find Award Id
                 var award = db.Award.SingleOrDefault(s => s.AwardId.Equals(id));
 
                 if (award != null)
                 {
-                    db.Award.Remove(award);
+                    db.Award.Remove(award); //remove chosen Award Id from database
                     db.SaveChanges();
                     return RedirectToAction("Index", "Awards");
                 }

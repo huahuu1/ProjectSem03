@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Admin Page";
+    ViewData["Title"] = "Competition";
     Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
@@ -31,6 +31,7 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.CompetitionName, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.CompetitionName)
+                            @ViewBag.Cpt
                         </div>
 
                         <div class="form-group">
@@ -70,6 +71,7 @@
                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                 </div>
                             </div>
+                            @ViewBag.images
                             <div class="text-center">
                                 <img width="200" src="@Html.DisplayFor(model => model.CompetitionImages)" alt="" />
                             </div>

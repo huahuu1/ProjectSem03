@@ -1,5 +1,5 @@
 ﻿@{
-    ViewData["Title"] = "Admin Page";
+    ViewData["Title"] = "Exhibition";
     Layout = "~/Views/Shared/_Layout-Admin.cshtml";
 }
 
@@ -28,6 +28,7 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.ExhibitionName, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.ExhibitionName)
+                            @ViewBag.ExName
                         </div>
 
                         <div class="form-group">

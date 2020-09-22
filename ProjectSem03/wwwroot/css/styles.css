@@ -817,7 +817,7 @@ section.competition {
             transition: all .3s ease; }
 
 section.top-students {
-  height: 970px;
+  height: 900px;
   background-color: #e6e7e8; }
   section.top-students .top-students-icon {
     text-align: center; }
@@ -869,10 +869,12 @@ section.top-students {
                       section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-trophy img {
                         width: 18rem; }
                     section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-img {
-                      position: absolute;
-                      left: 50%;
-                      top: 48%;
-                      transform: translate(-50%, -50%); }
+                        position: absolute;
+                        left: 50%;
+                        top: 48%;
+                        transform: translate(-50%, -50%);
+                        width: 13rem;
+                    }
                       section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-img img {
                         border-radius: 50%; }
                     section.top-students .student-slider .owl-stage-outer .owl-stage .owl-item .item .owl-lazy .top-student .wrapper-top-student .student-icon .student-stars {
