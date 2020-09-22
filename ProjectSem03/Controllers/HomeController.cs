@@ -99,12 +99,14 @@ namespace ProjectSem03.Controllers
         private List<CombineModels> designStudentList()
         {
             var list = (from d in db.Design
+                        join p in db.Posting on d.DesignId equals p.DesignID
                         join s in db.Student on d.StudentId equals s.StudentId
                         where s.StudentId.Equals(HttpContext.Session.GetString("studentid")) //check student
                         select new CombineModels
                         {
                             Designs = d,
-                            Students = s
+                            Students = s,
+                            Postings = p
                         }).ToList();
             return list;
         }

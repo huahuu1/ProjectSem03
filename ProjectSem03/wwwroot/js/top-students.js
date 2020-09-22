@@ -6,7 +6,7 @@ $(document).ready(function () {
     loop: true,
     responsiveClass: true,
     dots: true,
-    autoplay: false,
+    autoplay: true,
     lazyLoad: true,
     slideBy: 2,
     responsive: {
