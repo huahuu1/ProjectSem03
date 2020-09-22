@@ -81,6 +81,22 @@ namespace ProjectSem03.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //valid
+                    bool checkOk = true;
+                    //check duplicate ExhibitionName
+                    var mName = db.Exhibition.SingleOrDefault(s => s.ExhibitionName.Equals(exhibition.ExhibitionName));
+                    if (mName != null)
+                    {
+                        ViewBag.ExName = "Exhibition Name is already existed. Try again";
+                        checkOk = false;
+                    }
+
+                    //check duplicate ExhibitionName
+                    if (checkOk == false)
+                    {
+                        ViewBag.Msg = "Failed .......";
+                        return View();
+                    }
                     db.Exhibition.Add(exhibition);
                     db.SaveChanges();
                     return RedirectToAction("Index", "Exhibitions");
@@ -137,6 +153,16 @@ namespace ProjectSem03.Controllers
                 {
                     if (editExhibition != null)
                     {
+                        //valid
+                        bool checkOk = true;
+                        //check duplicate ExhibitionName
+                        var mName = db.Exhibition.SingleOrDefault(s => s.ExhibitionName.Equals(exhibition.ExhibitionName) && s.ExhibitionName != editExhibition.ExhibitionName);
+                        if (mName != null)
+                        {
+                            ViewBag.ExName = "Exhibition Name is already existed. Try again";
+                            checkOk = false;
+                        }
+
                         editExhibition.ExhibitionName = exhibition.ExhibitionName;
                         editExhibition.Place = exhibition.Place;
                         editExhibition.StartDate = exhibition.StartDate;
@@ -153,6 +179,12 @@ namespace ProjectSem03.Controllers
                         {
                             if (edittime > 0)
                             {
+                                //check duplicate ExhibitionName
+                                if (checkOk==false)
+                                {
+                                    ViewBag.Msg = "Failed";
+                                    return View();
+                                }
                                 db.SaveChanges();
                                 return RedirectToAction("Index", "Exhibitions");
                             }

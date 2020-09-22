@@ -61,7 +61,6 @@ namespace ProjectSem03.Models
         [Required(ErrorMessage = "JoinDate is required.")]
         public DateTime JoinDate { get; set; }
 
-        [RegularExpression(@"^(?=.*\d)(?=.*[a-zA-Z]).+$", ErrorMessage = "Address must contains characters and numbers")]
         [Required(ErrorMessage = "Address is required.")]
         [StringLength(254, MinimumLength = 5, ErrorMessage = "Address must be from 5 to 254 characters")]
         [DataType(DataType.MultilineText)]

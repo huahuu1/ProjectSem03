@@ -252,14 +252,20 @@ namespace ProjectSem03.Controllers
                                 if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
                                 {
 
-                                //check picture duplicate, unique email or phone
-                                if (checkOk == false)
+                                        //check picture duplicate, unique email or phone
+                                        if (checkOk == false)
                                         {
                                             return View();
                                         }
-                                        string tempCurFilePath = Path.Combine("wwwroot/", editStaff.ProfileImage.Substring(1)); //old painting
-                                        
-                                        string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\teachers\\{file.FileName}";
+
+
+                                        bool checkNotDelete = false;
+                                        string tempCurFilePath = Path.Combine("wwwroot/", editStaff.ProfileImage.Substring(1)); //old painting                                        
+                                        if (("/images/" + file.FileName).Equals(editStaff.ProfileImage))
+                                        {
+                                            checkNotDelete = true;
+                                        }
+                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\teachers\\{file.FileName}";
                                         using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
                                         {
                                             await file.CopyToAsync(stream);
@@ -272,6 +278,9 @@ namespace ProjectSem03.Controllers
                                         editStaff.Phone = staff.Phone;
                                         editStaff.Address = staff.Address;                                 
                                         db.SaveChanges();
+
+                                    if (checkNotDelete == false)
+                                    {
                                         System.GC.Collect();
                                         System.GC.WaitForPendingFinalizers();
                                         //check old painting exists
@@ -279,6 +288,7 @@ namespace ProjectSem03.Controllers
                                         {
                                             System.IO.File.Delete(tempCurFilePath);
                                         }
+                                    }
                                         return RedirectToAction("Index", "Staffs");
                                 }
                                 else if (file.Length > 8388608)

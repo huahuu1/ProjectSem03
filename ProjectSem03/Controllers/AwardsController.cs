@@ -77,12 +77,43 @@ namespace ProjectSem03.Controllers
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create(Award award)
         {
+            //call from get
+            if (HttpContext.Session.GetInt32("staffRole") == 2)
+            {
+                var list = db.Staff.Where(s => s.Role.Equals(2));
+                ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+
+                // show competition is not with any awards
+                var list2 = db.Competition.Where(c => !db.Award.Select(a => a.CompetitionID).Contains(c.CompetitionId));
+                ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName");
+
+                var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+                ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription");
+            }
+
+            //start
             try
             {
                 if (ModelState.IsValid)
                 {
+                    //valid
+                    bool checkOk = true;
+                    //check picture duplicate AwardName
+                    var mName = db.Award.SingleOrDefault(s => s.AwardName.Equals(award.AwardName));
+                    if (mName != null)
+                    {
+                        ViewBag.AwName = "Award Name is already existed. Try again";
+                        checkOk = false;
+                    }
+                    //check duplicate AwardName
+                    if (checkOk == false)
+                    {
+                        ViewBag.Msg = "Failed";
+                        return View();
+                    }
                     db.Award.Add(award);
                     db.SaveChanges();
                     return RedirectToAction("Index", "Awards");
@@ -106,7 +137,7 @@ namespace ProjectSem03.Controllers
             if(HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var listAward = db.Award.Find(id);
-                
+                HttpContext.Session.SetInt32("Awardid", id);
                 var list = db.Staff.Where(s => s.Role.Equals(2));
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
 
@@ -133,6 +164,20 @@ namespace ProjectSem03.Controllers
         [HttpPost]
         public IActionResult Edit(Award award)
         {
+
+            //call from get
+            var listAward = db.Award.Find(HttpContext.Session.GetInt32("Awardid"));
+
+            var list = db.Staff.Where(s => s.Role.Equals(2));
+            ViewBag.data = new SelectList(list, "StaffId", "StaffName", listAward.StaffId);
+
+            var list2 = db.Competition.ToList();
+            ViewBag.data2 = new SelectList(list2, "CompetitionId", "CompetitionName", listAward.CompetitionID);
+
+            var list3 = db.Posting.Where(p => p.Mark.Equals("best"));
+            ViewBag.data3 = new SelectList(list3, "PostingId", "PostDescription", listAward.PostingID);
+
+            //start
             try
             {
                 var editAward = db.Award.SingleOrDefault(c => c.AwardId.Equals(award.AwardId));
@@ -140,6 +185,21 @@ namespace ProjectSem03.Controllers
                 {
                     if (editAward != null)
                     {
+                        //valid
+                        bool checkOk = true;
+                        //check picture duplicate AwardName
+                        var mName = db.Award.SingleOrDefault(s => s.AwardName.Equals(award.AwardName) && s.AwardName != editAward.AwardName);
+                        if (mName != null)
+                        {
+                            ViewBag.AwName = "Award Name is already existed. Try again";
+                            checkOk = false;
+                        }
+                        //check duplicate AwardName
+                        if (checkOk == false)
+                        {
+                            ViewBag.Msg = "Failed";
+                            return View();                            
+                        }
                         editAward.AwardName = award.AwardName;
                         editAward.CompetitionID = award.CompetitionID;
                         editAward.StaffId = award.StaffId;
