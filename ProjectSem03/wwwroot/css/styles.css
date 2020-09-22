@@ -1233,7 +1233,7 @@ section.teachers {
               transition: .3s; }
 
 section.about-us {
-  padding-bottom: 4rem;
+  background-color: #eeeeee;
   padding-top: 3rem;
   margin: auto; }
   section.about-us .wrapper-about-us {

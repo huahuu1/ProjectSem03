@@ -21,7 +21,7 @@
                         <li class="nav-item test">
                             <a class="circle student-nav" asp-action="Index" asp-controller="Admin">
                                 <img src="@Context.Session.GetString("staffImage")" alt="" />
-                                <span>@Context.Session.GetString("ename")</span>
+                                <span>@Context.Session.GetString("staffName")</span>
                             </a>
                             <ul class="sub-nav student-sub-nav">
                                 <li><a asp-action="Index" asp-controller="Admin"><span>Admin Page</span></a></li>
