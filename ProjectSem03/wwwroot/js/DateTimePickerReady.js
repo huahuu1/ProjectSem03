@@ -1,6 +1,6 @@
 ﻿$(function () {
     $.datetimepicker.setDateFormatter('moment');
-    $(".datetimepicker").datetimepicker({
+    $(".datetimepickerForm").datetimepicker({
         format: 'DD/MM/YYYY hh:mm A',
         formatTime: 'hh:mm A'
     });
