@@ -14,9 +14,10 @@ namespace ProjectSem03.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Required(ErrorMessage = "StaffId is required.....")]
         [RegularExpression(@"^STA+[0-9]{2,6}$")]
-        [StringLength(10, MinimumLength = 3, ErrorMessage = "AccId must be from 3 to 9 characters")]
+        [StringLength(10, MinimumLength = 3, ErrorMessage = "Staff ID must be from 3 to 9 characters")]
         public string StaffId { get; set; }
         [Required(ErrorMessage = "StaffName is required.....")]
+        [RegularExpression(@"^([A-Z][a-z]*([\s][A-Z][a-z]*)*)$", ErrorMessage = "Name do not contains number or special characters or invalid whitespaces and the first character must be capitalized")]
         [StringLength(50, MinimumLength = 3, ErrorMessage = "StaffName must be from 3 to 50 characters")]
         public string StaffName { get; set; }
         [Required(ErrorMessage = "Password is required.....")]
@@ -32,7 +33,7 @@ namespace ProjectSem03.Models
         [RegularExpression(@"^[a-zA-z]+[0-9]*@[a-zA-z]+.com*$")]
         public string Email { get; set; }
         [Required(ErrorMessage = "Phone is required.....")]
-        [StringLength(20, MinimumLength = 10, ErrorMessage = "Phone must be from 10 to 20 characters")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Phone must be from 10 characters")]
         public string Phone { get; set; }
         [Required(ErrorMessage = "Address is required.....")]
         [StringLength(255, MinimumLength = 5, ErrorMessage = "Address must be from 5 to 255 characters")]

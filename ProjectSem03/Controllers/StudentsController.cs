@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.CodeAnalysis.FlowAnalysis;
 using X.PagedList; //using for pagination
+using System.Text.RegularExpressions;
 
 namespace ProjectSem03.Controllers
 {
@@ -22,6 +23,8 @@ namespace ProjectSem03.Controllers
             this.db = db;
         }
 
+
+        //INDEX
         [Breadcrumb("Student List")]
         public IActionResult Index(string sname, int? page)
         {
@@ -129,8 +132,8 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                //return to Index page of Staffs
-                return RedirectToAction("Index", "Staffs");
+                //return to Index page of Students
+                return RedirectToAction("Index", "Students");
             }
         }
 
@@ -142,7 +145,7 @@ namespace ProjectSem03.Controllers
         {
             try
             {
-                if (ModelState.IsValid) //check CreateViewStudent and profileimages
+                if (ModelState.IsValid && !string.IsNullOrEmpty(student.Password)) //check CreateViewStudent and profileimages
                 {
                     var mEmail = db.Student.SingleOrDefault(s=>s.Email.Equals(student.Email));
                     var mPhone = db.Student.SingleOrDefault(s => s.Phone.Equals(student.Phone));
@@ -209,6 +212,108 @@ namespace ProjectSem03.Controllers
                 else
                 {
                     ViewBag.Msg = "Invalid Field";
+                    ViewBag.Pass = "Password is required";
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Msg = ex.Message;
+            }
+            return View();
+        }
+
+        public IActionResult EditPassword(string id)
+        {
+            if (HttpContext.Session.GetInt32("staffRole") == 0) //role administrator
+            {
+                if (HttpContext.Session.GetString("staffId") == null) //check session
+                {
+                    return RedirectToAction("Logout", "Home");
+                }
+                else
+                {
+                    var model = db.Student.Find(id);
+
+                    if (model != null)
+                    {
+                        HttpContext.Session.SetString("StuIdChangePass", id);
+                        return View(model); ;
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                } //end check session
+            }
+            else
+            {
+                return RedirectToAction("Index", "Students");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPassword(string nPassword, string cnPassword)
+        {
+            try
+            {
+                var model = db.Student.SingleOrDefault(s=>s.StudentId.Equals(HttpContext.Session.GetString("StuIdChangePass")));
+                //check if model != null
+                if(model != null)
+                {
+
+                    //check newpassword and confirm not null
+                    if (nPassword == null || cnPassword == null)
+                    {
+                        if (nPassword == null)
+                        {
+                            ViewBag.nPass = "New Password Cannot left blank";
+                        }
+                        if (cnPassword == null)
+                        {
+                            ViewBag.cnPass = "Confirm Pass Cannot left blank";
+                        }
+                        
+                        return View();
+                    }
+                    else
+                    {                        
+                        //edit Password
+                        Regex regex = new Regex(@"^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).+$"); //regex
+                        bool match = regex.IsMatch(nPassword);
+                        if (match == true)
+                        {
+                            //length 5-49
+                            if (nPassword.Length <= 49 && nPassword.Length >= 5)
+                            {
+                                if (cnPassword != nPassword) //check confirm
+                                {
+                                    ViewBag.cnPass = "Confirm Password and Password must match";
+                                }
+                                else
+                                {
+                                    var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                                    nPassword = AesEncDesc.EncryptString(key, nPassword);
+                                    model.Password = nPassword;
+                                    db.SaveChanges();
+                                    ViewBag.Msg = "Update Password Success";
+                                    return RedirectToAction("Index", "Students");
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.nPass = "Password must be from 5 to 49 characters";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.nPass = "Password must including numbers and characters and do not contains whitespace";
+                        }
+                    }
+                }
+                else
+                {
+                    ViewBag.Msg = "Failed";
                 }
             }
             catch (Exception ex)
@@ -244,7 +349,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Staffs");
+                return RedirectToAction("Index", "Students");
             }
         }
         [HttpPost]
@@ -291,9 +396,9 @@ namespace ProjectSem03.Controllers
                                     return View();
                                 }
                                 //key
-                                var key = "b14ca5898a4e4133bbce2ea2315a1916";
-                                student.Password = AesEncDesc.EncryptString(key, student.Password);
-                                model.Password = student.Password;
+                                //var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                                //student.Password = AesEncDesc.EncryptString(key, student.Password);
+                                //model.Password = student.Password;
                                 model.FirstName = student.FirstName;
                                 model.LastName = student.LastName;
                                 model.DateOfBirth = student.DateOfBirth;
@@ -334,10 +439,10 @@ namespace ProjectSem03.Controllers
                                     }
 
                                     //key
-                                    var key = "b14ca5898a4e4133bbce2ea2315a1916";
-                                    student.Password = AesEncDesc.EncryptString(key, student.Password);
+                                    //var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                                    //student.Password = AesEncDesc.EncryptString(key, student.Password);
 
-                                    model.Password = student.Password;
+                                    //model.Password = student.Password;
                                     model.FirstName = student.FirstName;
                                     model.LastName = student.LastName;
                                     model.DateOfBirth = student.DateOfBirth;
@@ -396,7 +501,7 @@ namespace ProjectSem03.Controllers
             {
                 if (HttpContext.Session.GetString("staffId") == null) //check session
                 {
-                    return RedirectToAction("Index", "Staffs");
+                    return RedirectToAction("Index", "Students");
                 }
                 else
                 {
@@ -430,7 +535,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Staffs");
+                return RedirectToAction("Index", "Students");
             }
         }
     }

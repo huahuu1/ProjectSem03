@@ -89,8 +89,8 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                //return to Index page of Staffs Controller
-                return RedirectToAction("Index", "Staffs");
+                //return to Index page of Awards Controller
+                return RedirectToAction("Index", "Awards");
             }
         }
         [HttpPost]
@@ -171,7 +171,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Staffs");
+                return RedirectToAction("Index", "Awards");
             }
         }
         [HttpPost]

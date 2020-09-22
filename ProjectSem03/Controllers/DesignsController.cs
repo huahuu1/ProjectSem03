@@ -84,8 +84,8 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                //return to Index page of Staffs
-                return RedirectToAction("Index", "Staffs");
+                //return to Index page of Designs
+                return RedirectToAction("Index", "Designs");
             }
         }
         [HttpPost]

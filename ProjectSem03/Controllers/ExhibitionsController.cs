@@ -78,8 +78,8 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                //return to Index page of Staffs
-                return RedirectToAction("Index", "Staffs");
+                //return to Index page of Exhibitions
+                return RedirectToAction("Index", "Exhibitions");
             }
         }
         [HttpPost]
@@ -129,7 +129,7 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Edit Exhibition")]
         public IActionResult Edit(int id)
         {
-            if (HttpContext.Session.GetInt32("staffRole") == 2)
+            if (HttpContext.Session.GetInt32("staffRole") == 1 || HttpContext.Session.GetInt32("staffRole") == 2)
             {
                 var exh = db.Exhibition.Find(id); //Find exhibition Id
 
@@ -147,7 +147,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Staffs");
+                return RedirectToAction("Index", "Exhibitions");
             }
         }
 

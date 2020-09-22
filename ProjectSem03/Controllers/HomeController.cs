@@ -24,8 +24,6 @@ namespace ProjectSem03.Controllers
         public IActionResult Index()
         {
             DateTime localDate = DateTime.Now; //convert current day to comparable value
-            //ViewBag.data = db.Competition.ToList();
-            //ViewBag.data = db.Competition.Where(c => c.StartDate <= localDate && c.EndDate >= localDate); //get list of upcoming competitions
             ViewBag.data = from c in db.Competition
                            join a in db.Award on c.CompetitionId equals a.CompetitionID
                            where c.StartDate <= localDate && c.EndDate >= localDate
@@ -52,6 +50,12 @@ namespace ProjectSem03.Controllers
                            Students = stu,
                            Awards = a
                        }; //get combine list of "best" designs
+
+            //Count data in models
+            ViewBag.countDesign = db.Design.Count();
+            ViewBag.countStudent = db.Student.Count();
+            ViewBag.countWinner = db.Posting.Where(p=>p.Mark.Equals("best")).Count();
+            ViewBag.countExhibition = db.Exhibition.Count();
             return View(list);
         }
 

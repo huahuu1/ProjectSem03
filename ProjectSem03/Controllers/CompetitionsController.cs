@@ -75,8 +75,8 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                //return to Index page of Staffs
-                return RedirectToAction("Index", "Staffs");
+                //return to Index page of Competitions
+                return RedirectToAction("Index", "Competitions");
             }
         }
         [HttpPost]
@@ -215,7 +215,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Staffs");
+                return RedirectToAction("Index", "Competitions");
             }
         }
 
