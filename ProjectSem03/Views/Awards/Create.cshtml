@@ -23,12 +23,13 @@
                     {
                         @Html.AntiForgeryToken()
                         @Html.ValidationSummary(true)
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.AwardName, "Award Name")
-                            <span class="text text-danger">*</span>
-                            @Html.EditorFor(model => model.AwardName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.AwardName)
-                        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AwardName, "Award Name")
+                        <span class="text text-danger">*</span>
+                        @Html.EditorFor(model => model.AwardName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.AwardName)
+                        @ViewBag.AwName
+                    </div>
 
                         <div class="form-group">
                             <label>Staff Name: </label>
