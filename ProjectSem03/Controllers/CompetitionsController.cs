@@ -32,7 +32,7 @@ namespace ProjectSem03.Controllers
             else
             {
                 //set number of records per page and starting page
-                int maxsize = 3;
+                int maxsize = 5;
                 int numpage = page ?? 1;
 
                 //get combine list for Competition
@@ -66,18 +66,12 @@ namespace ProjectSem03.Controllers
         {
             if(HttpContext.Session.GetInt32("staffRole") == 2) //check session for Staff Role
             {
-                var today = DateTime.Now;
-                var modelComp = db.Competition.Where(c => c.StartDate.Date <= today && c.EndDate >= today);
-                //if (modelComp.ToList().Count >= 1)
-                //{
-                //    return RedirectToAction("Create", "Competitions");
-                //}
-                //else
-                //{
-                    var list = db.Staff.Where(s => s.Role.Equals(2));
-                    ViewBag.data = new SelectList(list, "StaffId", "StaffName");
-                    return View();
-                //}
+                
+                
+                var list = db.Staff.Where(s => s.Role.Equals(2));
+                ViewBag.data = new SelectList(list, "StaffId", "StaffName");
+                return View();
+                
             }
             else
             {
@@ -100,7 +94,7 @@ namespace ProjectSem03.Controllers
                 if (ModelState.IsValid)
                 {
                     //valid
-                    bool checkOk = true;
+                    bool checkOk = false;
                     //check duplicate CompetitionName
                     var mName = db.Competition.SingleOrDefault(c => c.CompetitionName.Equals(competition.CompetitionName));
                     if (mName != null)
@@ -108,56 +102,84 @@ namespace ProjectSem03.Controllers
                         ViewBag.Cpt = "Competition Name is already existed. Try again";
                         checkOk = false;
                     }
+                    //check duplicate Competition Time
+                    var timeStart = db.Competition.Where(c => c.EndDate.Date >= competition.StartDate.Date);
 
-                    if (file != null)
+                    if (timeStart.Count() > 0)
                     {
-                        //check Images duplicate
-                        var modelDuplicate = db.Competition.SingleOrDefault(c => c.CompetitionImages.Equals("/images/" + file.FileName));
-                        //if (modelDuplicate != null)
-                        //{
-                        if (modelDuplicate != null)
-                        {
-                            ViewBag.CImage = "File name already exists";
-                            checkOk = false;
-                        }
+                        ViewBag.TimeStart = "Date is already existed. Try again";
+                        checkOk = false;
+                    }
+                    else if (timeStart.Count() <= 0 && competition.StartDate.Date >= competition.EndDate.Date)
+                    {
+                        ViewBag.TimeEnd = "End Date must be larger than Start Date. Try again";
+                        checkOk = false;
+                    }
+                    //check endDate must be larger than starDate
+                    else if (timeStart.Count() > 0 && competition.StartDate.Date >= competition.EndDate.Date)
+                    {
+                        ViewBag.TimeStart = "Date is already existed. Try again";
+                        ViewBag.TimeEnd = "End Date must be larger than Start Date. Try again";
+                        checkOk = false;
+                    }
+                    
+                    else if (timeStart.Count() <= 0 && competition.StartDate.Date < competition.EndDate.Date)
+                    {
+                        checkOk = true;
+                    }
 
-                        //check file
-                        string ext = Path.GetExtension(file.FileName);
-                        if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                    if (checkOk == true)
+                    {
+                        if (file != null)
                         {
-                            //check duplicate Images, CompetitionName
-                            if (checkOk == false)
+                            //check Images duplicate
+                            var modelDuplicate = db.Competition.SingleOrDefault(c => c.CompetitionImages.Equals("/images/" + file.FileName));
+                            //if (modelDuplicate != null)
+                            //{
+                            if (modelDuplicate != null)
                             {
-                                ViewBag.Msg = "Fail";
-                                return View();
+                                ViewBag.CImage = "File name already exists";
+                                checkOk = false;
                             }
 
-                            //choose images
-                            string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{file.FileName}";
-                            using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                            //check file
+                            string ext = Path.GetExtension(file.FileName);
+                            if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
                             {
-                                await file.CopyToAsync(stream);
-                                await stream.FlushAsync();
+                                //check duplicate Images, CompetitionName
+                                if (checkOk == false)
+                                {
+                                    ViewBag.Msg = "Fail";
+                                    return View();
+                                }
+
+                                //choose images
+                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{file.FileName}";
+                                using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(stream);
+                                    await stream.FlushAsync();
+                                }
+
+                                competition.CompetitionImages = "/images/" + file.FileName;
+
+                                db.Competition.Add(competition);
+                                db.SaveChanges();
+                                return RedirectToAction("Index", "Competitions");
                             }
-
-                            competition.CompetitionImages = "/images/" + file.FileName;
-
-                            db.Competition.Add(competition);
-                            db.SaveChanges();
-                            return RedirectToAction("Index", "Competitions");
-                        }
-                        else if (file.Length > 8388608)
-                        {
-                            ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
+                            else if (file.Length > 8388608)
+                            {
+                                ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
+                            }
+                            else
+                            {
+                                ViewBag.CImage = "CompetitionImages must be .jpg or .png";
+                            }
                         }
                         else
                         {
-                            ViewBag.CImage = "CompetitionImages must be .jpg or .png";
+                            ViewBag.CImage = "CompetitionImages Required";
                         }
-                    }
-                    else
-                    {
-                        ViewBag.CImage = "CompetitionImages Required";
                     }
                 }
                 else
@@ -213,7 +235,7 @@ namespace ProjectSem03.Controllers
                     if (editCompetition != null)
                     {
                         //valid
-                        bool checkOk = true;
+                        bool checkOk = false;
                         //check duplicate CompetitionName
                         var mName = db.Competition.SingleOrDefault(c => c.CompetitionName.Equals(competition.CompetitionName) && c.CompetitionName != editCompetition.CompetitionName);
                         if (mName != null)
@@ -222,90 +244,118 @@ namespace ProjectSem03.Controllers
                             checkOk = false;
                         }
 
-                        if (file == null)
-                        {
-                            //check duplicate CompetitionName
-                            if (checkOk == false)
-                            {
-                                ViewBag.Msg = "Fail";
-                                return View();
-                            }
-                            editCompetition.CompetitionName = competition.CompetitionName;
-                            editCompetition.StartDate = competition.StartDate;
-                            editCompetition.EndDate = competition.EndDate;
-                            editCompetition.Description = competition.Description;
-                            editCompetition.StaffId = competition.StaffId;
-                            db.SaveChanges();
-                            return RedirectToAction("Index", "Competitions");
-                        }
-                        else
-                        {
+                        //check duplicate Competition Time
+                        var timeStart = db.Competition.Where(c => c.EndDate.Date >= competition.StartDate.Date);
 
-                            //check Images duplicate
-                            var modelDuplicate = db.Competition.SingleOrDefault(c => c.CompetitionImages.Equals("/images/" + file.FileName) && c.CompetitionImages != editCompetition.CompetitionImages);
-                            //if (modelDuplicate != null)
-                            //{
-                            if (modelDuplicate != null)
+                        if (timeStart.Count() > 0)
+                        {
+                            ViewBag.TimeStart = "Date is already existed. Try again";
+                            checkOk = false;
+                        }
+                        else if (timeStart.Count() <= 0 && competition.StartDate.Date >= competition.EndDate.Date)
+                        {
+                            ViewBag.TimeEnd = "End Date must be larger than Start Date. Try again";
+                            checkOk = false;
+                        }
+                        //check endDate must be larger than starDate
+                        else if (timeStart.Count() > 0 && competition.StartDate.Date >= competition.EndDate.Date)
+                        {
+                            ViewBag.TimeStart = "Date is already existed. Try again";
+                            ViewBag.TimeEnd = "End Date must be larger than Start Date. Try again";
+                            checkOk = false;
+                        }
+
+                        else if (timeStart.Count() <= 0 && competition.StartDate.Date < competition.EndDate.Date)
+                        {
+                            checkOk = true;
+                        }
+                        if (checkOk == true)
+                        {
+                            if (file == null)
                             {
-                                ViewBag.CImage = "File name already exists";
-                                checkOk = false;
-                            }
-                            //check file
-                            string ext = Path.GetExtension(file.FileName);
-                            var today = DateTime.Now;
-                            if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
-                            {
-                                //check duplicate Images, CompetitionName
+                                //check duplicate CompetitionName
                                 if (checkOk == false)
                                 {
                                     ViewBag.Msg = "Fail";
                                     return View();
                                 }
-
-                                //choose images
-                                bool checkNotDelete = false;
-                                string tempCurFilePath = Path.Combine("wwwroot/", editCompetition.CompetitionImages.Substring(1)); //old painting
-                                if(("/images/"+file.FileName).Equals(editCompetition.CompetitionImages))
-                                {
-                                    checkNotDelete = true;
-                                }
-                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{file.FileName}";
-                                using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
-                                {
-                                    await file.CopyToAsync(stream);
-                                    await stream.FlushAsync();
-                                }
-
-                                competition.CompetitionImages = "/images/" + file.FileName;
                                 editCompetition.CompetitionName = competition.CompetitionName;
                                 editCompetition.StartDate = competition.StartDate;
                                 editCompetition.EndDate = competition.EndDate;
                                 editCompetition.Description = competition.Description;
-                                editCompetition.CompetitionImages = competition.CompetitionImages;
                                 editCompetition.StaffId = competition.StaffId;
                                 db.SaveChanges();
-
-                                if (checkNotDelete == false)
-                                {
-                                    System.GC.Collect();
-                                    System.GC.WaitForPendingFinalizers();
-                                    //check old painting exists
-                                    if (System.IO.File.Exists(tempCurFilePath))
-                                    {
-                                        System.IO.File.Delete(tempCurFilePath);
-                                    }
-                                }
                                 return RedirectToAction("Index", "Competitions");
-                            }
-                            else if (file.Length > 8388608)
-                            {
-                                ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
                             }
                             else
                             {
-                                ViewBag.CImage = "CompetitionImages must be .jpg or .png";
-                            }
-                        }//end check file null
+
+                                //check Images duplicate
+                                var modelDuplicate = db.Competition.SingleOrDefault(c => c.CompetitionImages.Equals("/images/" + file.FileName) && c.CompetitionImages != editCompetition.CompetitionImages);
+                                //if (modelDuplicate != null)
+                                //{
+                                if (modelDuplicate != null)
+                                {
+                                    ViewBag.CImage = "File name already exists";
+                                    checkOk = false;
+                                }
+                                //check file
+                                string ext = Path.GetExtension(file.FileName);
+                                var today = DateTime.Now;
+                                if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
+                                {
+                                    //check duplicate Images, CompetitionName
+                                    if (checkOk == false)
+                                    {
+                                        ViewBag.Msg = "Fail";
+                                        return View();
+                                    }
+
+                                    //choose images
+                                    bool checkNotDelete = false;
+                                    string tempCurFilePath = Path.Combine("wwwroot/", editCompetition.CompetitionImages.Substring(1)); //old painting
+                                    if (("/images/" + file.FileName).Equals(editCompetition.CompetitionImages))
+                                    {
+                                        checkNotDelete = true;
+                                    }
+                                    string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\{file.FileName}";
+                                    using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
+                                    {
+                                        await file.CopyToAsync(stream);
+                                        await stream.FlushAsync();
+                                    }
+
+                                    competition.CompetitionImages = "/images/" + file.FileName;
+                                    editCompetition.CompetitionName = competition.CompetitionName;
+                                    editCompetition.StartDate = competition.StartDate;
+                                    editCompetition.EndDate = competition.EndDate;
+                                    editCompetition.Description = competition.Description;
+                                    editCompetition.CompetitionImages = competition.CompetitionImages;
+                                    editCompetition.StaffId = competition.StaffId;
+                                    db.SaveChanges();
+
+                                    if (checkNotDelete == false)
+                                    {
+                                        System.GC.Collect();
+                                        System.GC.WaitForPendingFinalizers();
+                                        //check old painting exists
+                                        if (System.IO.File.Exists(tempCurFilePath))
+                                        {
+                                            System.IO.File.Delete(tempCurFilePath);
+                                        }
+                                    }
+                                    return RedirectToAction("Index", "Competitions");
+                                }
+                                else if (file.Length > 8388608)
+                                {
+                                    ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
+                                }
+                                else
+                                {
+                                    ViewBag.CImage = "CompetitionImages must be .jpg or .png";
+                                }
+                            }//end check file null
+                        }
                     }
                     else
                     {

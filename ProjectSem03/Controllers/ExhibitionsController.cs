@@ -35,7 +35,7 @@ namespace ProjectSem03.Controllers
             ViewBag.data = listUp;
 
             //set number of records per page and starting page
-            int maxsize = 3;
+            int maxsize = 5;
             int numpage = page ?? 1;
             var list = from e in db.Exhibition
                        join s in db.Staff

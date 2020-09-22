@@ -28,7 +28,7 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.ExhibitionName, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.ExhibitionName)
-                            @ViewBag.ExName
+                            <span class="error-msg">@ViewBag.ExName</span>
                         </div>
 
                         <div class="form-group">
@@ -70,7 +70,7 @@
 </div>
 
 <div>
-    <h3>@ViewBag.Msg</h3>
+    <h3 style="color: #ee5b54;">@ViewBag.Msg</h3>
 </div>
 
 <div>

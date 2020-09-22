@@ -32,7 +32,7 @@ namespace ProjectSem03.Controllers
             else
             {
                 //set number of records per page and starting page
-                int maxsize = 3;
+                int maxsize = 5;
                 int numpage = page ?? 1;
 
                 var list = db.Student.ToList().ToPagedList(numpage, maxsize); //get list of students and pagination

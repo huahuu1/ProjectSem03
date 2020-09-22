@@ -72,7 +72,7 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.Phone, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Phone)
-                            @ViewBag.Phone
+                            <span class="error-msg">@ViewBag.Phone</span>
                         </div>
 
                         <div>
@@ -80,7 +80,7 @@
                             <span class="text text-danger">*</span>
                             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.Email)
-                            @ViewBag.Email
+                            <span class="error-msg">@ViewBag.Email</span>
                         </div>
 
                         <div>
@@ -99,7 +99,7 @@
                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                 </div>
                             </div>
-                            @ViewBag.PImage
+                            <span class="error-msg">@ViewBag.PImage</span>
                         </div>
 
                         <br />
@@ -112,7 +112,7 @@
         </div>
     </div>
 </div>
-<div><h3>@ViewBag.Msg</h3></div>
+<div><h3 style="color: #ee5b54;">@ViewBag.Msg</h3></div>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
