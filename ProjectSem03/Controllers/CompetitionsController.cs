@@ -68,16 +68,16 @@ namespace ProjectSem03.Controllers
             {
                 var today = DateTime.Now;
                 var modelComp = db.Competition.Where(c => c.StartDate.Date <= today && c.EndDate >= today);
-                if (modelComp.ToList().Count >= 1)
-                {
-                    return RedirectToAction("Index", "Staffs");
-                }
-                else
-                {
+                //if (modelComp.ToList().Count >= 1)
+                //{
+                //    return RedirectToAction("Index", "Staffs");
+                //}
+                //else
+                //{
                     var list = db.Staff.Where(s => s.Role.Equals(2));
                     ViewBag.data = new SelectList(list, "StaffId", "StaffName");
                     return View();
-                }                
+                //}                
             }
             else
             {
