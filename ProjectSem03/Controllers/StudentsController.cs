@@ -132,8 +132,8 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                //return to Index page of Staffs
-                return RedirectToAction("Index", "Staffs");
+                //return to Index page of Students
+                return RedirectToAction("Index", "Students");
             }
         }
 
@@ -349,7 +349,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Staffs");
+                return RedirectToAction("Index", "Students");
             }
         }
         [HttpPost]
@@ -501,7 +501,7 @@ namespace ProjectSem03.Controllers
             {
                 if (HttpContext.Session.GetString("staffId") == null) //check session
                 {
-                    return RedirectToAction("Index", "Staffs");
+                    return RedirectToAction("Index", "Students");
                 }
                 else
                 {
@@ -535,7 +535,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Staffs");
+                return RedirectToAction("Index", "Students");
             }
         }
     }

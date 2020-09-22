@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using SmartBreadcrumbs.Attributes;
 using X.PagedList;
 using Microsoft.AspNetCore.Hosting;
+using System.Text.RegularExpressions;
 
 namespace ProjectSem03.Controllers
 {
@@ -52,6 +53,7 @@ namespace ProjectSem03.Controllers
             }
 
         }
+
         [HttpGet]
         [Breadcrumb("Create Staff")]
         public IActionResult Create()
@@ -67,6 +69,7 @@ namespace ProjectSem03.Controllers
                 return RedirectToAction("Index", "Staffs");
             }
         }
+
         [HttpPost]
         [ActionName("Create")]
         [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
@@ -141,7 +144,7 @@ namespace ProjectSem03.Controllers
                             //Encrypt Password
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             staff.Password = AesEncDesc.EncryptString(key, staff.Password);
-
+                            //auto generated id
                             db.Staff.Add(staff);
                             db.SaveChanges();
                             return RedirectToAction("Index", "Staffs");
@@ -172,21 +175,130 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
+        public IActionResult EditPassword(string id)
+        {
+            if (HttpContext.Session.GetInt32("staffRole") == 0) //role administrator
+            {
+                if (HttpContext.Session.GetString("staffId") == null) //check session
+                {
+                    return RedirectToAction("Logout", "Home");
+                }
+                else
+                {
+                    var model = db.Staff.Find(id);
+
+                    if (model != null)
+                    {
+                        HttpContext.Session.SetString("StaffIdChangePass", id);
+                        return View(model); ;
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                } //end check session
+            }
+            else
+            {
+                return RedirectToAction("Index", "Staffs");
+            }
+        }
+
+        //Edit staff password
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditPassword(string nPassword, string cnPassword)
+        {
+            try
+            {
+                var model = db.Staff.SingleOrDefault(s => s.StaffId.Equals(HttpContext.Session.GetString("StaffIdChangePass")));
+                //check if model != null
+                if (model != null)
+                {
+
+                    //check newpassword and confirm not null
+                    if (nPassword == null || cnPassword == null)
+                    {
+                        if (nPassword == null)
+                        {
+                            ViewBag.nPass = "New Password Cannot left blank";
+                        }
+                        if (cnPassword == null)
+                        {
+                            ViewBag.cnPass = "Confirm Pass Cannot left blank";
+                        }
+
+                        return View();
+                    }
+                    else
+                    {
+                        //edit Password
+                        Regex regex = new Regex(@"^(?=.*\d)(?=.*[a-zA-Z])(?!.*\s).+$"); //regex
+                        bool match = regex.IsMatch(nPassword);
+                        if (match == true)
+                        {
+                            //length 5-49
+                            if (nPassword.Length <= 49 && nPassword.Length >= 5)
+                            {
+                                if (cnPassword != nPassword) //check confirm
+                                {
+                                    ViewBag.cnPass = "Confirm Password and Password must match";
+                                }
+                                else
+                                {
+                                    var key = "b14ca5898a4e4133bbce2ea2315a1916";
+                                    nPassword = AesEncDesc.EncryptString(key, nPassword);
+                                    model.Password = nPassword;
+                                    db.SaveChanges();
+                                    ViewBag.Msg = "Update Password Success";
+                                    return RedirectToAction("Index", "Staffs");
+                                }
+                            }
+                            else
+                            {
+                                ViewBag.nPass = "Password must be from 5 to 49 characters";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.nPass = "Password must including numbers and characters and do not contains whitespace";
+                        }
+                    }
+                }
+                else
+                {
+                    ViewBag.Msg = "Failed";
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Msg = ex.Message;
+            }
+            return View();
+        }
+
         [HttpGet]
         [Breadcrumb("Edit Staff")]
         public IActionResult Edit(string id)
         {
             if (HttpContext.Session.GetInt32("staffRole") == 0)
             {
-                var stf = db.Staff.Find(id); //Find Staff Id
-                if (stf != null)
+                if (HttpContext.Session.GetString("staffId") == null) //check session
                 {
-                    return View(stf);
+                    return RedirectToAction("Login");
                 }
                 else
                 {
-                    return View();
-                }
+                    var model = db.Staff.Find(id);
+                    if (model != null)
+                    {
+                        return View(model); ;
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                } //end check session
             }
             else
             {

@@ -28,15 +28,21 @@
         <th>Phone</th>
         <th>Address</th>
         <th>Role</th>
-        <th>
-            @if (Context.Session.GetInt32("staffRole") == 0)
-            {
+        @if (Context.Session.GetInt32("staffRole") == 0)
+        {
+            <th>
+
                 <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Staffs">
                     <i class="fas fa-plus"></i> Add New
                 </a>
-            }
-        </th>
-    </tr>
+                }
+            </th>
+        }
+        else
+        {
+            <th></th>
+        }
+        </tr>
     @foreach (var item in ViewBag.page)
     {
         <tr class="text-center">
@@ -63,13 +69,14 @@
                     @item.Role.ToString("Staff");
                 }
             </td>
-            @if (Context.Session.GetInt32("staffRole") == 0)
-            {
-                <td style="width: 15%">
+            
+            <td style="width: 15%">
+                @if (Context.Session.GetInt32("staffRole") == 0)
+                {
                     <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Staffs" asp-route-id="@item.StaffId"><i class="fas fa-folder"></i> Update</a>
                     <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Staffs" asp-route-id="@item.StaffId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
-                </td>
-            }
+                }
+            </td>
         </tr>
     }
 </table>

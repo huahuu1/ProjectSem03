@@ -25,12 +25,12 @@ namespace ProjectSem03.Models
         //[DataType(DataType.Password)]
         //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         //public string ConfirmPassword { get; set; } //END CONFIRMPASSWORD
-        [RegularExpression(@"^([A-Z][a-z]*)$", ErrorMessage = "FirstName do not contains number or special characters or whitespaces")]
+        [RegularExpression(@"^([A-Z][a-z]*)$", ErrorMessage = "FirstName do not contains number or special characters or whitespaces and the first character must be capitalized")]
         [Required(ErrorMessage = "FirstName is required.")]
         [StringLength(49, MinimumLength = 1, ErrorMessage = "FirstName must be from 1 to 49 characters")]
         public string FirstName { get; set; }
 
-        [RegularExpression(@"^([A-Z][a-z]*([\s][A-Z][a-z]*)*)$", ErrorMessage = "LastName do not contains number or special characters or invalid whitespaces")]
+        [RegularExpression(@"^([A-Z][a-z]*([\s][A-Z][a-z]*)*)$", ErrorMessage = "LastName do not contains number or special characters or invalid whitespaces and the first character must be capitalized")]
         [Required(ErrorMessage = "LastName is required.")]
         [StringLength(49, MinimumLength = 1, ErrorMessage = "LastName must be from 1 to 49 characters")]
         public string LastName { get; set; }
