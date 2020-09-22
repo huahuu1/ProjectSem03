@@ -5,6 +5,12 @@
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
 @using Microsoft.AspNetCore.Http
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Bootstrap4.Core;
+@{
+    var pagedList = (IPagedList)ViewBag.page;
+}
 
 @{
     ViewData["Title"] = "Index";
@@ -36,41 +42,47 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in ViewBag.page)
             {
-            <tr class="text-center">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Awards.AwardId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Awards.AwardName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Competitions.CompetitionName)
-                </td>
-                <td>
-                    @if (item.Postings == null || String.IsNullOrEmpty(item.Postings.PostDescription))
-                    {
-                        <span></span>
-                    }
-                    else
-                    {
-                        @item.Postings.PostDescription
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Staffs.StaffName)
-                </td>
-                <td style="width: 150px;">
-                    @if (Context.Session.GetInt32("staffRole") == 2)
-                    {
-                        <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Awards" asp-route-id="@item.Awards.AwardId"><i class="fas fa-folder"></i> Update</a>
-                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Awards" asp-route-id="@item.Awards.AwardId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
-                    }
-                </td>
-            </tr>
+                <tr class="text-center">
+                    <td>
+                        @item.Awards.AwardId
+                    </td>
+                    <td>
+                        @item.Awards.AwardName
+                    </td>
+                    <td>
+                        @item.Competitions.CompetitionName
+                    </td>
+                    <td>
+                        @if (item.Postings == null || String.IsNullOrEmpty(item.Postings.PostDescription))
+                        {
+                            <span></span>
+                        }
+                        else
+                        {
+                            @item.Postings.PostDescription
+                        }
+                    </td>
+                    <td>
+                        @item.Staffs.StaffName
+                    </td>
+                    <td style="width: 150px;">
+                        @if (Context.Session.GetInt32("staffRole") == 2)
+                        {
+                            <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Awards" asp-route-id="@item.Awards.AwardId"><i class="fas fa-folder"></i> Update</a>
+                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Awards" asp-route-id="@item.Awards.AwardId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                        }
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
 </div>
-
+<br />
+<div>
+    @using (Html.BeginForm("Index", "Awards", FormMethod.Post))
+    {
+        <p>@Html.PagedListPager(pagedList, page => Url.Action("Index", "Awards", new { page, currentFilter=ViewBag.page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)</p>
+    }
+</div>

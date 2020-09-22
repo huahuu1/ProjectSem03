@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Http;
 using SmartBreadcrumbs.Attributes;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using X.PagedList; //using for pagination
 
 namespace ProjectSem03.Controllers
 {
     public class StudentsController : Controller
     {
+        //connection to database
         ProjectDB db;
         public StudentsController(ProjectDB db)
         {
@@ -20,7 +22,7 @@ namespace ProjectSem03.Controllers
         }
 
         [Breadcrumb("Student List")]
-        public IActionResult Index(string sname)
+        public IActionResult Index(string sname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -28,22 +30,29 @@ namespace ProjectSem03.Controllers
             }
             else
             {
-                var list = db.Student.ToList();
-                if (string.IsNullOrEmpty(sname))
+                //set number of records per page and starting page
+                int maxsize = 3;
+                int numpage = page ?? 1;
+
+                var list = db.Student.ToList().ToPagedList(numpage, maxsize); //get list of students and pagination
+
+                //check if result is found or not
+                if (string.IsNullOrEmpty(sname)) //empty
                 {
-                    return View(list);
+                    ViewBag.page = list;
                 }
                 else
                 {
-                    var filter = list.Where(s => s.FirstName.ToLower().Contains(sname) || s.FirstName.ToUpper().Contains(sname) || s.LastName.ToLower().Contains(sname) || s.LastName.ToUpper().Contains(sname));
-                    return View(filter);
+                    //show the result
+                    list = db.Student.Where(s => s.FirstName.ToLower().Contains(sname) || s.FirstName.ToUpper().Contains(sname) || s.LastName.ToLower().Contains(sname) || s.LastName.ToUpper().Contains(sname)).ToList().ToPagedList(numpage, maxsize);
+                    ViewBag.page = list;
                 }
-
+                return View();
             }
         }
 
         //Method
-        private string GenId()
+        private string GenId() //automic generate Student Id
         {
             //var model = db.Student.LastOrDefault();
             var model = (from s in db.Student orderby s.StudentId descending select s).First();
@@ -99,6 +108,7 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //return to Index page of Staffs
                 return RedirectToAction("Index", "Staffs");
             }
         }
@@ -107,7 +117,7 @@ namespace ProjectSem03.Controllers
         [ValidateAntiForgeryToken]
         [RequestFormLimits(MultipartBodyLengthLimit = 8388608)]
         [RequestSizeLimit(8388608)]
-        public async Task<IActionResult> Create(Student student, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment)
+        public async Task<IActionResult> Create(Student student, IFormFile file, [FromServices] IWebHostEnvironment owebHostEnvironment) //create new Student
         {
             try
             {

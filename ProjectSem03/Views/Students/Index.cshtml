@@ -1,4 +1,11 @@
 ﻿@model IEnumerable<ProjectSem03.Models.Student>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Bootstrap4.Core;
+@{
+    var pagedList = (IPagedList)ViewBag.page;
+}
+@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = "Index";
@@ -25,55 +32,67 @@
                 <th>Join Date</th>
                 <th>Address</th>
                 <th>Profile Image</th>
-                <th>
-                    <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Students">
-                        <i class="fas fa-plus"></i> Add New
-                    </a>
-                </th>
+                @if (Context.Session.GetInt32("staffRole") == 0)
+                {
+                    <th>
+                        <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Students">
+                            <i class="fas fa-plus"></i> Add New
+                        </a>
+                    </th>
+                }
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in ViewBag.page)
             {
-                <tr class="text-center">
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StudentId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td>
-                        @item.DateOfBirth.ToString("dd/MM/yyyy")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Gender)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Phone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Email)
-                    </td>
-                    <td>
-                        @item.JoinDate.ToString("dd/MM/yyyy")
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Address)
-                    </td>
-                    <td>
-                        <img src="@item.ProfileImage" width="50" height="50" />
-                    </td>
+            <tr class="text-center">
+                <td>
+                    @item.StudentId
+                </td>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.DateOfBirth.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @item.Gender
+                </td>
+                <td>
+                    @item.Phone
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.JoinDate.ToString("dd/MM/yyyy")
+                </td>
+                <td>
+                    @item.Address
+                </td>
+                <td>
+                    <img src="@item.ProfileImage" width="50" height="50" />
+                </td>
+                @if (Context.Session.GetInt32("staffRole") == 0)
+                {
                     <td style="width: 150px;">
                         <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Students" asp-route-id="@item.StudentId"><i class="fas fa-folder"></i> Update</a>
                         <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Students" asp-route-id="@item.StudentId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
                     </td>
-                </tr>
+                }
+            </tr>
             }
         </tbody>
     </table>
+</div>
+<div>
+    @using (Html.BeginForm("Index", "Students", FormMethod.Post))
+    {
+        <p>@Html.PagedListPager(pagedList, page => Url.Action("Index", "Students", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)</p>
+    }
 </div>
 @if (TempData["message"] != null)
 {

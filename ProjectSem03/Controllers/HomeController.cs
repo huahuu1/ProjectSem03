@@ -14,6 +14,7 @@ namespace ProjectSem03.Controllers
 {
     public class HomeController : Controller
     {
+        //connection to database
         ProjectDB db;
         public HomeController(ProjectDB db)
         {
@@ -22,9 +23,9 @@ namespace ProjectSem03.Controllers
 
         public IActionResult Index()
         {
-            DateTime localDate = DateTime.Now;
+            DateTime localDate = DateTime.Now; //convert current day to comparable value
             //ViewBag.data = db.Competition.ToList();
-            ViewBag.data = db.Competition.Where(c => c.StartDate <= localDate && c.EndDate >= localDate);
+            ViewBag.data = db.Competition.Where(c => c.StartDate <= localDate && c.EndDate >= localDate); //get list of upcoming competitions
 
             var list = from p in db.Posting
                        join s in db.Staff on p.StaffId equals s.StaffId
@@ -39,13 +40,13 @@ namespace ProjectSem03.Controllers
                            Competitions = c,
                            Staffs = s,
                            Students = stu
-                       };
+                       }; //get combine list of "best" designs
             return View(list);
         }
 
-        public IActionResult Exhibition(string stuname)
+        public IActionResult Exhibition(string stuname) //Index of Exhibition Page
         {
-            ViewBag.Exhibition = db.Exhibition.ToList();
+            ViewBag.Exhibition = db.Exhibition.ToList(); //Viewbag list of exhibitions
             
             //var exh = db.Exhibition.ToList();
             //ViewBag.data = new SelectList(exh, "ExhibitionId", "ExhibitionName");
@@ -60,14 +61,16 @@ namespace ProjectSem03.Controllers
                            Exhibitions = e,
                            Designs = d,
                            Students = stu
-                       };
-            
-            if (string.IsNullOrEmpty(stuname))
+                       };//get combine list of exhibitions
+
+            //check if result is found or not
+            if (string.IsNullOrEmpty(stuname)) //empty
             {
                 return View(list);
             }
             else
             {
+                //show the result
                 var filter = from e in db.Exhibition
                        join d in db.Design on e.ExhibitionId equals d.ExhibitionID
                        join stu in db.Student on d.StudentId equals stu.StudentId
@@ -109,12 +112,12 @@ namespace ProjectSem03.Controllers
             }
         }
 
-        public IActionResult Courses()
+        public IActionResult Courses() //Index of Courses page
         {
             return View();
         }
 
-        public IActionResult AboutUs()
+        public IActionResult AboutUs() //Index of AboutUs page
         {
             return View();
         }
@@ -130,37 +133,37 @@ namespace ProjectSem03.Controllers
         {
             try
             {
-                var staff = db.Staff.SingleOrDefault(s => s.Email.Equals(accName));
-                var student = db.Student.SingleOrDefault(s => s.Email.Equals(accName));
+                var staff = db.Staff.SingleOrDefault(s => s.Email.Equals(accName)); //check account name of staff
+                var student = db.Student.SingleOrDefault(s => s.Email.Equals(accName)); //check account name of student
 
-                if (staff != null)
+                if (staff != null) //if account is staff
                 {
                     var key = "b14ca5898a4e4133bbce2ea2315a1916";
-                    staff.Password = AesEncDesc.DecryptString(key, staff.Password);
+                    staff.Password = AesEncDesc.DecryptString(key, staff.Password); //decrypt password
                     if (staff.Password.Equals(accPass))
                     {
-                        HttpContext.Session.SetString("ename", accName);
-                        HttpContext.Session.SetString("staffName", staff.StaffName);
-                        HttpContext.Session.SetString("staffId", staff.StaffId);
-                        HttpContext.Session.SetString("staffImage", staff.ProfileImage);
-                        HttpContext.Session.SetInt32("staffRole", staff.Role);
-                        return RedirectToAction("Index", "Admin", new { area = "" });
+                        HttpContext.Session.SetString("ename", accName); //get account name from session
+                        HttpContext.Session.SetString("staffName", staff.StaffName); //get staff name from session
+                        HttpContext.Session.SetString("staffId", staff.StaffId); //get staff id from session
+                        HttpContext.Session.SetString("staffImage", staff.ProfileImage); //get Staff image from session
+                        HttpContext.Session.SetInt32("staffRole", staff.Role); //get Staff role from session
+                        return RedirectToAction("Index", "Admin", new { area = "" }); //return to Index of Admin
                     }
                     else
                     {
-                        ViewBag.Msg = "Wrong Email or Pasword....";
+                        ViewBag.Msg = "Wrong Email or Pasword...."; //error password message
                     }
                 }
-                else if (student != null)
+                else if (student != null) //if account is student
                 {
                     var key = "b14ca5898a4e4133bbce2ea2315a1916";
                     student.Password = AesEncDesc.DecryptString(key, student.Password);
                     if (student.Password.Equals(accPass))
                     {
-                        HttpContext.Session.SetString("ename", student.FirstName + " " + student.LastName);
-                        HttpContext.Session.SetString("studentid", student.StudentId);
-                        HttpContext.Session.SetString("studentImage", student.ProfileImage);
-                        return RedirectToAction("Index", "Home");
+                        HttpContext.Session.SetString("ename", student.FirstName + " " + student.LastName); //get student name from session
+                        HttpContext.Session.SetString("studentid", student.StudentId); //get student id from session
+                        HttpContext.Session.SetString("studentImage", student.ProfileImage); //get student profile image from session
+                        return RedirectToAction("Index", "Home"); //return to Index of Home
                     }
                     else
                     {
@@ -174,17 +177,17 @@ namespace ProjectSem03.Controllers
             }
             catch (Exception e)
             {
-                ViewBag.Msg = e.Message;
+                ViewBag.Msg = e.Message; //error message
             }
             return View();
         }
 
-        public IActionResult Logout()
+        public IActionResult Logout() //logout
         {
-            var model = HttpContext.Session.GetString("ename");
+            var model = HttpContext.Session.GetString("ename"); //get account name from session
             if (model != null)
             {
-                HttpContext.Session.Clear();
+                HttpContext.Session.Clear(); //clear session
                 return RedirectToAction("Index", "Home");
 
             }

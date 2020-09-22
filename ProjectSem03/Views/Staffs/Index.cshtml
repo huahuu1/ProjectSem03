@@ -7,6 +7,7 @@
 @using Microsoft.AspNetCore.Http
 @using X.PagedList
 @using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Bootstrap4.Core; 
 @{
     var pagedList = (IPagedList)ViewBag.page;
 }
@@ -15,8 +16,6 @@
 {
     <input style="height: 2.5rem; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 30%" type="text" class="form-control" name="sname" placeholder="Enter staff name" />
     <button style="height: 2.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0" type="submit" class="btn btn btn-info"><i class="nav-icon fas fa-search"></i></button>
-
-    <h5>@Html.PagedListPager(pagedList, page => Url.Action("Index", "Staffs", new { page }))</h5>
 }
 
 <table class="table table-bordered table-valign-middle">
@@ -30,9 +29,12 @@
         <th>Address</th>
         <th>Role</th>
         <th>
-            <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Staffs">
-                <i class="fas fa-plus"></i> Add New
-            </a>
+            @if (Context.Session.GetInt32("staffRole") == 0)
+            {
+                <a class="btn btn-sm btn-success" asp-action="Create" asp-controller="Staffs">
+                    <i class="fas fa-plus"></i> Add New
+                </a>
+            }
         </th>
     </tr>
     @foreach (var item in ViewBag.page)
@@ -61,14 +63,23 @@
                     @item.Role.ToString("Staff");
                 }
             </td>
-            <td style="width: 15%">
-                <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Staffs" asp-route-id="@item.StaffId"><i class="fas fa-folder"></i> Update</a>
-                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Staffs" asp-route-id="@item.StaffId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
-            </td>
+            @if (Context.Session.GetInt32("staffRole") == 0)
+            {
+                <td style="width: 15%">
+                    <a class="btn btn-primary btn-sm my-2" asp-action="Edit" asp-controller="Staffs" asp-route-id="@item.StaffId"><i class="fas fa-folder"></i> Update</a>
+                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Staffs" asp-route-id="@item.StaffId" onclick="return confirm('Are you sure?')"><i class="fas fa-trash"></i> Delete</a>
+                </td>
+            }
         </tr>
     }
 </table>
-
+<br />
+<div>
+    @using (Html.BeginForm("Index", "Staffs", FormMethod.Post))
+    {
+        <p>@Html.PagedListPager(pagedList, page => Url.Action("Index", "Staffs", new { page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)</p>
+    }
+</div>
 
 
 

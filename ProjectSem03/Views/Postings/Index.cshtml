@@ -5,6 +5,12 @@
 
 @model IEnumerable<ProjectSem03.Models.CombineModels>
 @using Microsoft.AspNetCore.Http
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Mvc.Bootstrap4.Core;
+@{
+    var pagedList = (IPagedList)ViewBag.page;
+}
 
 @using (Html.BeginForm("Index", "Postings", FormMethod.Post, new { @class = "form-inline form-group" }))
 {
@@ -30,38 +36,38 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in ViewBag.page)
             {
                 <tr class="text-center">
                     <td>
-                        @Html.DisplayFor(modelItem => item.Postings.PostingId)
+                        @item.Postings.PostingId
                     </td>
                     <td>
                         @item.Postings.PostDate.ToString("dd/MM/yyyy")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Postings.PostDescription)
+                        @item.Postings.PostDescription
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Postings.Mark)
+                        @item.Postings.Mark
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Postings.Remark)
+                        @item.Postings.Remark
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Postings.SoldStatus)
+                        @item.Postings.SoldStatus
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Postings.PaidStatus)
+                        @item.Postings.PaidStatus
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Designs.DesignName)
+                        @item.Designs.DesignName
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Competitions.CompetitionName)
+                        @item.Competitions.CompetitionName
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Staffs.StaffName)
+                        @item.Staffs.StaffName
                     </td>
                     <td style="width: 150px;">
                         @if (Context.Session.GetInt32("staffRole") == 2)
@@ -73,4 +79,11 @@
             }
         </tbody>
     </table>
+</div>
+<br />
+<div>
+    @using (Html.BeginForm("Index", "Postings", FormMethod.Post))
+    {
+        <p>@Html.PagedListPager(pagedList, page => Url.Action("Index", "Postings", new { page, currentFilter = ViewBag.page }), Bootstrap4PagedListRenderOptions.ClassicPlusFirstAndLast)</p>
+    }
 </div>

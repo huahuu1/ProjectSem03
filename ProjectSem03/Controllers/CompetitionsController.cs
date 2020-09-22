@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using SmartBreadcrumbs.Attributes;
+using X.PagedList; //using for pagination
 
 namespace ProjectSem03.Controllers
 {
     public class CompetitionsController : Controller
     {
+        //connection to database
         ProjectDB db;
         public CompetitionsController(ProjectDB db)
         {
@@ -20,7 +22,7 @@ namespace ProjectSem03.Controllers
         }
 
         [Breadcrumb("Competition List")]
-        public IActionResult Index(string cname)
+        public IActionResult Index(string cname, int? page)
         {
             if (HttpContext.Session.GetString("staffId") == null) //check session
             {
@@ -28,24 +30,32 @@ namespace ProjectSem03.Controllers
             }
             else
             {
+                //set number of records per page and starting page
+                int maxsize = 3;
+                int numpage = page ?? 1;
+
+                //get combine list for Competition
                 var list = from c in db.Competition
-                           join s in db.Staff
-                           on c.StaffId equals s.StaffId
+                           join s in db.Staff on c.StaffId equals s.StaffId
                            select new CombineModels
                            {
                                Staffs = s,
                                Competitions = c
                            };
-                if (string.IsNullOrEmpty(cname))
+                var model = list.ToList().ToPagedList(); //pagination
+
+                //check if result is found or not
+                if (string.IsNullOrEmpty(cname)) //empty
                 {
-                    return View(list);
+                    ViewBag.page = model;
                 }
                 else
                 {
-                    var filter = list.Where(c=>c.Competitions.CompetitionName.Contains(cname));
-                    return View(filter);
+                    //show the result
+                    var filter = list.Where(c=>c.Competitions.CompetitionName.ToLower().Contains(cname)).ToList().ToPagedList(numpage, maxsize);
+                    ViewBag.page = filter;
                 }
-
+                return View();
             }
         }
 
@@ -53,19 +63,20 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Create Competition")]
         public IActionResult Create()
         {
-            if(HttpContext.Session.GetInt32("staffRole") == 2)
+            if(HttpContext.Session.GetInt32("staffRole") == 2) //check session for Staff Role
             {
-                var list = db.Staff.Where(s => s.Role.Equals(2));
+                var list = db.Staff.Where(s => s.Role.Equals(2)); //get list of staffs
                 ViewBag.data = new SelectList(list, "StaffId", "StaffName");
                 return View();
             }
             else
             {
+                //return to Index page of Staffs
                 return RedirectToAction("Index", "Staffs");
             }
         }
         [HttpPost]
-        public IActionResult Create(Competition competition, IFormFile file)
+        public IActionResult Create(Competition competition, IFormFile file) //create new comeptition
         {
             var list = db.Staff.Where(s => s.Role.Equals(2));
             ViewBag.data = new SelectList(list, "StaffId", "StaffName");
@@ -74,26 +85,27 @@ namespace ProjectSem03.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //check conditions of creating
                     if (file.Length > 0)
                     {
-                        string path = Path.Combine("wwwroot/images", file.FileName);
-                        var stream = new FileStream(path, FileMode.Create);
-                        file.CopyToAsync(stream);
-                        competition.CompetitionImages = "/images/" + file.FileName;
+                        string path = Path.Combine("wwwroot/images", file.FileName); //destination of image source
+                        var stream = new FileStream(path, FileMode.Create); //create file stream
+                        file.CopyToAsync(stream); //copy image file
+                        competition.CompetitionImages = "/images/" + file.FileName; //set copied image to CompetitionImage
 
-                        db.Competition.Add(competition);
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Competitions");
+                        db.Competition.Add(competition); //add new competition
+                        db.SaveChanges(); //save changes
+                        return RedirectToAction("Index", "Competitions"); ////return to Index page of Competitions
                     }
                 }
                 else
                 {
-                    ViewBag.Msg = "Failed .......";
+                    ViewBag.Msg = "Failed ......."; //show error message if conditions are invalid
                 }
             }
             catch (Exception e)
             {
-                ViewBag.msg = e.Message;
+                ViewBag.msg = e.Message; //show other error messages
             }
             return View();
         }
@@ -107,7 +119,7 @@ namespace ProjectSem03.Controllers
 
             if (HttpContext.Session.GetInt32("staffRole") == 2)
             {
-                var competition = db.Competition.Find(id);
+                var competition = db.Competition.Find(id); //find CompetitionId
                 if (competition != null)
                 {
                     return View(competition);
@@ -124,17 +136,18 @@ namespace ProjectSem03.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Competition competition, IFormFile file)
+        public IActionResult Edit(Competition competition, IFormFile file) //edit competition
         {
             try
             {
-                var editCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(competition.CompetitionId));
+                var editCompetition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(competition.CompetitionId)); //check CompetitionId
                 if (ModelState.IsValid)
                 {
                     if (editCompetition != null)
                     {
                         if (file == null)
                         {
+                            //edit Competition values without choosing image
                             editCompetition.CompetitionName = competition.CompetitionName;
                             editCompetition.StartDate = competition.StartDate;
                             editCompetition.EndDate = competition.EndDate;
@@ -145,6 +158,7 @@ namespace ProjectSem03.Controllers
                         }
                         else if (file != null && file.Length > 0)
                         {
+                            //edit Competition values with choosing image
                             string path = Path.Combine("wwwroot/images", file.FileName);
                             var stream = new FileStream(path, FileMode.Create);
                             file.CopyToAsync(stream);
@@ -172,14 +186,14 @@ namespace ProjectSem03.Controllers
             return View();
         }
 
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id) //delete competition
         {
             try
             {
-                var competition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(id));
+                var competition = db.Competition.SingleOrDefault(c => c.CompetitionId.Equals(id)); //find Competition Id
                 if (competition != null)
                 {
-                    db.Competition.Remove(competition);
+                    db.Competition.Remove(competition); //remove chosen Competition from database
                     db.SaveChanges();
                     return RedirectToAction("Index", "Competitions");
                 }
