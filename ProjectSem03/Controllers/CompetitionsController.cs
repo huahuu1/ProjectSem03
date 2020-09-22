@@ -43,7 +43,7 @@ namespace ProjectSem03.Controllers
                                Staffs = s,
                                Competitions = c
                            };
-                var model = list.ToList().ToPagedList(); //pagination
+                var model = list.ToList().ToPagedList(numpage, maxsize); //pagination
 
                 //check if result is found or not
                 if (string.IsNullOrEmpty(cname)) //empty
@@ -53,7 +53,7 @@ namespace ProjectSem03.Controllers
                 else
                 {
                     //show the result
-                    var filter = list.Where(c=>c.Competitions.CompetitionName.ToLower().Contains(cname)).ToList().ToPagedList(numpage, maxsize);
+                    var filter = list.Where(c=>c.Competitions.CompetitionName.ToLower().Contains(cname)).ToList().ToPagedList();
                     ViewBag.page = filter;
                 }
                 return View();

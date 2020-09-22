@@ -45,7 +45,7 @@ namespace ProjectSem03.Controllers
                 else
                 {
                     //show the result
-                    list = db.Student.Where(s => s.FirstName.ToLower().Contains(sname) || s.FirstName.ToUpper().Contains(sname) || s.LastName.ToLower().Contains(sname) || s.LastName.ToUpper().Contains(sname)).ToList().ToPagedList(numpage, maxsize);
+                    list = db.Student.Where(s => s.FirstName.ToLower().Contains(sname) || s.FirstName.ToUpper().Contains(sname) || s.LastName.ToLower().Contains(sname) || s.LastName.ToUpper().Contains(sname)).ToList().ToPagedList();
                     ViewBag.page = list;
                 }
                 return View();

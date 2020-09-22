@@ -46,7 +46,7 @@ namespace ProjectSem03.Controllers
                                Staffs = s,
                                Postings = p
                            };
-                var model = list.ToList().ToPagedList(); //pagination
+                var model = list.ToList().ToPagedList(numpage, maxsize); //pagination
 
                 //check if the search has result or not
                 if (string.IsNullOrEmpty(aname)) //empty
@@ -56,7 +56,7 @@ namespace ProjectSem03.Controllers
                 else
                 {
                     //show the search result
-                    var filter = list.Where(s => s.Awards.AwardName.ToLower().Contains(aname)).ToList().ToPagedList(numpage, maxsize);
+                    var filter = list.Where(s => s.Awards.AwardName.ToLower().Contains(aname)).ToList().ToPagedList();
                     ViewBag.page = filter;
                 }
                 return View();
