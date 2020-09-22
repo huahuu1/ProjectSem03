@@ -52,6 +52,7 @@ namespace ProjectSem03.Controllers
         [Breadcrumb("Create Staff")]
         public IActionResult Create()
         {
+            //role administrator
             if(HttpContext.Session.GetInt32("staffRole") == 0)
             {
                 return View();
@@ -78,7 +79,7 @@ namespace ProjectSem03.Controllers
 
                     //valid
                     bool checkOk = true;
-                    //check unique email phone
+                    //check unique email phone staff id
                     if (email != null || phone != null || staffid !=null)
                     {
                         if (email != null)
@@ -96,6 +97,7 @@ namespace ProjectSem03.Controllers
                         checkOk = false;
                     }
 
+                    //check file not null
                     if (file!= null && file.Length > 0)
                     {
 
@@ -111,26 +113,28 @@ namespace ProjectSem03.Controllers
                         //    checkOk = false;
                         //}
 
+                        //get file .Extensition
                         string ext = Path.GetExtension(file.FileName);
-                        var today = DateTime.Now;
                         if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png")))
                         {
 
-                            //check picture duplicate, unique email or phone
+                            //check picture duplicate, unique email or phone staffid
                             if (checkOk == false)
                             {
                                 return View();
                             }
 
-                            //choose image
+                            //choose image path
                             string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\teachers\\{file.FileName}";
                             using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
                             {
                                 await file.CopyToAsync(stream);
                                 await stream.FlushAsync();
                             }
-                            staff.ProfileImage = "/images/teachers/" + file.FileName;
 
+                            staff.ProfileImage = "/images/teachers/" + file.FileName;
+                            
+                            //Encrypt Password
                             var key = "b14ca5898a4e4133bbce2ea2315a1916";
                             staff.Password = AesEncDesc.EncryptString(key, staff.Password);
 
@@ -138,18 +142,18 @@ namespace ProjectSem03.Controllers
                             db.SaveChanges();
                             return RedirectToAction("Index", "Staffs");
                         }
-                        else if (file.Length > 8388608)
+                        else if (file.Length > 8388608) //check images capacity
                         {
-                            ViewBag.Painting = "Painting must be smaller than 8MB";
+                            ViewBag.PImages = "Profile Images must be smaller than 8MB";
                         }
                         else
                         {
-                            ViewBag.Painting = "Painting must be .jpg or .png";
+                            ViewBag.PImages = "Profile Images must be .jpg or .png";
                         }
                     }
                     else
                     {
-                        ViewBag.Image = "Image Upload Container Cannot Be Empty";
+                        ViewBag.PImages = "Image Upload Container Cannot Be Empty";
                     }
                 }
                 else
@@ -240,7 +244,7 @@ namespace ProjectSem03.Controllers
                                 //{
                                     if(modelDuplicate != null)
                                     {
-                                        ViewBag.Painting = "File name already exists";
+                                        ViewBag.PImages = "File name already exists";
                                         checkOk = false;
                                     }
                                     //checkOk = false;
@@ -258,14 +262,16 @@ namespace ProjectSem03.Controllers
                                             return View();
                                         }
 
-
+                                        //check if new file equal current file
                                         bool checkNotDelete = false;
                                         string tempCurFilePath = Path.Combine("wwwroot/", editStaff.ProfileImage.Substring(1)); //old painting                                        
                                         if (("/images/" + file.FileName).Equals(editStaff.ProfileImage))
                                         {
                                             checkNotDelete = true;
                                         }
-                                string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\teachers\\{file.FileName}";
+
+                                        //choose save file path
+                                        string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\teachers\\{file.FileName}";
                                         using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
                                         {
                                             await file.CopyToAsync(stream);
@@ -278,8 +284,8 @@ namespace ProjectSem03.Controllers
                                         editStaff.Phone = staff.Phone;
                                         editStaff.Address = staff.Address;                                 
                                         db.SaveChanges();
-
-                                    if (checkNotDelete == false)
+                                    
+                                    if (checkNotDelete == false) //delete old file if false
                                     {
                                         System.GC.Collect();
                                         System.GC.WaitForPendingFinalizers();
@@ -327,7 +333,7 @@ namespace ProjectSem03.Controllers
                     db.Staff.Remove(staff);
                     db.SaveChanges();
 
-                    //check old painting exists
+                    //check old painting exists to delete
                     System.GC.Collect();
                     System.GC.WaitForPendingFinalizers();
                     if (System.IO.File.Exists(tempCurFilePath))

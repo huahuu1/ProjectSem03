@@ -80,6 +80,7 @@ namespace ProjectSem03.Controllers
         {
             try
             {
+                //get model need to update
                 var model = db.Design.SingleOrDefault(s => s.DesignId.Equals(design.DesignId));
                 if (ModelState.IsValid)
                 {
@@ -98,6 +99,7 @@ namespace ProjectSem03.Controllers
                         ////check today SubmitDate
                         if (today >= modelCompetition.StartDate.Date && today <= modelCompetition.EndDate.Date)
                         {
+                            //check mark and remark
                             if(modelPosting.Mark!=null || modelPosting.Remark != null)
                             {
                                 ViewBag.Msg = "This painting has been graded";
@@ -113,6 +115,8 @@ namespace ProjectSem03.Controllers
                                 //message box
                                 string message = "File updated Successful";
                                 TempData["message"] = "<script>alert('" + message + "');</script>";
+
+                                //get model painting path send mail to staff managed this competition
                                 newFilePath = Path.Combine("wwwroot/images/Medium", model.Painting);
                                 await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<h3><strong>Posting Id:" + modelPosting.PostingId + "</strong></h3><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
 
@@ -121,18 +125,21 @@ namespace ProjectSem03.Controllers
                             else
                             {
 
+                                //get .extension of file and check
                                 string ext = Path.GetExtension(file.FileName);
                                 if ((file.Length > 0 && file.Length < 8388608) && (ext.ToLower().Equals(".jpg") || ext.ToLower().Equals(".png"))) //painting must be .jpg or .png
                                 {
                                     string tempCurFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //old painting
+                                    //Auto Generate a random unique filename
                                     string renameFile = Convert.ToString(Guid.NewGuid()) + today.ToString("_yyyy-MM-dd_hhmmss_tt") + ext;
                                     string fileNameAndPath = $"{owebHostEnvironment.WebRootPath}\\images\\Medium\\{renameFile}";
-
+                                    //Copy to filepath
                                     using (var stream = new FileStream(fileNameAndPath, FileMode.Create))
                                     {
                                         await file.CopyToAsync(stream);
                                         await stream.FlushAsync();
                                     }
+
                                     model.DesignName = design.DesignName;
                                     design.Painting = renameFile;
                                     model.Painting = design.Painting;
@@ -147,11 +154,14 @@ namespace ProjectSem03.Controllers
                                     //messagebox
                                     string message = "File updated Successful";
                                     TempData["message"] = "<script>alert('" + message + "');</script>";
+
+                                    //get updated painting path send mail to staff managed this competition
                                     newFilePath = Path.Combine("wwwroot/images/Medium", model.Painting); //new painting
                                     await SendMailGoogleSmtp("phathuyhuukhanh@gmail.com", modelStaff.Email, "[" + modelStudent.StudentId + "]-[" + modelStudent.FirstName + " " + modelStudent.LastName + "] Has updated the drawing design", "<p><strong>Posting Id:" + modelPosting.PostingId + "</strong></p><h3>Design Name: " + design.DesignName + "</h3><p>Description: " + design.Description + "</p><p>Student Name: " + modelStudent.FirstName + " " + modelStudent.LastName + "</p><br/>" + "", "phathuyhuukhanh@gmail.com", "t+NShmKmHyq0H7kp7ZBVRg==", newFilePath); //smtp gmail: phathuyhuukhanh@gmail.com
                                     System.GC.Collect();
                                     System.GC.WaitForPendingFinalizers();
-                                    //check old painting exists
+
+                                    //check old painting exists then delete
                                     if (System.IO.File.Exists(tempCurFilePath))
                                     {
                                         System.IO.File.Delete(tempCurFilePath);
@@ -159,7 +169,7 @@ namespace ProjectSem03.Controllers
 
                                     return RedirectToAction("Upload", "Home");
                                 }
-                                else if (file.Length > 8388608)
+                                else if (file.Length > 8388608) //check painting capacity
                                 {
                                     ViewBag.Msg = "Painting must be smaller than 8MB";
                                 }
@@ -171,6 +181,7 @@ namespace ProjectSem03.Controllers
                         }
                         else
                         {
+                            //Messages provided end date
                             ViewBag.Msg = "Time to submit pictures for competition has expired ( Endate: " + modelCompetition.EndDate.ToString() + " )";
                         }// End check Design Submitdate
                     }//END check model
@@ -245,23 +256,17 @@ namespace ProjectSem03.Controllers
                 return RedirectToAction("Index","Home");
             }
             else
-            {
-                //check root
+            {                
                 var compList = db.Competition.SingleOrDefault(c=>c.CompetitionId.Equals(id));
                 if (compList == null)
                 {
                     return NotFound();
                 }
 
-                //Viewbag list of student designs
-                //ViewBag.designList = designStudentList();
-
                 //check if student is already registered competition
                 if(CheckPosting(id, stuId) == true)
                 {
                     TempData["testmsg"] = "<script>alert('You have already registered for this competition');</script>";
-                    //ViewBag.Msg = "You have already registered for this competition";
-                    //return View();
                     return RedirectToAction("Index", "Home");
                 }
                 else

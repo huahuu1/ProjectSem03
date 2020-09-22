@@ -106,7 +106,7 @@ namespace ProjectSem03.Controllers
                         //{
                         if (modelDuplicate != null)
                         {
-                            ViewBag.images = "File name already exists";
+                            ViewBag.CImage = "File name already exists";
                             checkOk = false;
                         }
 
@@ -137,16 +137,16 @@ namespace ProjectSem03.Controllers
                         }
                         else if (file.Length > 8388608)
                         {
-                            ViewBag.Painting = "CompetitionImages must be smaller than 8MB";
+                            ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
                         }
                         else
                         {
-                            ViewBag.Painting = "CompetitionImages must be .jpg or .png";
+                            ViewBag.CImage = "CompetitionImages must be .jpg or .png";
                         }
                     }
                     else
                     {
-                        ViewBag.Painting = "CompetitionImages Required";
+                        ViewBag.CImage = "CompetitionImages Required";
                     }
                 }
                 else
@@ -236,7 +236,7 @@ namespace ProjectSem03.Controllers
                             //{
                             if (modelDuplicate != null)
                             {
-                                ViewBag.images = "File name already exists";
+                                ViewBag.CImage = "File name already exists";
                                 checkOk = false;
                             }
                             //check file
@@ -288,11 +288,11 @@ namespace ProjectSem03.Controllers
                             }
                             else if (file.Length > 8388608)
                             {
-                                ViewBag.Painting = "CompetitionImages must be smaller than 8MB";
+                                ViewBag.CImage = "CompetitionImages must be smaller than 8MB";
                             }
                             else
                             {
-                                ViewBag.Painting = "CompetitionImages must be .jpg or .png";
+                                ViewBag.CImage = "CompetitionImages must be .jpg or .png";
                             }
                         }//end check file null
                     }
