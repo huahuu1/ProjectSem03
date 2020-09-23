@@ -30,7 +30,7 @@ namespace ProjectSem03.Models
         public DateTime SubmitDate { get; set; }
 
         [Required(ErrorMessage ="Price is required.")]
-        [Range(1, 1000000, ErrorMessage = "Price must be between 100 and 1,000,000$")]
+        [Range(100, 1000000, ErrorMessage = "Price must be between 100 and 1,000,000$")]
         [DataType(DataType.Currency)]
         public double Price { get; set; }
 
